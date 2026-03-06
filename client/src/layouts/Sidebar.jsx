@@ -22,7 +22,7 @@ const menuItems = [
     { name: "Users", icon: Users, path: "/users", roles: ["SUPER_ADMIN", "MANAGER"] },
     { name: "Role", icon: ShieldCheck, path: "/roles", roles: ["SUPER_ADMIN"] },
     { name: "Location", icon: MapPin, path: "/locations", roles: ["SUPER_ADMIN", "MANAGER", "TECHNICIAN"] },
-    { name: "Property", icon: Building2, path: "/properties", roles: ["SUPER_ADMIN", "OWNER", "MANAGER", "TENANT"] },
+    { name: "Property", icon: Building2, path: "/properties", roles: ["SUPER_ADMIN", "OWNER", "MANAGER"] },
     { name: "Floor & Unit", icon: Building2, path: "/floor", roles: ["OWNER"] },
     { name: "Settings", icon: Settings, path: "/settings", roles: ["SUPER_ADMIN"] },
     { name: "Reports", icon: BarChart3, path: "/reports", roles: ["SUPER_ADMIN", "OWNER", "MANAGER"] },
@@ -31,8 +31,8 @@ const menuItems = [
     { name: "Tenant", icon: UserCog, path: "/tenant", roles: ["SUPER_ADMIN", "OWNER", "MANAGER"] },
     { name: "Revenue Report", icon: CreditCard, path: "/revenue-report", roles: ["SUPER_ADMIN", "OWNER"] },
     { name: "Lease", icon: CreditCard, path: "/lease", roles: ["TENANT"] },
-    { name: "Profile & Security", icon: UserCog, path: "/profile", roles: ["SUPER_ADMIN", "OWNER", "MANAGER", "TENANT", "TECHNICIAN"] },
     { name: "Maintenance", icon: Wrench, path: "/maintenance", roles: ["TENANT", "MANAGER"] },
+    { name: "Profile & Security", icon: UserCog, path: "/profile", roles: ["SUPER_ADMIN", "OWNER", "MANAGER", "TENANT", "TECHNICIAN"] },
 ];
 
 const Sidebar = ({ isOpen, onClose }) => {

@@ -2,23 +2,58 @@ const Maintenance = require("../models/Maintenance-model");
 const Tenant = require("../models/Tenant-model");
 const Property = require("../models/Property-Model");
 
-// 🛠️ Tenant: Create Request
+// 🛠️ Create Request (Tenant or Manager)
 const createRequest = async (req, res) => {
     try {
         const userId = req.user._id;
-        const { title, description, category, priority } = req.body;
+        const role = req.user.role;
+        const { title, description, category, priority, propertyId, unitId, tenantId } = req.body;
 
-        // Find tenant record to get property and unit info
-        const tenantRecord = await Tenant.findOne({ userId });
-        if (!tenantRecord) {
-            return res.status(404).json({ message: "Tenant record not found" });
+        let finalPropertyId, finalUnitId, finalManagerId, finalTenantId, finalOwnerId;
+
+        if (role === "TENANT") {
+            // Find tenant record to get property and unit info
+            const tenantRecord = await Tenant.findOne({ userId });
+            if (!tenantRecord) {
+                return res.status(404).json({ message: "Tenant record not found" });
+            }
+            finalPropertyId = tenantRecord.propertyId;
+            finalUnitId = tenantRecord.unitId;
+            finalTenantId = userId;
+        } else if (role === "MANAGER") {
+            // Managers can create requests for properties they manage
+            finalPropertyId = propertyId;
+            finalUnitId = unitId;
+            finalTenantId = tenantId; // Can be null if for common area
+        } else {
+            return res.status(403).json({ message: "Unauthorized to create maintenance requests" });
         }
 
+        if (!finalPropertyId) {
+            return res.status(400).json({ message: "Property ID is required" });
+        }
+
+        // Fetch property to get current owner and assigned manager
+        const property = await Property.findById(finalPropertyId).populate("owner");
+        if (!property) {
+            return res.status(404).json({ message: "Property not found" });
+        }
+
+        // Only the assigned manager should be able to create requests if the role is MANAGER
+        if (role === "MANAGER" && property.manager?.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "You are not the assigned manager for this property" });
+        }
+
+        // property.owner is a reference to Owner model, which has a user field
+        finalOwnerId = property.owner.user;
+        finalManagerId = property.manager; // Use the manager currently assigned to the property
+
         const newRequest = await Maintenance.create({
-            tenantId: userId,
-            propertyId: tenantRecord.propertyId,
-            unitId: tenantRecord.unitId,
-            managerId: tenantRecord.managerId,
+            tenantId: finalTenantId,
+            propertyId: finalPropertyId,
+            unitId: finalUnitId,
+            managerId: finalManagerId,
+            ownerId: finalOwnerId,
             title,
             description,
             category,
@@ -42,17 +77,16 @@ const getRequests = async (req, res) => {
         if (role === "TENANT") {
             query.tenantId = userId;
         } else if (role === "MANAGER") {
-            // Managers see requests for properties they manage or are assigned to
-            query.managerId = userId;
+            // Managers see requests for all properties they are currently assigned to
+            const managedProperties = await Property.find({ manager: userId }).select("_id");
+            const propertyIds = managedProperties.map(p => p._id);
+            query.propertyId = { $in: propertyIds };
         } else if (role === "OWNER") {
-            // Owners see requests for all their properties
-            // First find all properties owned by this user (mapping needed if owner is not direct user ref)
-            // But from current model check, property has 'owner' ref
-            // Let's keep it simple for now, if it's a direct owner ID match
-            // query.ownerId = userId; // Owner check usually requires Property model lookup
-
-            // For now, let's fetch all (Super Admin style) or filter if we have more time
-        } else if (role !== "SUPER_ADMIN") {
+            // Owners see requests for all their properties via ownerId field
+            query.ownerId = userId;
+        } else if (role === "SUPER_ADMIN") {
+            query = {}; // Super Admin sees everything
+        } else {
             return res.status(403).json({ message: "Unauthorized access" });
         }
 
@@ -61,6 +95,7 @@ const getRequests = async (req, res) => {
             .populate("propertyId", "propertyName address")
             .populate("unitId", "unitNumber")
             .populate("managerId", "name email")
+            .populate("ownerId", "name email")
             .populate("technicianId", "name email")
             .sort({ createdAt: -1 });
 

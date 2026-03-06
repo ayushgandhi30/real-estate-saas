@@ -8,6 +8,7 @@ import {
     CheckCircle2,
     AlertTriangle,
     User,
+    Building2,
     MoreVertical,
     Eye,
     Send,
@@ -40,7 +41,24 @@ export default function Maintenance() {
         priority: "All"
     });
 
+    const [properties, setProperties] = useState([]);
+
     const role = user?.role || "TENANT";
+
+    const fetchProperties = async () => {
+        if (role !== "MANAGER") return;
+        try {
+            const response = await fetch("http://localhost:7000/api/owner/properties", {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setProperties(data.properties || []);
+            }
+        } catch (err) {
+            console.error("Failed to fetch properties", err);
+        }
+    };
 
     const fetchRequests = async () => {
         try {
@@ -62,8 +80,11 @@ export default function Maintenance() {
     };
 
     useEffect(() => {
-        if (token) fetchRequests();
-    }, [token]);
+        if (token) {
+            fetchRequests();
+            if (role === "MANAGER") fetchProperties();
+        }
+    }, [token, role]);
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -84,7 +105,7 @@ export default function Maintenance() {
 
             if (response.ok) {
                 setShowForm(false);
-                setFormData({ title: "", category: "Plumbing", priority: "Medium", description: "" });
+                setFormData({ title: "", category: "Plumbing", priority: "Medium", description: "", propertyId: "" });
                 fetchRequests();
             } else {
                 alert("Failed to create request");
@@ -165,7 +186,7 @@ export default function Maintenance() {
                     </div>
                 </div>
 
-                {role === "TENANT" && (
+                {(role === "TENANT" || role === "MANAGER") && (
                     <button
                         onClick={() => setShowForm(true)}
                         className="bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-black px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-[var(--color-primary)]/20 active:scale-95"
@@ -250,6 +271,7 @@ export default function Maintenance() {
                                     <h4 className="font-bold text-lg text-[var(--text-primary)] group-hover:text-[var(--color-primary)] transition-colors">{req.title}</h4>
                                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[var(--text-card)]">
                                         <span className="flex items-center gap-1.5"><Calendar size={14} /> {new Date(req.createdAt).toLocaleDateString()}</span>
+                                        <span className="flex items-center gap-1.5"><Building2 size={14} /> {req.propertyId?.propertyName || "Common Area"}</span>
                                         <span className="flex items-center gap-1.5"><User size={14} /> Unit: {req.unitId?.unitNumber || "N/A"}</span>
                                         <span className={`font-bold ${getPriorityStyle(req.priority)}`}>• {req.priority} Priority</span>
                                     </div>
@@ -312,6 +334,24 @@ export default function Maintenance() {
                                         onChange={handleInputChange}
                                     />
                                 </div>
+
+                                {role === "MANAGER" && (
+                                    <div className="md:col-span-2">
+                                        <label className="block text-sm font-bold text-[var(--text-card)] mb-2 uppercase tracking-wide">Select Property</label>
+                                        <select
+                                            name="propertyId"
+                                            required
+                                            className="w-full bg-[var(--bg-main)]/50 border border-[var(--color-main)]/20 rounded-xl py-3 px-4 outline-none"
+                                            value={formData.propertyId}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Choose a property...</option>
+                                            {properties.map(p => (
+                                                <option key={p._id} value={p._id}>{p.propertyName}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
 
                                 <div>
                                     <label className="block text-sm font-bold text-[var(--text-card)] mb-2 uppercase tracking-wide">Category</label>

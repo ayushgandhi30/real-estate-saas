@@ -27,13 +27,15 @@ const initialState = {
     state: "",
     zipCode: "",
     country: "",
-    isActive: true
+    isActive: true,
+    manager: ""
 };
 
 const Property = () => {
     const { toast } = useToast();
     const { user } = useAuth();
     const [properties, setProperties] = useState([]);
+    const [managers, setManagers] = useState([]);
     const [formData, setFormData] = useState(initialState);
     const [openForm, setOpenForm] = useState(false);
     const [editId, setEditId] = useState(null);
@@ -69,8 +71,25 @@ const Property = () => {
         }
     };
 
+    const fetchManagers = async () => {
+        if (user?.role !== "OWNER") return;
+        try {
+            const token = localStorage.getItem("token");
+            const response = await fetch("http://localhost:7000/api/owner/managers", {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setManagers(data.managers || []);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
         fetchProperties();
+        fetchManagers();
     }, []);
 
     const handleChange = (e) => {
@@ -132,7 +151,8 @@ const Property = () => {
             state: property.state || "",
             zipCode: property.zipCode || "",
             country: property.country || "",
-            isActive: property.isActive
+            isActive: property.isActive,
+            manager: property.manager?._id || ""
         });
         setEditId(property._id);
         setOpenForm(true);
@@ -420,6 +440,26 @@ const Property = () => {
                                         </div>
                                     </div>
 
+                                    {/* Assign Manager (Owner Only) */}
+                                    {user?.role === "OWNER" && (
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-black uppercase tracking-widest text-[var(--text-secondary)] ml-1">
+                                                Assign Manager
+                                            </label>
+                                            <select
+                                                name="manager"
+                                                value={formData.manager}
+                                                onChange={handleChange}
+                                                className="w-full bg-[var(--color-card)] border border-white/10 rounded-2xl p-3.5 text-sm font-bold text-[var(--text-secondary)] focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30 transition appearance-none cursor-pointer"
+                                            >
+                                                <option value="">No Manager Assigned</option>
+                                                {managers.map(m => (
+                                                    <option key={m._id} value={m._id}>{m.name} ({m.email})</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
+
                                     {/* Location & City/State */}
                                     <div className="grid grid-cols-2 gap-4">
                                         <Input
@@ -624,6 +664,12 @@ function ViewProperty({ property, onClose }) {
                                     <span className="text-sm font-medium text-[var(--text-card)]">Status</span>
                                     <span className={`text-xs font-black px-2 py-0.5 rounded-md ${property.isActive ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
                                         {property.isActive ? 'OPERATIONAL' : 'INACTIVE'}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between items-center py-2 border-b border-white/5">
+                                    <span className="text-sm font-medium text-[var(--text-card)]">Assigned Manager</span>
+                                    <span className="text-sm font-bold text-[var(--text-secondary)]">
+                                        {property.manager?.name || "Not Assigned"}
                                     </span>
                                 </div>
                             </div>

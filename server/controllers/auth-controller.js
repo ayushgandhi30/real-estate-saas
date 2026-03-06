@@ -207,4 +207,13 @@ const updateProfile = async (req, res) => {
     }
 };
 
-module.exports = { register, login, user, getAllUsers, changePassword, updateProfile }
+const getManagers = async (req, res) => {
+    try {
+        const managers = await User.find({ role: "MANAGER", isActive: true }).select("name email phone");
+        res.status(200).json({ managers });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = { register, login, user, getAllUsers, getManagers, changePassword, updateProfile }

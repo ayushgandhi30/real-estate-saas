@@ -64,6 +64,13 @@ const propertySchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true
+    },
+
+    // 🤝 Management
+    manager: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        index: true
     }
 
 })

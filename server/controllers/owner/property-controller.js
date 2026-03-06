@@ -15,7 +15,8 @@ const createProperty = async (req, res) => {
             state,
             zipCode,
             country,
-            isActive
+            isActive,
+            manager
         } = req.body;
 
         let owner = await Owner.findOne({ user: userId });
@@ -51,7 +52,8 @@ const createProperty = async (req, res) => {
             state,
             zipCode,
             country,
-            isActive: isActive !== undefined ? isActive : true
+            isActive: isActive !== undefined ? isActive : true,
+            manager: manager || null
         });
 
         res.status(201).json({
@@ -82,20 +84,25 @@ const getProperties = async (req, res) => {
                 });
             }
             query = { owner: owner._id };
-        } else if (role === "SUPER_ADMIN" || role === "MANAGER") {
+        } else if (role === "MANAGER") {
+            // Managers can only see properties assigned to them
+            query = { manager: userId };
+        } else if (role === "SUPER_ADMIN") {
             query = {};
         } else {
             return res.status(403).json({ message: "Unauthorized access" });
         }
 
-        const properties = await Property.find(query).populate({
-            path: "owner",
-            select: "companyName ownerType",
-            populate: {
-                path: "user",
-                select: "name"
-            }
-        });
+        const properties = await Property.find(query)
+            .populate({
+                path: "owner",
+                select: "companyName ownerType",
+                populate: {
+                    path: "user",
+                    select: "name"
+                }
+            })
+            .populate("manager", "name email phone");
 
         res.status(200).json({
             message: "Properties fetched successfully",
@@ -117,13 +124,21 @@ const updateProperty = async (req, res) => {
             return res.status(404).json({ message: "Property not found" });
         }
 
-        if (role === "OWNER" || role === "MANAGER") {
+        // Logic check: only owner or super admin should be able to update manager? 
+        // Or owner of the property
+        if (role === "OWNER") {
             const owner = await Owner.findOne({ user: userId });
             if (!owner || property.owner.toString() !== owner._id.toString()) {
                 return res.status(403).json({ message: "You are not allowed to update this property" });
             }
-        } else if (role === "SUPER_ADMIN") {
-            return res.status(403).json({ message: "Super Admin can only see properties" });
+        } else if (role === "MANAGER") {
+            // A manager could update details of their assigned property if permitted, 
+            // but normally assigning a manager is an OWNER action.
+            if (property.manager?.toString() !== userId.toString()) {
+                return res.status(403).json({ message: "You are not the assigned manager for this property" });
+            }
+        } else if (role !== "SUPER_ADMIN") {
+            return res.status(403).json({ message: "Unauthorized role" });
         }
 
         const allowedFields = [
@@ -136,7 +151,8 @@ const updateProperty = async (req, res) => {
             "state",
             "zipCode",
             "country",
-            "isActive"
+            "isActive",
+            "manager"
         ];
 
         allowedFields.forEach((field) => {
@@ -167,13 +183,15 @@ const deleteProperty = async (req, res) => {
             return res.status(404).json({ message: "Property not found" });
         }
 
-        if (role === "OWNER" || role === "MANAGER") {
+        if (role === "OWNER") {
             const owner = await Owner.findOne({ user: userId });
             if (!owner || property.owner.toString() !== owner._id.toString()) {
                 return res.status(403).json({ message: "You are not allowed to delete this property" });
             }
         } else if (role === "SUPER_ADMIN") {
-            return res.status(403).json({ message: "Super Admin can only see properties" });
+            // Allow super admin to delete
+        } else {
+            return res.status(403).json({ message: "Unauthorized to delete property" });
         }
 
         await property.deleteOne();

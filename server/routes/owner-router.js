@@ -9,9 +9,13 @@ const PropertyController = require("../controllers/owner/property-controller.js"
 const FloorController = require("../controllers/owner/floore-controller.js")
 const UnitController = require("../controllers/owner/unit-controller.js")
 const RevenueController = require("../controllers/owner/revenue-controller.js")
+const authController = require("../controllers/auth-controller.js");
 
 // Owner registration
 router.post("/register", authMiddleware, roleMiddleware("OWNER"), registerOwner);
+
+// Get available managers for assignment
+router.get("/managers", authMiddleware, roleMiddleware("OWNER"), authController.getManagers);
 
 // Revenue Analytics
 router.get("/revenue-stats", authMiddleware, roleMiddleware("OWNER"), RevenueController.getRevenueStats);

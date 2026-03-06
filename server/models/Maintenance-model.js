@@ -24,6 +24,11 @@ const MaintenanceSchema = new mongoose.Schema({
         ref: "User",
         index: true
     },
+    ownerId: { // Owner of the property
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        index: true
+    },
     technicianId: { // Person assigned to fix it
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
