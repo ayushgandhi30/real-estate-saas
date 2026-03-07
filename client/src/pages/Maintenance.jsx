@@ -17,6 +17,7 @@ import {
     ArrowRight
 } from "lucide-react";
 import { useAuth } from "../store/auth";
+import Button from "../components/ui/Button";
 
 export default function Maintenance() {
     const { token, user } = useAuth();
@@ -187,13 +188,7 @@ export default function Maintenance() {
                 </div>
 
                 {(role === "TENANT" || role === "MANAGER") && (
-                    <button
-                        onClick={() => setShowForm(true)}
-                        className="bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-black px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-[var(--color-primary)]/20 active:scale-95"
-                    >
-                        <Plus size={20} />
-                        New Request
-                    </button>
+                    <Button variant="primary" onClick={() => setShowForm(true)} icon={<Plus size={20} />} >New Request</Button>
                 )}
             </div>
 
@@ -226,7 +221,7 @@ export default function Maintenance() {
                 </div>
                 <div className="flex gap-4 w-full md:w-auto">
                     <select
-                        className="bg-[var(--bg-main)]/50 border border-[var(--color-main)]/20 rounded-xl px-4 py-3 outline-none text-sm font-medium"
+                        className="bg-[var(--bg-card)] border border-[var(--color-main)]/20 rounded-xl px-4 py-3 outline-none text-sm font-medium"
                         value={filter.status}
                         onChange={(e) => setFilter({ ...filter, status: e.target.value })}
                     >
@@ -236,7 +231,7 @@ export default function Maintenance() {
                         <option value="Completed">Completed</option>
                     </select>
                     <select
-                        className="bg-[var(--bg-main)]/50 border border-[var(--color-main)]/20 rounded-xl px-4 py-3 outline-none text-sm font-medium"
+                        className="bg-[var(--bg-card)] border border-[var(--color-main)]/20 rounded-xl px-4 py-3 outline-none text-sm font-medium"
                         value={filter.priority}
                         onChange={(e) => setFilter({ ...filter, priority: e.target.value })}
                     >
@@ -283,18 +278,8 @@ export default function Maintenance() {
                                 <div className="flex items-center gap-3">
                                     {role === "MANAGER" && req.status !== "Completed" && (
                                         <>
-                                            <button
-                                                onClick={() => handleUpdateStatus(req._id, "In Progress")}
-                                                className="px-4 py-2 bg-blue-500/10 text-blue-500 border border-blue-500/30 rounded-lg text-sm font-bold hover:bg-blue-500 hover:text-white transition-all"
-                                            >
-                                                Start Fixing
-                                            </button>
-                                            <button
-                                                onClick={() => handleUpdateStatus(req._id, "Completed")}
-                                                className="px-4 py-2 bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 rounded-lg text-sm font-bold hover:bg-emerald-500 hover:text-white transition-all"
-                                            >
-                                                Finish
-                                            </button>
+                                            <Button variant="primary" onClick={() => handleUpdateStatus(req._id, "In Progress")} icon={<Plus size={20} />} >Start Fixing</Button>
+                                            <Button variant="primary" onClick={() => handleUpdateStatus(req._id, "Completed")} icon={<Plus size={20} />} >Finish</Button>
                                         </>
                                     )}
                                     <button className="p-2.5 rounded-xl hover:bg-[var(--bg-main)] text-[var(--text-card)] transition-colors border border-transparent hover:border-[var(--color-main)]/20">
@@ -316,7 +301,7 @@ export default function Maintenance() {
                     <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowForm(false)}></div>
                     <div className="relative bg-[var(--bg-card)] w-full max-w-2xl rounded-3xl border border-[var(--color-main)]/30 shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
                         <div className="p-8">
-                            <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-6 flex items-center gap-3">
+                            <h2 className="text-2xl font-bold text-[var(--text-secondary)] mb-6 flex items-center gap-3">
                                 <Send className="text-[var(--color-primary)]" />
                                 Submit Maintenance Request
                             </h2>
@@ -357,7 +342,7 @@ export default function Maintenance() {
                                     <label className="block text-sm font-bold text-[var(--text-card)] mb-2 uppercase tracking-wide">Category</label>
                                     <select
                                         name="category"
-                                        className="w-full bg-[var(--bg-main)]/50 border border-[var(--color-main)]/20 rounded-xl py-3 px-4 outline-none"
+                                        className="w-full bg-[var(--bg-card)] border border-[var(--color-main)]/20 rounded-xl py-3 px-4 outline-none"
                                         value={formData.category}
                                         onChange={handleInputChange}
                                     >
@@ -374,7 +359,7 @@ export default function Maintenance() {
                                     <label className="block text-sm font-bold text-[var(--text-card)] mb-2 uppercase tracking-wide">Priority Level</label>
                                     <select
                                         name="priority"
-                                        className="w-full bg-[var(--bg-main)]/50 border border-[var(--color-main)]/20 rounded-xl py-3 px-4 outline-none"
+                                        className="w-full bg-[var(--bg-card)] border border-[var(--color-main)]/20 rounded-xl py-3 px-4 outline-none"
                                         value={formData.priority}
                                         onChange={handleInputChange}
                                     >
@@ -406,14 +391,14 @@ export default function Maintenance() {
                                     >
                                         Dismiss
                                     </button>
-                                    <button
+                                    <Button
                                         type="submit"
                                         disabled={submitting}
                                         className="bg-[var(--color-primary)] hover:opacity-90 disabled:opacity-50 text-black px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all"
                                     >
                                         {submitting ? <Loader2 className="animate-spin" /> : <ArrowRight size={20} />}
                                         Submit Request
-                                    </button>
+                                    </Button>
                                 </div>
                             </form>
                         </div>
