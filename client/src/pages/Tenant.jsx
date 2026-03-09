@@ -90,10 +90,43 @@ const Tenant = () => {
         }
     };
 
+    const fetchTenantUsers = async () => {
+        try {
+            const response = await fetch("http://localhost:7000/api/auth/all-users", {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = await response.json();
+            if (response.ok) {
+                // Filter users who are already TENANTS
+                const onlyTenants = (data.msg || []).filter(u => u.role === "TENANT");
+                setTenantUsers(onlyTenants);
+            }
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        }
+    };
+
+    const fetchManagers = async () => {
+        try {
+            const response = await fetch("http://localhost:7000/api/auth/all-users", {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = await response.json();
+            if (response.ok) {
+                const managersOnly = (data.msg || []).filter(u => u.role === "MANAGER" || u.role === "SUPER_ADMIN" || u.role === "OWNER");
+                setManagers(managersOnly);
+            }
+        } catch (error) {
+            console.error("Error fetching managers:", error);
+        }
+    };
+
     useEffect(() => {
         if (token) {
             fetchTenants();
             fetchProperties();
+            fetchTenantUsers();
+            fetchManagers();
         }
     }, [token]);
 
@@ -747,29 +780,53 @@ const Tenant = () => {
                                         <Users size={20} className="text-[var(--color-primary)]" />
                                         Resident Identification
                                     </h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                        <Input
-                                            label="Full Name"
-                                            required
-                                            placeholder="Resident's complete name"
-                                            value={formData.name}
-                                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                        />
-                                        <Input
-                                            label="Email Address"
-                                            type="email"
-                                            required
-                                            placeholder="resident@example.com"
-                                            value={formData.email}
-                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                        />
-                                        <Input
-                                            label="Phone Number"
-                                            required
-                                            placeholder="+91 XXXXX XXXXX"
-                                            value={formData.phone}
-                                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                        />
+                                    <div className="space-y-4">
+                                        <div className="flex items-center gap-4 mb-2">
+                                            <span className="text-sm font-semibold text-[var(--text-secondary)]">Search Existing User?</span>
+                                            <select
+                                                className="bg-[var(--bg-main)] border border-gray-600 text-xs rounded-lg px-2 py-1 outline-none"
+                                                onChange={(e) => {
+                                                    const selected = tenantUsers.find(u => u._id === e.target.value);
+                                                    if (selected) {
+                                                        setFormData({
+                                                            ...formData,
+                                                            name: selected.name,
+                                                            email: selected.email,
+                                                            phone: selected.phone || ""
+                                                        });
+                                                    }
+                                                }}
+                                            >
+                                                <option value="">-- Select from existing users --</option>
+                                                {tenantUsers.map(u => (
+                                                    <option key={u._id} value={u._id}>{u.name} ({u.email})</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                            <Input
+                                                label="Full Name"
+                                                required
+                                                placeholder="Resident's complete name"
+                                                value={formData.name}
+                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                            />
+                                            <Input
+                                                label="Email Address"
+                                                type="email"
+                                                required
+                                                placeholder="resident@example.com"
+                                                value={formData.email}
+                                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            />
+                                            <Input
+                                                label="Phone Number"
+                                                required
+                                                placeholder="+91 XXXXX XXXXX"
+                                                value={formData.phone}
+                                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                            />
+                                        </div>
                                     </div>
 
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

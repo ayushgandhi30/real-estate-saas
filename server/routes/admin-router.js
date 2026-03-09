@@ -29,17 +29,17 @@ router.delete("/locations/:id", authMiddleware, roleMiddleware("SUPER_ADMIN"), l
 router.patch("/owner/:ownerId/approve", authMiddleware, roleMiddleware("SUPER_ADMIN"), OwnerController.approveOwner)
 
 // Get Owner
-router.get("/getOwners", authMiddleware, roleMiddleware("SUPER_ADMIN"), OwnerController.getOwner)
+router.get("/getOwners", authMiddleware, roleMiddleware("SUPER_ADMIN", "OWNER", "MANAGER"), OwnerController.getOwner)
 
 
 // create user
-router.post("/user", authMiddleware, roleMiddleware("SUPER_ADMIN"), UserController.addUser)
+router.post("/user", authMiddleware, roleMiddleware("SUPER_ADMIN", "MANAGER"), UserController.addUser)
 
 // update user
-router.put("/user/:userId", authMiddleware, roleMiddleware("SUPER_ADMIN"), UserController.updateUser)
+router.put("/user/:userId", authMiddleware, roleMiddleware("SUPER_ADMIN", "MANAGER"), UserController.updateUser)
 
 // delete user
-router.delete("/user/:userId", authMiddleware, roleMiddleware("SUPER_ADMIN"), UserController.deleteUser)
+router.delete("/user/:userId", authMiddleware, roleMiddleware("SUPER_ADMIN", "MANAGER"), UserController.deleteUser)
 
 
 // get all plans

@@ -77,8 +77,12 @@ const createTenant = async (req, res) => {
                 role: "TENANT",
                 isActive: true
             });
-        } else if (user.role !== "TENANT") {
-            return res.status(400).json({ message: "User with this email already exists with a different role" });
+        } else {
+            // If user exists, ensure they are marked as TENANT (optional update) or just use them
+            if (user.role !== "TENANT") {
+                user.role = "TENANT";
+                await user.save();
+            }
         }
 
         // Create Tenant
