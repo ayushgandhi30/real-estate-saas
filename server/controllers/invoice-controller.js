@@ -84,6 +84,7 @@ const createInvoice = async (req, res) => {
             invoice,
         });
     } catch (error) {
+        console.error("CREATE INVOICE ERROR:", error);
         return res.status(500).json({
             message: "Failed to create invoice",
             error: error.message,

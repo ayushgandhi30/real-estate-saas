@@ -6,7 +6,7 @@ const invoiceController = require("../controllers/invoice-controller");
 const router = express.Router();
 
 // Create Invoice (MANAGER only)
-router.post("/invoice", authMiddleware, roleMiddleware("MANAGER"), invoiceController.createInvoice);
+router.post("/", authMiddleware, roleMiddleware("MANAGER"), invoiceController.createInvoice);
 
 // Get Invoices (MANAGER sees all they manage, TENANT sees their own)
 router.get("/invoices", authMiddleware, roleMiddleware("MANAGER", "TENANT"), invoiceController.getAllInvoices);

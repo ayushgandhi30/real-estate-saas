@@ -94,13 +94,12 @@ const InvoiceSchema = new mongoose.Schema(
 );
 
 // Auto-calculate totalAmount before save
-InvoiceSchema.pre("save", function (next) {
+InvoiceSchema.pre("save", function () {
     this.totalAmount =
         (this.rent || 0) +
         (this.utilityCharges || 0) +
         (this.maintenanceCharges || 0) +
         (this.lateFee || 0);
-    next();
 });
 
 const Invoice = mongoose.model("Invoice", InvoiceSchema);
