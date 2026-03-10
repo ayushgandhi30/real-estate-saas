@@ -9,6 +9,8 @@ const createRequest = async (req, res) => {
         const role = req.user.role;
         const { title, description, category, priority, propertyId, unitId, tenantId } = req.body;
 
+        console.log("Create Request Triggered:", { role, title, propertyId });
+
         let finalPropertyId, finalUnitId, finalManagerId, finalTenantId, finalOwnerId;
 
         if (role === "TENANT") {
@@ -30,6 +32,7 @@ const createRequest = async (req, res) => {
             finalUnitId = unitId;
             finalTenantId = tenantId;
         } else {
+            console.log("Unauthorized role for maintenance creation:", role);
             return res.status(403).json({ message: "Unauthorized to create maintenance requests" });
         }
 
@@ -53,6 +56,10 @@ const createRequest = async (req, res) => {
         }
 
         // property.owner is a reference to Owner model, which has a user field
+        if (!property.owner || !property.owner.user) {
+            return res.status(404).json({ message: "Property owner record not found or incomplete" });
+        }
+
         finalOwnerId = property.owner.user;
         finalManagerId = property.manager; // Use the manager currently assigned to the property
 
@@ -69,8 +76,11 @@ const createRequest = async (req, res) => {
             status: "Pending"
         });
 
+        console.log("Success: Maintenance request created", newRequest._id);
+
         res.status(201).json({ message: "Maintenance request created successfully", request: newRequest });
     } catch (error) {
+        console.error("Maintenance Create Error:", error);
         res.status(500).json({ message: "Failed to create request", error: error.message });
     }
 };

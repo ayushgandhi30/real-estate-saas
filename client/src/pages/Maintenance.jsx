@@ -17,10 +17,12 @@ import {
     ArrowRight
 } from "lucide-react";
 import { useAuth } from "../store/auth";
+import { useToast } from "../store/ToastContext";
 import Button from "../components/ui/Button";
 
 export default function Maintenance() {
     const { token, user } = useAuth();
+    const { toast } = useToast();
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
@@ -32,7 +34,8 @@ export default function Maintenance() {
         title: "",
         category: "Plumbing",
         priority: "Medium",
-        description: ""
+        description: "",
+        propertyId: ""
     });
 
     // Filters
@@ -107,14 +110,18 @@ export default function Maintenance() {
             });
 
             if (response.ok) {
+                toast.success("Maintenance request submitted successfully");
                 setShowForm(false);
                 setFormData({ title: "", category: "Plumbing", priority: "Medium", description: "", propertyId: "" });
                 fetchRequests();
             } else {
-                alert("Failed to create request");
+                const data = await response.json();
+                toast.error(data.message || "Failed to create request");
+                console.error("Maintenance creation failed:", data);
             }
         } catch (err) {
-            alert("Error creating request");
+            toast.error("Error connecting to server");
+            console.error("Maintenance connection error:", err);
         } finally {
             setSubmitting(false);
         }
@@ -132,18 +139,22 @@ export default function Maintenance() {
             });
 
             if (response.ok) {
+                toast.success("Status updated successfully");
                 fetchRequests();
             } else {
-                alert("Failed to update status");
+                const data = await response.json();
+                toast.error(data.message || "Failed to update status");
             }
         } catch (err) {
-            alert("Error updating status");
+            toast.error("Error updating status");
         }
     };
 
     const filteredRequests = requests.filter(req => {
-        const matchesSearch = req.title.toLowerCase().includes(filter.search.toLowerCase()) ||
-            req.unitId?.unitNumber?.toLowerCase().includes(filter.search.toLowerCase());
+        const titleMatch = req.title?.toLowerCase().includes(filter.search.toLowerCase());
+        const unitMatch = req.unitId?.unitNumber?.toLowerCase().includes(filter.search.toLowerCase()) || false;
+
+        const matchesSearch = titleMatch || unitMatch;
         const matchesStatus = filter.status === "All" || req.status === filter.status;
         const matchesPriority = filter.priority === "All" || req.priority === filter.priority;
         return matchesSearch && matchesStatus && matchesPriority;
@@ -389,7 +400,8 @@ export default function Maintenance() {
                                         Dismiss
                                     </button>
                                     <Button
-                                        type="submit"
+                                        htmlType="submit"
+                                        type="primary"
                                         disabled={submitting}
                                         className="bg-[var(--color-primary)] hover:opacity-90 disabled:opacity-50 text-black px-8 py-3 rounded-xl font-bold flex items-center gap-2 transition-all"
                                     >
