@@ -4,7 +4,6 @@ const MaintenanceSchema = new mongoose.Schema({
     tenantId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true,
         index: true
     },
     propertyId: {
@@ -16,7 +15,6 @@ const MaintenanceSchema = new mongoose.Schema({
     unitId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Unit",
-        required: true,
         index: true
     },
     managerId: { // Assigned manager for the property

@@ -44,10 +44,12 @@ export default function Maintenance() {
 
     const [properties, setProperties] = useState([]);
 
-    const role = user?.role || "TENANT";
+    const role = user?.role;
+    const isAuthorizedToCreate = ["TENANT", "MANAGER", "OWNER"].includes(role);
+    const isPropertySelectRequired = ["MANAGER", "OWNER"].includes(role);
 
     const fetchProperties = async () => {
-        if (role !== "MANAGER") return;
+        if (!isPropertySelectRequired) return;
         try {
             const response = await fetch("http://localhost:7000/api/owner/properties", {
                 headers: { Authorization: `Bearer ${token}` }
@@ -83,7 +85,7 @@ export default function Maintenance() {
     useEffect(() => {
         if (token) {
             fetchRequests();
-            if (role === "MANAGER") fetchProperties();
+            if (isPropertySelectRequired) fetchProperties();
         }
     }, [token, role]);
 
@@ -187,7 +189,7 @@ export default function Maintenance() {
                     </div>
                 </div>
 
-                {(role === "TENANT" || role === "MANAGER") && (
+                {isAuthorizedToCreate && (
                     <Button variant="primary" onClick={() => setShowForm(true)} icon={<Plus size={20} />} >New Request</Button>
                 )}
             </div>
@@ -315,7 +317,7 @@ export default function Maintenance() {
                                     />
                                 </div>
 
-                                {role === "MANAGER" && (
+                                {isPropertySelectRequired && (
                                     <div className="md:col-span-2">
                                         <label className="block text-sm font-bold text-[var(--text-card)] mb-2 uppercase tracking-wide">Select Property</label>
                                         <select

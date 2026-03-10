@@ -567,7 +567,6 @@ const Tenant = () => {
                                                 <button
                                                     onClick={() => {
                                                         setSelectedTenant(tenant);
-                                                        setOpenViewDetails(true);
                                                     }}
                                                     className="p-2 text-blue-500 hover:bg-blue-500/10 rounded-xl transition-all"
                                                     title="View Details"
@@ -650,7 +649,6 @@ const Tenant = () => {
                                         <button
                                             onClick={() => {
                                                 setSelectedTenant(tenant);
-                                                setOpenViewDetails(true);
                                             }}
                                             className="p-3 bg-white/5 text-[var(--text-card)] hover:text-white rounded-2xl transition-all border border-white/5"
                                         >

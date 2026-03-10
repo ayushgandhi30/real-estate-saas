@@ -4,8 +4,8 @@ const authMiddleware = require("../middlewares/auth-middleware");
 const roleMiddleware = require("../middlewares/role-middleware");
 const MaintenanceController = require("../controllers/maintenance-controller");
 
-//  CREATE request (TENANT)
-router.post("/request", authMiddleware, roleMiddleware("TENANT"), MaintenanceController.createRequest);
+//  CREATE request (TENANT, MANAGER, OWNER)
+router.post("/request", authMiddleware, roleMiddleware("TENANT", "MANAGER", "OWNER"), MaintenanceController.createRequest);
 
 //  GET all requests (TENANT sees their own, MANAGER sees all)
 router.get("/requests", authMiddleware, roleMiddleware("TENANT", "MANAGER", "OWNER", "SUPER_ADMIN"), MaintenanceController.getRequests);

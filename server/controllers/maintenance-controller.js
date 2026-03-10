@@ -20,11 +20,15 @@ const createRequest = async (req, res) => {
             finalPropertyId = tenantRecord.propertyId;
             finalUnitId = tenantRecord.unitId;
             finalTenantId = userId;
-        } else if (role === "MANAGER") {
-            // Managers can create requests for properties they manage
+        } else if (role === "MANAGER" || role === "OWNER") {
+            // Managers/Owners can create requests for properties they manage/own
             finalPropertyId = propertyId;
             finalUnitId = unitId;
             finalTenantId = tenantId; // Can be null if for common area
+        } else if (role === "SUPER_ADMIN") {
+            finalPropertyId = propertyId;
+            finalUnitId = unitId;
+            finalTenantId = tenantId;
         } else {
             return res.status(403).json({ message: "Unauthorized to create maintenance requests" });
         }
@@ -39,9 +43,13 @@ const createRequest = async (req, res) => {
             return res.status(404).json({ message: "Property not found" });
         }
 
-        // Only the assigned manager should be able to create requests if the role is MANAGER
+        // Authorization Check
         if (role === "MANAGER" && property.manager?.toString() !== userId.toString()) {
             return res.status(403).json({ message: "You are not the assigned manager for this property" });
+        }
+
+        if (role === "OWNER" && property.owner?.user?.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "You are not the owner of this property" });
         }
 
         // property.owner is a reference to Owner model, which has a user field

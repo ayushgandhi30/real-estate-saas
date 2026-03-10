@@ -13,7 +13,7 @@ const planController = require("../controllers/admin/Plan-controller.js")
 router.post("/locations", authMiddleware, roleMiddleware("SUPER_ADMIN"), locationController.createLocation);
 
 // Get all locations
-router.get("/locations", authMiddleware, roleMiddleware("SUPER_ADMIN"), locationController.getAllLocations);
+router.get("/locations", authMiddleware, roleMiddleware("SUPER_ADMIN", "OWNER", "MANAGER"), locationController.getAllLocations);
 
 // Update location
 router.put("/locations/:id", authMiddleware, roleMiddleware("SUPER_ADMIN"), locationController.updateLocation);
@@ -43,7 +43,7 @@ router.delete("/user/:userId", authMiddleware, roleMiddleware("SUPER_ADMIN", "MA
 
 
 // get all plans
-router.get("/plans", authMiddleware, roleMiddleware("SUPER_ADMIN"), planController.getAllPlans)
+router.get("/plans", authMiddleware, roleMiddleware("SUPER_ADMIN", "OWNER", "MANAGER"), planController.getAllPlans)
 
 // create plan
 router.post("/plan", authMiddleware, roleMiddleware("SUPER_ADMIN"), planController.createPlan)
