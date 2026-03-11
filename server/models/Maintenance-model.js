@@ -32,6 +32,12 @@ const MaintenanceSchema = new mongoose.Schema({
         ref: "User",
         index: true
     },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: false,
+        index: true
+    },
 
     title: {
         type: String,

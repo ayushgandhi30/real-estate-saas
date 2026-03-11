@@ -150,6 +150,8 @@ export default function Maintenance() {
         }
     };
 
+    const [activeTab, setActiveTab] = useState("Received"); // Received or Sent
+
     const filteredRequests = requests.filter(req => {
         const titleMatch = req.title?.toLowerCase().includes(filter.search.toLowerCase());
         const unitMatch = req.unitId?.unitNumber?.toLowerCase().includes(filter.search.toLowerCase()) || false;
@@ -157,7 +159,18 @@ export default function Maintenance() {
         const matchesSearch = titleMatch || unitMatch;
         const matchesStatus = filter.status === "All" || req.status === filter.status;
         const matchesPriority = filter.priority === "All" || req.priority === filter.priority;
-        return matchesSearch && matchesStatus && matchesPriority;
+
+        // Manager specific tab filtering
+        let matchesTab = true;
+        if (role === "MANAGER") {
+            if (activeTab === "Sent") {
+                matchesTab = req.createdBy?._id === user?._id;
+            } else {
+                matchesTab = req.createdBy?._id !== user?._id;
+            }
+        }
+
+        return matchesSearch && matchesStatus && matchesPriority && matchesTab;
     });
 
     const getStatusStyle = (status) => {
@@ -205,20 +218,29 @@ export default function Maintenance() {
                 )}
             </div>
 
-            {/* Quick Stats (Brief) */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                {[
-                    { label: "Total Requests", value: requests.length, color: "blue" },
-                    { label: "Pending", value: requests.filter(r => r.status === "Pending").length, color: "amber" },
-                    { label: "In Progress", value: requests.filter(r => r.status === "In Progress").length, color: "blue" },
-                    { label: "Completed", value: requests.filter(r => r.status === "Completed").length, color: "emerald" },
-                ].map((stat, i) => (
-                    <div key={i} className="bg-[var(--bg-card)] p-4 rounded-xl border border-[var(--color-main)]/30">
-                        <p className="text-xs font-bold text-[var(--text-card)] uppercase tracking-wider">{stat.label}</p>
-                        <p className="text-2xl font-bold text-[var(--text-secondary)] mt-1">{stat.value}</p>
-                    </div>
-                ))}
-            </div>
+            {/* Manager Tabs */}
+            {role === "MANAGER" && (
+                <div className="flex gap-4 mb-6 pt-2 border-b border-[var(--color-main)]/10">
+                    <button
+                        onClick={() => setActiveTab("Received")}
+                        className={`pb-4 px-2 text-sm font-bold uppercase tracking-widest transition-all relative ${activeTab === "Received" ? "text-[var(--color-primary)]" : "text-[var(--text-card)] hover:text-white"
+                            }`}
+                    >
+                        Receive
+                        {activeTab === "Received" && <div className="absolute bottom-0 left-0 w-full h-1 bg-[var(--color-primary)] rounded-full shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.5)]"></div>}
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("Sent")}
+                        className={`pb-4 px-2 text-sm font-bold uppercase tracking-widest transition-all relative ${activeTab === "Sent" ? "text-[var(--color-primary)]" : "text-[var(--text-card)] hover:text-white"
+                            }`}
+                    >
+                        Send
+                        {activeTab === "Sent" && <div className="absolute bottom-0 left-0 w-full h-1 bg-[var(--color-primary)] rounded-full shadow-[0_0_10px_rgba(var(--color-primary-rgb),0.5)]"></div>}
+                    </button>
+                </div>
+            )}
+
+
 
             {/* Filters */}
             <div className="bg-[var(--bg-card)] p-2 rounded-2xl border border-[var(--color-main)]/30 shadow-md mb-8 flex flex-col md:flex-row gap-4 items-center">
@@ -276,6 +298,7 @@ export default function Maintenance() {
                                         <span className="flex items-center gap-1.5"><Calendar size={12} /> {new Date(req.createdAt).toLocaleDateString()}</span>
                                         <span className="flex items-center gap-1.5"><Building2 size={12} /> {req.propertyId?.propertyName || "Common Area"}</span>
                                         <span className="flex items-center gap-1.5"><User size={12} /> Unit: {req.unitId?.unitNumber || "N/A"}</span>
+                                        <span className="flex items-center gap-1.5"><User size={12} /> By: {req.createdBy?.name || "Unknown"}</span>
                                         <span className={`font-black ${getPriorityStyle(req.priority)}`}>• {req.priority} Priority</span>
                                     </div>
                                     <p className="text-sm line-clamp-2 text-[var(--text-card)]/80 mt-2 font-medium leading-relaxed">{req.description}</p>
@@ -284,10 +307,22 @@ export default function Maintenance() {
 
                             <div className="flex flex-col md:items-end gap-3 w-full md:w-auto mt-2 md:mt-0 pt-4 md:pt-0 border-t md:border-t-0 border-[var(--color-main)]/20">
                                 <div className="flex items-center gap-3">
-                                    {role === "MANAGER" && req.status !== "Completed" && (
+                                    {req.status !== "Completed" && (
                                         <>
-                                            <Button variant="primary" onClick={() => handleUpdateStatus(req._id, "In Progress")} className="text-xs py-2 px-4 h-auto" >Start Fixing</Button>
-                                            <Button variant="primary" onClick={() => handleUpdateStatus(req._id, "Completed")} className="text-xs py-2 px-4 h-auto" >Finish</Button>
+                                            {/* Manager can fix requests received from tenants */}
+                                            {role === "MANAGER" && activeTab === "Received" && (
+                                                <>
+                                                    <Button variant="primary" onClick={() => handleUpdateStatus(req._id, "In Progress")} className="text-xs py-2 px-4 h-auto" >Start Fixing</Button>
+                                                    <Button variant="primary" onClick={() => handleUpdateStatus(req._id, "Completed")} className="text-xs py-2 px-4 h-auto" >Finish</Button>
+                                                </>
+                                            )}
+                                            {/* Owner can fix requests sent by managers or tenants */}
+                                            {role === "OWNER" && (
+                                                <>
+                                                    <Button variant="primary" onClick={() => handleUpdateStatus(req._id, "In Progress")} className="text-xs py-2 px-4 h-auto" >Start Fixing</Button>
+                                                    <Button variant="primary" onClick={() => handleUpdateStatus(req._id, "Completed")} className="text-xs py-2 px-4 h-auto" >Finish</Button>
+                                                </>
+                                            )}
                                         </>
                                     )}
                                     <button className="p-3 rounded-xl bg-white/5 text-[var(--text-card)] hover:text-white transition-colors border border-white/5 hover:border-[var(--color-main)]/20">

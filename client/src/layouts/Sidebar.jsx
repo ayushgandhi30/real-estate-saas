@@ -31,7 +31,7 @@ const menuItems = [
     { name: "Tenant", icon: UserCog, path: "/tenant", roles: ["SUPER_ADMIN", "OWNER", "MANAGER"] },
     { name: "Revenue Report", icon: CreditCard, path: "/revenue-report", roles: ["SUPER_ADMIN", "OWNER"] },
     { name: "Lease", icon: CreditCard, path: "/lease", roles: ["TENANT"] },
-    { name: "Maintenance", icon: Wrench, path: "/maintenance", roles: ["TENANT", "MANAGER"] },
+    { name: "Maintenance", icon: Wrench, path: "/maintenance", roles: ["TENANT", "MANAGER", "OWNER"] },
     { name: "Invoice", icon: CreditCard, path: "/invoice", roles: ["TENANT", "MANAGER"] },
     { name: "Profile & Security", icon: UserCog, path: "/profile", roles: ["SUPER_ADMIN", "OWNER", "MANAGER", "TENANT", "TECHNICIAN"] },
 ];

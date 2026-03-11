@@ -69,6 +69,7 @@ const createRequest = async (req, res) => {
             unitId: finalUnitId,
             managerId: finalManagerId,
             ownerId: finalOwnerId,
+            createdBy: userId, // Set the creator
             title,
             description,
             category,
@@ -115,6 +116,7 @@ const getRequests = async (req, res) => {
             .populate("managerId", "name email")
             .populate("ownerId", "name email")
             .populate("technicianId", "name email")
+            .populate("createdBy", "name email role")
             .sort({ createdAt: -1 });
 
         res.status(200).json({ requests });
