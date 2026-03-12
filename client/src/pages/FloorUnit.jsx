@@ -35,7 +35,6 @@ const initialUnitData = {
   balcony: false,
   rentAmount: "",
   securityDeposit: "",
-  maintenanceCharge: "",
   utilityIncluded: false
 };
 
@@ -318,7 +317,6 @@ const FloorUnit = () => {
       balcony: Boolean(unit.balcony),
       rentAmount: unit.rentAmount ?? "",
       securityDeposit: unit.securityDeposit ?? "",
-      maintenanceCharge: unit.maintenanceCharge ?? "",
       utilityIncluded: Boolean(unit.utilityIncluded)
     });
     setSelectedPropertyForUnit(propertyId);
@@ -722,9 +720,8 @@ const FloorUnit = () => {
                   <div className="space-y-4 p-4 bg-[var(--color-card)] rounded-2xl border border-white/5">
                     <div className="text-[10px] font-black uppercase text-green-500 tracking-widest">Financial Configuration</div>
                     <Input label="Monthly Rent ($)" name="rentAmount" type="number" value={unitData.rentAmount} onChange={handleUnitChange} placeholder="1500" required variant="formInput" />
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1">
                       <Input label="Deposit" name="securityDeposit" type="number" value={unitData.securityDeposit} onChange={handleUnitChange} placeholder="2000" variant="formInput" />
-                      <Input label="Maint." name="maintenanceCharge" type="number" value={unitData.maintenanceCharge} onChange={handleUnitChange} placeholder="150" variant="formInput" />
                     </div>
                   </div>
 

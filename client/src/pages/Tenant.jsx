@@ -70,6 +70,7 @@ const Tenant = () => {
         leaseStatus: "Active",
         rent: "",
         deposit: "",
+        maintenanceCost: 1000,
         paymentStatus: "Pending",
         avatar: "",
         isActive: true
@@ -211,6 +212,7 @@ const Tenant = () => {
             leaseStatus: tenant.leaseStatus || "Active",
             rent: tenant.rent || "",
             deposit: tenant.deposit || "",
+            maintenanceCost: tenant.maintenanceCost || 1000,
             paymentStatus: tenant.paymentStatus || "Pending",
             avatar: tenant.avatar || "",
             isActive: tenant.isActive ?? true
@@ -1011,6 +1013,13 @@ const Tenant = () => {
                                                 placeholder="50000"
                                                 value={formData.deposit}
                                                 onChange={(e) => setFormData({ ...formData, deposit: e.target.value })}
+                                            />
+                                            <Input
+                                                label="Maintenance (₹)"
+                                                type="number"
+                                                placeholder="1000"
+                                                value={formData.maintenanceCost}
+                                                onChange={(e) => setFormData({ ...formData, maintenanceCost: e.target.value })}
                                             />
                                         </div>
 

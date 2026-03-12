@@ -2,6 +2,8 @@ const Tenant = require("../../models/Tenant-model");
 const Property = require("../../models/Property-Model");
 const Unit = require("../../models/Unit-model");
 const Owner = require("../../models/Owner-model");
+const Invoice = require("../../models/Invoice-model");
+const Maintenance = require("../../models/Maintenance-model");
 
 const getRevenueStats = async (req, res) => {
     try {
@@ -41,51 +43,67 @@ const getRevenueStats = async (req, res) => {
             });
         }
 
-        // Fetch all tenants for these properties
-        const tenants = await Tenant.find({ propertyId: { $in: propertyIds } })
-            .populate('userId', 'name')
-            .populate('unitId', 'unitNumber');
+        // Fetch all tenants for these properties (for monthly revenue and occupancy)
+        const tenants = await Tenant.find({ propertyId: { $in: propertyIds } });
+
+        // Fetch all invoices for these properties/owner
+        const invoices = await Invoice.find({ ownerId: userId })
+            .populate('tenantId', 'name')
+            .populate('unitId', 'unitNumber')
+            .sort({ createdAt: -1 });
+
+        // Fetch all maintenance requests for these properties/owner
+        const maintenanceRequests = await Maintenance.find({ ownerId: userId });
 
         // Fetch all units for occupancy rate
         const units = await Unit.find({ propertyId: { $in: propertyIds } });
 
         // Calculations
-        let totalRevenue = 0;
-        let monthlyRevenueActive = 0;
-        let pendingRent = 0;
-        let totalExpenses = 0;
-        let collectedLateFees = 0;
         let rentCollected = 0;
+        let collectedLateFees = 0;
+        let pendingRent = 0;
+        let monthlyRevenueActive = 0;
+        let totalExpenses = 0;
 
+        // Calculate Monthly Revenue from Active Tenants
         tenants.forEach(tenant => {
-            rentCollected += (tenant.totalCollected || 0);
-            collectedLateFees += (tenant.lateFees || 0);
-
             if (tenant.leaseStatus === "Active") {
                 monthlyRevenueActive += (tenant.rent || 0);
             }
-
-            pendingRent += (tenant.pending || 0);
-            totalExpenses += (tenant.maintenanceCost || 0);
         });
 
-        totalRevenue = rentCollected + collectedLateFees; // Simplified
+        // Calculate Revenue from Invoices
+        invoices.forEach(invoice => {
+            if (invoice.status === "Paid") {
+                rentCollected += (invoice.totalAmount - (invoice.lateFee || 0));
+                collectedLateFees += (invoice.lateFee || 0);
+            } else if (invoice.status === "Unpaid" || invoice.status === "Overdue") {
+                pendingRent += invoice.totalAmount;
+            }
+        });
 
+        // Calculate Expenses from Maintenance Costs
+        maintenanceRequests.forEach(req => {
+            totalExpenses += (req.cost || 0);
+        });
+
+        const totalRevenue = rentCollected + collectedLateFees;
+        
         const totalUnits = units.length;
         const occupiedUnits = units.filter(u => u.status === "Occupied").length;
         const occupancyRate = totalUnits > 0 ? Math.round((occupiedUnits / totalUnits) * 100) : 0;
 
         const netProfit = totalRevenue - totalExpenses;
 
-        // Transaction History
-        const transactions = tenants.map(t => ({
-            date: new Date(t.updatedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
-            tenant: t.userId?.name || "Anonymous",
-            unit: t.unitId?.unitNumber || "N/A",
-            invoice: `INV-${t._id.toString().slice(-4).toUpperCase()}`,
-            amount: `₹${(t.totalCollected || 0).toLocaleString('en-IN')}`,
-            status: t.paymentStatus
-        })).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10);
+        // Transaction History from Invoices
+        const transactionsList = invoices.map(inv => ({
+            date: new Date(inv.paidAt || inv.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
+            tenant: inv.tenantId?.name || "Anonymous",
+            unit: inv.unitId?.unitNumber || "N/A",
+            invoice: inv.invoiceNumber || `INV-${inv._id.toString().slice(-4).toUpperCase()}`,
+            amount: `₹${(inv.totalAmount || 0).toLocaleString('en-IN')}`,
+            status: inv.status === "Paid" ? "Paid" : "Pending"
+        })).slice(0, 10);
 
         res.status(200).json({
             stats: {
@@ -98,7 +116,7 @@ const getRevenueStats = async (req, res) => {
                 rentCollected: `₹${rentCollected.toLocaleString('en-IN')}`,
                 lateFees: `₹${collectedLateFees.toLocaleString('en-IN')}`
             },
-            transactions,
+            transactions: transactionsList,
             efficiency: occupancyRate,
             breakdown: {
                 rent: {
@@ -107,7 +125,7 @@ const getRevenueStats = async (req, res) => {
                     lateFees: `₹${collectedLateFees.toLocaleString('en-IN')}`
                 },
                 other: {
-                    parking: "₹0", // No field in schema yet
+                    parking: "₹0",
                     utilities: "₹0",
                     services: "₹0"
                 },
@@ -119,6 +137,7 @@ const getRevenueStats = async (req, res) => {
             }
         });
 
+
     } catch (error) {
         console.error("Error fetching revenue stats:", error);
         res.status(500).json({ message: "Internal Server Error" });
@@ -126,3 +145,4 @@ const getRevenueStats = async (req, res) => {
 };
 
 module.exports = { getRevenueStats };
+

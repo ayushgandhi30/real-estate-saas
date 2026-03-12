@@ -139,7 +139,7 @@ const getRequests = async (req, res) => {
 const updateRequest = async (req, res) => {
     try {
         const { id } = req.params;
-        const { status, technicianId, priority, notes } = req.body;
+        const { status, technicianId, priority, notes, cost } = req.body;
         const role = req.user.role;
 
         if (role === "TENANT" && (status || technicianId)) {
@@ -154,6 +154,7 @@ const updateRequest = async (req, res) => {
         if (status) request.status = status;
         if (technicianId) request.technicianId = technicianId;
         if (priority) request.priority = priority;
+        if (cost !== undefined) request.cost = cost;
 
         if (notes) {
             request.notes.push({

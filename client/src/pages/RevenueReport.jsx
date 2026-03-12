@@ -182,14 +182,7 @@ const RevenueReport = () => {
                 <div className="space-y-6">
                     <MiniChartSection title="Revenue Pulse" />
                     <MiniChartSection title="Occupancy Mix" />
-                    <div className="bg-gradient-to-br from-indigo-600 to-purple-700 p-8 rounded-[2rem] text-white shadow-xl relative overflow-hidden group">
-                        <div className="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-125 transition-transform duration-500">
-                            <TrendingUp size={120} />
-                        </div>
-                        <h3 className="text-lg font-bold mb-2">Smart Forecast</h3>
-                        <p className="text-white/80 text-sm leading-relaxed mb-6">Based on current trends, your revenue is projected to hit ₹2.8L next month.</p>
-                        <button className="w-full py-3 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-xl font-bold text-xs uppercase tracking-widest transition-all">Deep Analysis</button>
-                    </div>
+
                 </div>
             </div>
 

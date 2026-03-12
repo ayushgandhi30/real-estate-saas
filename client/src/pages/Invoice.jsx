@@ -187,8 +187,6 @@ const Invoice = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response);
-
             if (response.ok) {
                 toast.success("Invoice deleted successfully");
                 fetchInvoices();
@@ -197,7 +195,27 @@ const Invoice = () => {
             }
         } catch (error) {
             toast.error("Something went wrong while deleting the invoice");
-            console.error("Error deleting invoice:", error);
+        }
+    };
+
+    const handlePay = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:7000/api/invoice/pay/${id}`, {
+                method: "PATCH",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                toast.success("Invoice paid successfully");
+                fetchInvoices();
+            } else {
+                toast.error("Failed to pay invoice");
+            }
+        } catch (error) {
+            toast.error("Something went wrong while paying the invoice");
+            console.error("Error paying invoice:", error);
         }
     };
 
@@ -553,6 +571,7 @@ const Invoice = () => {
                                                         {role === "tenant" && !isPaid && (
                                                             <button
                                                                 title="Pay"
+                                                                onClick={() => handlePay(inv._id)}
                                                                 className="p-2 rounded-lg text-[var(--text-card)] hover:text-violet-400 hover:bg-violet-500/10 transition-all duration-150"
                                                             >
                                                                 <CreditCard size={16} />
@@ -649,7 +668,10 @@ const Invoice = () => {
                                             <Download size={14} /> Get PDF
                                         </button>
                                         {role === "tenant" && !isPaid && (
-                                            <button className="col-span-2 flex items-center justify-center gap-2 py-3 mt-1 rounded-2xl bg-gradient-to-r from-violet-600/20 to-purple-600/20 hover:from-violet-600/30 hover:to-purple-600/30 text-violet-400 transition-all text-xs font-black uppercase tracking-widest border border-violet-500/30">
+                                            <button 
+                                                onClick={() => handlePay(inv._id)}
+                                                className="col-span-2 flex items-center justify-center gap-2 py-3 mt-1 rounded-2xl bg-gradient-to-r from-violet-600/20 to-purple-600/20 hover:from-violet-600/30 hover:to-purple-600/30 text-violet-400 transition-all text-xs font-black uppercase tracking-widest border border-violet-500/30"
+                                            >
                                                 <CreditCard size={14} /> Pay Balance
                                             </button>
                                         )}

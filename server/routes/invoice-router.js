@@ -14,4 +14,7 @@ router.get("/invoices", authMiddleware, roleMiddleware("MANAGER", "TENANT"), inv
 // Delete specific invoice (MANAGER only)
 router.delete("/invoice/:id", authMiddleware, roleMiddleware("MANAGER"), invoiceController.deleteInvoice);
 
-module.exports = router;
+// Pay Invoice (TENANT only)
+router.patch("/pay/:id", authMiddleware, roleMiddleware("TENANT"), invoiceController.payInvoice);
+
+module.exports = router;

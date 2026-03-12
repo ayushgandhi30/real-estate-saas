@@ -24,7 +24,6 @@ const menuItems = [
     { name: "Property", icon: Building2, path: "/properties", roles: ["SUPER_ADMIN", "OWNER"] },
     { name: "Floor & Unit", icon: Building2, path: "/floor", roles: ["OWNER"] },
     { name: "Settings", icon: Settings, path: "/settings", roles: ["SUPER_ADMIN"] },
-    { name: "Reports", icon: BarChart3, path: "/reports", roles: ["SUPER_ADMIN", "OWNER"] },
     // { name: "Subscriptions", icon: CreditCard, path: "/subscriptions", roles: ["SUPER_ADMIN", "OWNER"] },
     { name: "Audit Logs", icon: FileSearch, path: "/audit-logs", roles: ["SUPER_ADMIN"] },
     { name: "Tenant", icon: UserCog, path: "/tenant", roles: ["SUPER_ADMIN", "OWNER", "MANAGER"] },

@@ -63,6 +63,11 @@ const MaintenanceSchema = new mongoose.Schema({
         enum: ["Pending", "In Progress", "Completed", "Cancelled"],
         default: "Pending"
     },
+    cost: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
     images: [{
         type: String // URL/Path to images if any
     }],

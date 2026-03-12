@@ -1,6 +1,7 @@
 const Invoice = require("../models/Invoice-model");
 const Tenant = require("../models/Tenant-model");
 const Property = require("../models/Property-Model");
+const mongoose = require("mongoose");
 
 // ────────────────────────────────────────────────────────────
 // Helper: generate invoice number  →  INV-YYYYMM-XXXX
@@ -8,8 +9,22 @@ const Property = require("../models/Property-Model");
 const generateInvoiceNumber = async () => {
     const now = new Date();
     const prefix = `INV-${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}`;
-    const count = await Invoice.countDocuments();
-    return `${prefix}-${String(count + 1).padStart(4, "0")}`;
+    
+    // Find the latest invoice with this prefix
+    const lastInvoice = await Invoice.findOne({ 
+        invoiceNumber: new RegExp(`^${prefix}-`) 
+    }).sort({ invoiceNumber: -1 });
+
+    let nextNumber = 1;
+    if (lastInvoice && lastInvoice.invoiceNumber) {
+        const parts = lastInvoice.invoiceNumber.split("-");
+        const lastSerial = parseInt(parts[parts.length - 1], 10);
+        if (!isNaN(lastSerial)) {
+            nextNumber = lastSerial + 1;
+        }
+    }
+
+    return `${prefix}-${String(nextNumber).padStart(4, "0")}`;
 };
 
 // ────────────────────────────────────────────────────────────
@@ -39,12 +54,15 @@ const createInvoice = async (req, res) => {
         }
 
         // Find the tenant record to get property / unit / owner info
+        if (!mongoose.Types.ObjectId.isValid(tenantId)) {
+            return res.status(400).json({ message: "Invalid tenant ID" });
+        }
         const tenantRecord = await Tenant.findOne({ userId: tenantId });
         if (!tenantRecord) {
             return res.status(404).json({ message: "Tenant record not found" });
         }
 
-        const { propertyId, unitId } = tenantRecord;
+        const { propertyId, unitId, maintenanceCost } = tenantRecord;
 
         // Fetch property to resolve ownerId
         const property = await Property.findById(propertyId).populate("owner");
@@ -75,7 +93,7 @@ const createInvoice = async (req, res) => {
             month,
             rent,
             utilityCharges,
-            maintenanceCharges,
+            maintenanceCharges: maintenanceCharges !== 0 ? maintenanceCharges : (maintenanceCost || 0),
             lateFee,
             dueDate: new Date(dueDate),
             notes,
@@ -88,6 +106,12 @@ const createInvoice = async (req, res) => {
         });
     } catch (error) {
         console.error("CREATE INVOICE ERROR:", error);
+        if (error.code === 11000) {
+            return res.status(409).json({
+                message: "Invoice number collision. Please try again.",
+                error: error.message,
+            });
+        }
         return res.status(500).json({
             message: "Failed to create invoice",
             error: error.message,
@@ -149,6 +173,10 @@ const deleteInvoice = async (req, res) => {
             return res.status(403).json({ message: "Unauthorized access" });
         }
 
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid invoice ID" });
+        }
+
         const invoice = await Invoice.findById(id);
         if (!invoice) {
             return res.status(404).json({ message: "Invoice not found" });
@@ -174,4 +202,36 @@ const deleteInvoice = async (req, res) => {
 }
 
 
-module.exports = { createInvoice, getAllInvoices, deleteInvoice };
+const payInvoice = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user._id;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "Invalid invoice ID" });
+        }
+
+        const invoice = await Invoice.findById(id);
+        if (!invoice) {
+            return res.status(404).json({ message: "Invoice not found" });
+        }
+
+        // Authorization: Only the tenant can pay their invoice
+        if (invoice.tenantId.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "Unauthorized to pay this invoice" });
+        }
+
+        invoice.status = "Paid";
+        invoice.paidAt = new Date();
+        await invoice.save();
+
+        return res.status(200).json({ message: "Invoice paid successfully", invoice });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Failed to pay invoice",
+            error: error.message,
+        });
+    }
+};
+
+module.exports = { createInvoice, getAllInvoices, deleteInvoice, payInvoice };

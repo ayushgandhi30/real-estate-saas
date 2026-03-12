@@ -14,7 +14,6 @@ import User from './pages/User.jsx'
 import Role from './pages/Role.jsx'
 import Property from './pages/Property.jsx'
 import Settings from './pages/Settings.jsx'
-import Reports from './pages/Reports.jsx'
 import Subscriptions from './pages/Subscriptions.jsx'
 import AuditLogs from './pages/AuditLogs.jsx'
 import Profile from './pages/Profile.jsx'
@@ -65,11 +64,6 @@ function App() {
               {/* Roles: Super Admin, Owner, Manager, Tenant */}
               <Route element={<ProtectedRoute allowedRoles={["SUPER_ADMIN", "OWNER"]} />}>
                 <Route path="/properties" element={<Property />} />
-              </Route>
-
-              {/* Roles: Super Admin, Owner */}
-              <Route element={<ProtectedRoute allowedRoles={["SUPER_ADMIN", "OWNER"]} />}>
-                <Route path="/reports" element={<Reports />} />
               </Route>
 
               {/* Roles: Super Admin, Owner */}
