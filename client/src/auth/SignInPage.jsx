@@ -41,7 +41,16 @@ const SignInPage = () => {
             if (response.ok) {
                 storetokenInLS(res_data.token);
                 setUser({ email: "", password: "" });
-                navigate("/dashboard")
+                
+                // Redirect based on role
+                const userRole = res_data.user.role;
+                if (userRole === "TENANT") {
+                    navigate("/lease");
+                } else if (userRole === "MAINTENANCE_STAFF") {
+                    navigate("/maintenance");
+                } else {
+                    navigate("/dashboard");
+                }
             } else {
                 toast.error(res_data.message)
             }

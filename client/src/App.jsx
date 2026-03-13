@@ -40,7 +40,7 @@ function App() {
           </Route>
 
           {/* App Layout Wrapper */}
-          <Route element={<ProtectedRoute allowedRoles={["SUPER_ADMIN", "OWNER", "MANAGER", "TENANT", "TECHNICIAN"]} />}>
+          <Route element={<ProtectedRoute allowedRoles={["SUPER_ADMIN", "OWNER", "MANAGER", "TENANT", "MAINTENANCE_STAFF"]} />}>
             <Route element={<Layout />}>
               <Route path="/admin" element={<Navigate to="/dashboard" replace />} />
 

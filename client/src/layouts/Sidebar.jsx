@@ -33,7 +33,7 @@ const menuItems = [
     { name: "Lease", icon: CreditCard, path: "/lease", roles: ["TENANT"] },
     { name: "Maintenance Request", icon: Wrench, path: "/maintenance", roles: ["TENANT", "MANAGER", "OWNER"] },
     { name: "Invoice", icon: CreditCard, path: "/invoice", roles: ["TENANT", "MANAGER"] },
-    { name: "Profile & Security", icon: UserCog, path: "/profile", roles: ["SUPER_ADMIN", "OWNER", "MANAGER", "TENANT", "TECHNICIAN"] },
+    { name: "Profile & Security", icon: UserCog, path: "/profile", roles: ["SUPER_ADMIN", "OWNER", "MANAGER", "TENANT", "MAINTENANCE_STAFF"] },
 ];
 
 const Sidebar = ({ isOpen, onClose }) => {
@@ -68,8 +68,8 @@ const Sidebar = ({ isOpen, onClose }) => {
                             {user?.role === "MANAGER" && "Manager Panel"}
                             {user?.role === "SUPER_ADMIN" && "Super Admin Panel"}
                             {user?.role === "TENANT" && "Tenant Panel"}
-                            {user?.role === "TECHNICIAN" && "Tech Panel"}
-                            {!["OWNER", "MANAGER", "SUPER_ADMIN", "TENANT", "TECHNICIAN"].includes(user?.role) && "User Panel"}
+                            {user?.role === "MAINTENANCE_STAFF" && "Staff Panel"}
+                            {!["OWNER", "MANAGER", "SUPER_ADMIN", "TENANT", "MAINTENANCE_STAFF"].includes(user?.role) && "User Panel"}
                         </span>
                     </div>
                     <button
