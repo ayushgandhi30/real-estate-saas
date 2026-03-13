@@ -24,6 +24,7 @@ import RevenueReport from './pages/RevenueReport.jsx'
 import Lease from './pages/Lease.jsx'
 import Maintenance from './pages/Maintenance.jsx'
 import Invoice from './pages/Invoice.jsx'
+import LeaseAgrement from './pages/LeaseAgrement.jsx'
 
 function App() {
   return (
@@ -92,6 +93,10 @@ function App() {
               {/* Roles: Tenant */}
               <Route element={<ProtectedRoute allowedRoles={["TENANT"]} />}>
                 <Route path="/lease" element={<Lease />} />
+              </Route>
+
+              <Route element={<ProtectedRoute allowedRoles={["OWNER", "MANAGER"]} />}>
+                <Route path="/lease-agreement" element={<LeaseAgrement />} />
               </Route>
 
               {/* Roles: Tenant, Manager */}

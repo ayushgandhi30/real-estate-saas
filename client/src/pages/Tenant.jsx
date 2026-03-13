@@ -599,13 +599,6 @@ const Tenant = () => {
                                                     <Eye size={18} />
                                                 </button>
                                                 <button
-                                                    onClick={() => navigate(`/lease-agreement/${tenant._id}`)}
-                                                    className="p-2 text-emerald-500 hover:bg-emerald-500/10 rounded-xl transition-all"
-                                                    title="Lease Agreement"
-                                                >
-                                                    <FileText size={18} />
-                                                </button>
-                                                <button
                                                     onClick={() => handleEdit(tenant)}
                                                     className="p-2 text-blue-500 hover:bg-blue-500/10 rounded-xl transition-all"
                                                     title="Edit Tenant"
