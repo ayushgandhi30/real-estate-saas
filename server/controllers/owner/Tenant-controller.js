@@ -36,8 +36,8 @@ const createTenant = async (req, res) => {
         const loggedInUserId = req.user._id;
         const role = req.user.role;
 
-        if (role !== "OWNER" && role !== "MANAGER") {
-            return res.status(403).json({ message: "Unauthorized access" });
+        if (role !== "MANAGER") {
+            return res.status(403).json({ message: "Only managers can add tenants" });
         }
 
         // Check if property exists
@@ -45,15 +45,6 @@ const createTenant = async (req, res) => {
         if (!property) {
             return res.status(404).json({ message: "Property not found" });
         }
-
-        // Authorization logic for Owners and Managers
-        if (role === "OWNER") {
-            const owner = await Owner.findOne({ user: loggedInUserId });
-            if (!owner || property.owner.toString() !== owner._id.toString()) {
-                return res.status(403).json({ message: "Unauthorized to add tenant to this property" });
-            }
-        }
-        // Managers are typically allowed if they are assigned to the property or by system logic
 
         // Validate unit and floor
         const unit = await Unit.findOne({ _id: unitId, propertyId });
@@ -223,17 +214,13 @@ const updateTenant = async (req, res) => {
             return res.status(404).json({ message: "Tenant not found" });
         }
 
-        if (role === "OWNER") {
-            const owner = await Owner.findOne({ user: userId });
-            if (!owner || tenant.propertyId.owner.toString() !== owner._id.toString()) {
-                return res.status(403).json({ message: "Unauthorized to update this tenant" });
-            }
-        } else if (role === "MANAGER") {
-            if (tenant.managerId?.toString() !== userId.toString()) {
-                return res.status(403).json({ message: "Unauthorized to update this tenant" });
-            }
-        } else if (role !== "SUPER_ADMIN") {
-            return res.status(403).json({ message: "Unauthorized access" });
+        if (role !== "MANAGER") {
+            return res.status(403).json({ message: "Only managers can update tenants" });
+        }
+
+        // Ensure manager can only update their own tenants (existing check)
+        if (tenant.managerId?.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "Unauthorized to update this tenant" });
         }
 
         const { name, email, phone, propertyId, unitId, floorId } = req.body;
@@ -313,17 +300,13 @@ const deleteTenant = async (req, res) => {
             return res.status(404).json({ message: "Tenant not found" });
         }
 
-        if (role === "OWNER") {
-            const owner = await Owner.findOne({ user: userId });
-            if (!owner || tenant.propertyId.owner.toString() !== owner._id.toString()) {
-                return res.status(403).json({ message: "Unauthorized to delete this tenant" });
-            }
-        } else if (role === "MANAGER") {
-            if (tenant.managerId?.toString() !== userId.toString()) {
-                return res.status(403).json({ message: "Unauthorized to delete this tenant" });
-            }
-        } else if (role !== "SUPER_ADMIN") {
-            return res.status(403).json({ message: "Unauthorized access" });
+        if (role !== "MANAGER") {
+            return res.status(403).json({ message: "Only managers can delete tenants" });
+        }
+
+        // Ensure manager can only delete their own tenants
+        if (tenant.managerId?.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "Unauthorized to delete this tenant" });
         }
 
         const unitId = tenant.unitId;

@@ -111,9 +111,6 @@ const OwnerDashboard = () => {
           <h1 className="text-2xl font-black text-white tracking-tight flex items-center gap-3">
             Owner Dashboard
           </h1>
-          <p className="text-[var(--text-card)] font-medium">
-            Welcome back, <span className="text-white">{user?.name}</span>. Here's a quick overview of your portfolio.
-          </p>
         </div>
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider bg-[var(--bg-card)] px-4 py-2 rounded-full border border-[var(--color-main)]/20 text-[var(--text-card)] shadow-lg">
           <Calendar size={14} className="text-[var(--color-primary)]" />

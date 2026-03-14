@@ -470,7 +470,7 @@ const Tenant = () => {
                     <Button type="secondary" onClick={() => { }} className="mt-0! px-4! py-2! w-full md:w-auto">
                         <Download size={18} /> Export
                     </Button>
-                    {(user?.role === "MANAGER" || user?.role === "OWNER") && (
+                    {user?.role === "MANAGER" && (
                         <Button type="primary" onClick={() => setIsAddingTenant(true)} className="mt-0! px-4! py-2! w-full md:w-auto">
                             <Plus size={18} /> Add Tenant
                         </Button>
@@ -587,8 +587,7 @@ const Tenant = () => {
                                         <td className="p-6">
                                             <StatusPill status={tenant.leaseStatus || tenant.status} />
                                         </td>
-                                        <td className="p-6">
-                                            <div className="flex items-center justify-center gap-2">
+                                        <td className="p-6">                                             <div className="flex items-center justify-center gap-2">
                                                 <button
                                                     onClick={() => {
                                                         setSelectedTenant(tenant);
@@ -598,21 +597,26 @@ const Tenant = () => {
                                                 >
                                                     <Eye size={18} />
                                                 </button>
-                                                <button
-                                                    onClick={() => handleEdit(tenant)}
-                                                    className="p-2 text-blue-500 hover:bg-blue-500/10 rounded-xl transition-all"
-                                                    title="Edit Tenant"
-                                                >
-                                                    <Edit size={18} />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDelete(tenant._id)}
-                                                    className="p-2 text-red-500 hover:bg-red-500/10 rounded-xl transition-all"
-                                                    title="Delete Tenant"
-                                                >
-                                                    <Trash2 size={18} />
-                                                </button>
+                                                {user?.role === "MANAGER" && (
+                                                    <>
+                                                        <button
+                                                            onClick={() => handleEdit(tenant)}
+                                                            className="p-2 text-blue-500 hover:bg-blue-500/10 rounded-xl transition-all"
+                                                            title="Edit Tenant"
+                                                        >
+                                                            <Edit size={18} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete(tenant._id)}
+                                                            className="p-2 text-red-500 hover:bg-red-500/10 rounded-xl transition-all"
+                                                            title="Delete Tenant"
+                                                        >
+                                                            <Trash2 size={18} />
+                                                        </button>
+                                                    </>
+                                                )}
                                             </div>
+
                                         </td>
                                     </tr>
                                 ))
@@ -679,18 +683,22 @@ const Tenant = () => {
                                         >
                                             <Eye size={18} />
                                         </button>
-                                        <button
-                                            onClick={() => handleEdit(tenant)}
-                                            className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl transition-all border border-blue-500/10"
-                                        >
-                                            <Edit size={18} />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(tenant._id)}
-                                            className="p-3 bg-red-500/10 text-red-500 rounded-2xl transition-all border border-red-500/10"
-                                        >
-                                            <Trash2 size={18} />
-                                        </button>
+                                        {user?.role === "MANAGER" && (
+                                            <>
+                                                <button
+                                                    onClick={() => handleEdit(tenant)}
+                                                    className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl transition-all border border-blue-500/10"
+                                                >
+                                                    <Edit size={18} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(tenant._id)}
+                                                    className="p-3 bg-red-500/10 text-red-500 rounded-2xl transition-all border border-red-500/10"
+                                                >
+                                                    <Trash2 size={18} />
+                                                </button>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -824,7 +832,7 @@ const Tenant = () => {
                                     </section>
                                 </div>
 
-                                {(user?.role === "OWNER" || user?.role === "MANAGER") && (
+                                {user?.role === "MANAGER" && (
                                     <div className="mt-12 mb-8">
                                         <Button
                                             type="primary"
@@ -833,7 +841,7 @@ const Tenant = () => {
                                         >
                                             Edit Tenant Profile
                                         </Button>
-                                        <p className="text-center text-xs text-[var(--text-card)] mt-4">Last update: 2 hours ago by System</p>
+                                        <p className="text-center text-xs text-[var(--text-card)] mt-4">Last update: recently by Manager</p>
                                     </div>
                                 )}
                             </div>
