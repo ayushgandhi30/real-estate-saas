@@ -2,6 +2,7 @@ import React from 'react';
 import { Users, DollarSign, Building, AlertCircle } from 'lucide-react';
 import { useAuth } from '../store/auth';
 import ManagerDashboard from './ManagerDashboard';
+import OwnerDashboard from './OwnerDashboard';
 
 const stats = [
   { title: "Total Users", value: "1,234", icon: Users, color: "bg-blue-500", change: "+12% from last month" },
@@ -23,6 +24,10 @@ const Dashboard = () => {
 
   if (role === "MANAGER") {
     return <ManagerDashboard />;
+  }
+
+  if (role === "OWNER") {
+    return <OwnerDashboard />;
   }
 
   return (

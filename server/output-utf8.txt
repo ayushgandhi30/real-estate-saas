@@ -1,0 +1,11 @@
+﻿Owners: [
+  {
+    _id: new ObjectId('69aff7ef3f1803414f8310f5'),
+    user: new ObjectId('69aff7ef3f1803414f8310f3')
+  }
+]
+--- Owner: new ObjectId('69aff7ef3f1803414f8310f5') User: new ObjectId('69aff7ef3f1803414f8310f3') ---
+  Properties count: 2
+  Units count: 14
+  Unit statuses: { Vacant: 10, Occupied: 4 }
+  Invoices count: 5
