@@ -27,7 +27,6 @@ const menuItems = [
     { name: "Settings", icon: Settings, path: "/settings", roles: ["SUPER_ADMIN"] },
     { name: "Lease Management", icon: FileText, path: "/lease-agreement", roles: ["SUPER_ADMIN", "OWNER", "MANAGER"] },
     // { name: "Subscriptions", icon: CreditCard, path: "/subscriptions", roles: ["SUPER_ADMIN", "OWNER"] },
-    { name: "Audit Logs", icon: FileSearch, path: "/audit-logs", roles: ["SUPER_ADMIN"] },
     { name: "Tenant", icon: UserCog, path: "/tenant", roles: ["SUPER_ADMIN", "OWNER", "MANAGER"] },
     { name: "Revenue Report", icon: CreditCard, path: "/revenue-report", roles: ["SUPER_ADMIN", "OWNER"] },
     { name: "Lease", icon: CreditCard, path: "/lease", roles: ["TENANT"] },

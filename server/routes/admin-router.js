@@ -7,6 +7,10 @@ const roleMiddleware = require("../middlewares/role-middleware.js");
 const OwnerController = require("../controllers/admin/Owner-controller.js")
 const UserController = require("../controllers/admin/User-controller.js")
 const planController = require("../controllers/admin/Plan-controller.js")
+const DashboardController = require("../controllers/admin/Dashboard-controller.js")
+
+// Dashboard Stats
+router.get("/dashboard-stats", authMiddleware, roleMiddleware("SUPER_ADMIN"), DashboardController.getDashboardStats)
 
 
 

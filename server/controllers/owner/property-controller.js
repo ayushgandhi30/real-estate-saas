@@ -1,5 +1,7 @@
 const Owner = require("../../models/Owner-model");
 const Property = require("../../models/Property-Model");
+const Invoice = require("../../models/Invoice-model");
+const Unit = require("../../models/Unit-model");
 
 const createProperty = async (req, res) => {
     try {
@@ -102,11 +104,41 @@ const getProperties = async (req, res) => {
                     select: "name"
                 }
             })
-            .populate("manager", "name email phone");
+            .populate("manager", "name email phone")
+            .lean();
+
+        // Calculate total revenue for each property
+        const propertiesWithRevenue = await Promise.all(properties.map(async (property) => {
+            const revenueResult = await Invoice.aggregate([
+                {
+                    $match: {
+                        propertyId: property._id,
+                        status: "Paid"
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        totalRevenue: { $sum: "$totalAmount" }
+                    }
+                }
+            ]);
+
+            const vacantUnits = await Unit.countDocuments({
+                propertyId: property._id,
+                status: "Vacant"
+            });
+
+            return {
+                ...property,
+                totalRevenue: revenueResult.length > 0 ? revenueResult[0].totalRevenue : 0,
+                vacantUnits: vacantUnits || 0
+            };
+        }));
 
         res.status(200).json({
             message: "Properties fetched successfully",
-            properties
+            properties: propertiesWithRevenue
         });
     } catch (error) {
         res.status(500).json({ message: error.message });

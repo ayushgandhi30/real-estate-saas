@@ -15,7 +15,6 @@ import Role from './pages/Role.jsx'
 import Property from './pages/Property.jsx'
 import Settings from './pages/Settings.jsx'
 import Subscriptions from './pages/Subscriptions.jsx'
-import AuditLogs from './pages/AuditLogs.jsx'
 import Profile from './pages/Profile.jsx'
 import Logout from './auth/Logout.jsx'
 import FloorUnit from './pages/FloorUnit.jsx'
@@ -58,7 +57,6 @@ function App() {
               <Route element={<ProtectedRoute allowedRoles={["SUPER_ADMIN"]} />}>
                 <Route path="/roles" element={<Role />} />
                 <Route path="/settings" element={<Settings />} />
-                <Route path="/audit-logs" element={<AuditLogs />} />
               </Route>
 
               {/* Roles: Super Admin & Manager */}
@@ -98,7 +96,7 @@ function App() {
                 <Route path="/lease" element={<Lease />} />
               </Route>
 
-              <Route element={<ProtectedRoute allowedRoles={["OWNER", "MANAGER"]} />}>
+              <Route element={<ProtectedRoute allowedRoles={["OWNER", "MANAGER", "SUPER_ADMIN"]} />}>
                 <Route path="/lease-agreement" element={<LeaseAgrement />} />
               </Route>
 
