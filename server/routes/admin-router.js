@@ -23,13 +23,13 @@ router.get("/getOwners", authMiddleware, roleMiddleware("SUPER_ADMIN", "OWNER", 
 
 
 // create user
-router.post("/user", authMiddleware, roleMiddleware("SUPER_ADMIN", "MANAGER"), UserController.addUser)
+router.post("/user", authMiddleware, roleMiddleware("SUPER_ADMIN", "MANAGER", "OWNER"), UserController.addUser)
 
 // update user
-router.put("/user/:userId", authMiddleware, roleMiddleware("SUPER_ADMIN", "MANAGER"), UserController.updateUser)
+router.put("/user/:userId", authMiddleware, roleMiddleware("SUPER_ADMIN", "MANAGER", "OWNER"), UserController.updateUser)
 
 // delete user
-router.delete("/user/:userId", authMiddleware, roleMiddleware("SUPER_ADMIN", "MANAGER"), UserController.deleteUser)
+router.delete("/user/:userId", authMiddleware, roleMiddleware("SUPER_ADMIN", "MANAGER", "OWNER"), UserController.deleteUser)
 
 
 // get all plans

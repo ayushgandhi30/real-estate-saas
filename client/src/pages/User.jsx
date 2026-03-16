@@ -20,7 +20,7 @@ const User = () => {
     const [userList, setUserList] = useState([]);
     const [formData, setFormData] = useState({
         ...initialState,
-        role: currentUser?.role === "MANAGER" ? "TENANT" : "TENANT"
+        role: ["MANAGER", "OWNER"].includes(currentUser?.role) ? "TENANT" : "TENANT"
     });
     const [openForm, setOpenForm] = useState(false);
     const [editId, setEditId] = useState(null);
@@ -29,17 +29,19 @@ const User = () => {
 
     useEffect(() => {
         if (Array.isArray(users)) {
-            if (currentUser?.role === "MANAGER") {
-                setUserList(users.filter(u => u.role === "TENANT"));
+            if (currentUser?.role === "MANAGER" || currentUser?.role === "OWNER") {
+                // Filter users to only show those created by the current manager/owner 
+                // and where their role is appropriate (Tenants for Managers, Manager/Tenant for Owners)
+                setUserList(users.filter(u => u.createdBy === currentUser?._id || u.createdBy?._id === currentUser?._id));
             } else {
                 setUserList(users);
             }
         }
     }, [users, currentUser]);
 
-    // Update role if currentUser is Manager
+    // Update role if currentUser is Manager or Owner
     useEffect(() => {
-        if (currentUser?.role === "MANAGER" && !isEditing) {
+        if (["MANAGER", "OWNER"].includes(currentUser?.role) && !isEditing) {
             setFormData(prev => ({ ...prev, role: "TENANT" }));
         }
     }, [currentUser, isEditing]);
@@ -342,13 +344,20 @@ const User = () => {
                                     name="role"
                                     value={formData.role}
                                     onChange={handleChange}
-                                    className={`w-full bg-[var(--bg-card)] border border-[var(--color-card)] rounded-lg px-4 py-2.5 text-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition ${currentUser?.role === "MANAGER" ? "opacity-70 cursor-not-allowed" : ""}`}
+                                    className={`w-full bg-[var(--bg-card)] border border-[var(--color-card)] rounded-lg px-4 py-2.5 text-[var(--text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] transition ${["MANAGER", "OWNER"].includes(currentUser?.role) && isEditing ? "opacity-70 cursor-not-allowed" : ""}`}
                                     required
-                                    disabled={currentUser?.role === "MANAGER"}
+                                    disabled={["MANAGER", "OWNER"].includes(currentUser?.role) && isEditing}
                                 >
-                                    {currentUser?.role === "MANAGER" ? (
+                                    {currentUser?.role === "MANAGER" && (
                                         <option value="TENANT">Tenant</option>
-                                    ) : (
+                                    )}
+                                    {currentUser?.role === "OWNER" && (
+                                        <>
+                                            <option value="MANAGER">Manager</option>
+                                            <option value="TENANT">Tenant</option>
+                                        </>
+                                    )}
+                                    {currentUser?.role === "SUPER_ADMIN" && (
                                         <>
                                             <option value="TENANT">Tenant</option>
                                             <option value="OWNER">Owner</option>

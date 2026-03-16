@@ -123,12 +123,9 @@ const getAllUsers = async (req, res) => {
         const role = req.user.role;
         let query = {};
 
-        if (role === "MANAGER") {
-            // Managers only see users they created
+        if (role === "MANAGER" || role === "OWNER") {
+            // Managers and Owners only see users they created
             query.createdBy = userId;
-        } else if (role === "OWNER") {
-            // For now owners see all, but later might want to filter by their properties
-            query = {}; 
         } else if (role === "SUPER_ADMIN") {
             query = {};
         } else {

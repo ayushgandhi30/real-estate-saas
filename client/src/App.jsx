@@ -59,8 +59,8 @@ function App() {
                 <Route path="/settings" element={<Settings />} />
               </Route>
 
-              {/* Roles: Super Admin & Manager */}
-              <Route element={<ProtectedRoute allowedRoles={["SUPER_ADMIN", "MANAGER"]} />}>
+              {/* Roles: Super Admin, Manager & Owner */}
+              <Route element={<ProtectedRoute allowedRoles={["SUPER_ADMIN", "MANAGER", "OWNER"]} />}>
                 <Route path="/users" element={<User />} />
               </Route>
 

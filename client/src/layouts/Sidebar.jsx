@@ -20,7 +20,7 @@ import { useAuth } from "../store/auth";
 
 const menuItems = [
     { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard", roles: ["SUPER_ADMIN", "OWNER", "MANAGER"] },
-    { name: "Users", icon: Users, path: "/users", roles: ["SUPER_ADMIN", "MANAGER"] },
+    { name: "Users", icon: Users, path: "/users", roles: ["SUPER_ADMIN", "MANAGER", "OWNER"] },
     { name: "Role", icon: ShieldCheck, path: "/roles", roles: ["SUPER_ADMIN"] },
     { name: "Property", icon: Building2, path: "/properties", roles: ["SUPER_ADMIN", "OWNER"] },
     { name: "Floor & Unit", icon: Building2, path: "/floor", roles: ["OWNER"] },

@@ -17,6 +17,11 @@ const addUser = async (req, res) => {
         let finalRole = role;
         if (req.user.role === "MANAGER") {
             finalRole = "TENANT"; // Managers can only add tenants
+        } else if (req.user.role === "OWNER") {
+            // Owners can only add Managers or Tenants
+            if (!["MANAGER", "TENANT"].includes(role)) {
+                finalRole = "TENANT";
+            }
         }
 
         const newUser = await User.create({
@@ -55,8 +60,8 @@ const updateUser = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Authorization: Managers can only update users they created
-        if (req.user.role === "MANAGER" && userToUpdate.createdBy?.toString() !== req.user._id.toString()) {
+        // Authorization: Managers and Owners can only update users they created
+        if (["MANAGER", "OWNER"].includes(req.user.role) && userToUpdate.createdBy?.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: "Unauthorized to update this user" });
         }
 
@@ -88,8 +93,8 @@ const deleteUser = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Authorization: Managers can only delete users they created
-        if (req.user.role === "MANAGER" && userToDelete.createdBy?.toString() !== req.user._id.toString()) {
+        // Authorization: Managers and Owners can only delete users they created
+        if (["MANAGER", "OWNER"].includes(req.user.role) && userToDelete.createdBy?.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: "Unauthorized to delete this user" });
         }
 
