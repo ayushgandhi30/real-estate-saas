@@ -11,6 +11,7 @@ const DashboardController = require("../controllers/admin/Dashboard-controller.j
 
 // Dashboard Stats
 router.get("/dashboard-stats", authMiddleware, roleMiddleware("SUPER_ADMIN"), DashboardController.getDashboardStats)
+router.get("/revenue-stats", authMiddleware, roleMiddleware("SUPER_ADMIN"), DashboardController.getRevenueStats)
 
 
 

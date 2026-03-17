@@ -24,10 +24,13 @@ import Lease from './pages/Lease.jsx'
 import Maintenance from './pages/Maintenance.jsx'
 import Invoice from './pages/Invoice.jsx'
 import LeaseAgrement from './pages/LeaseAgrement.jsx'
+import SuperAdminRevenueReport from './pages/SuperAdminRevenueReport.jsx'
+import { useAuth } from './store/auth.jsx'
 
 import ScrollToTop from './components/ScrollToTop.jsx'
 
 function App() {
+  const { user } = useAuth();
   return (
     <>
       <BrowserRouter>
@@ -51,12 +54,6 @@ function App() {
 
               <Route element={<ProtectedRoute allowedRoles={["SUPER_ADMIN", "OWNER", "MANAGER"]} />}>
                 <Route path="/dashboard" element={<Dashboard />} />
-              </Route>
-
-              {/* Roles: Super Admin Only */}
-              <Route element={<ProtectedRoute allowedRoles={["SUPER_ADMIN"]} />}>
-                <Route path="/roles" element={<Role />} />
-                <Route path="/settings" element={<Settings />} />
               </Route>
 
               {/* Roles: Super Admin, Manager & Owner */}
@@ -83,7 +80,7 @@ function App() {
 
               {/* Roles: Super Admin, Owner */}
               <Route element={<ProtectedRoute allowedRoles={["SUPER_ADMIN", "OWNER"]} />}>
-                <Route path="/revenue-report" element={<RevenueReport />} />
+                <Route path="/revenue-report" element={user?.role === "SUPER_ADMIN" ? <SuperAdminRevenueReport /> : <RevenueReport />} />
               </Route>
 
               {/* Roles: Owner */}

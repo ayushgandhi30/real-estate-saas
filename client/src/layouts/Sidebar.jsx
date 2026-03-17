@@ -21,10 +21,8 @@ import { useAuth } from "../store/auth";
 const menuItems = [
     { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard", roles: ["SUPER_ADMIN", "OWNER", "MANAGER"] },
     { name: "Users", icon: Users, path: "/users", roles: ["SUPER_ADMIN", "MANAGER", "OWNER"] },
-    { name: "Role", icon: ShieldCheck, path: "/roles", roles: ["SUPER_ADMIN"] },
     { name: "Property", icon: Building2, path: "/properties", roles: ["SUPER_ADMIN", "OWNER"] },
     { name: "Floor & Unit", icon: Building2, path: "/floor", roles: ["OWNER"] },
-    { name: "Settings", icon: Settings, path: "/settings", roles: ["SUPER_ADMIN"] },
     { name: "Lease Management", icon: FileText, path: "/lease-agreement", roles: ["SUPER_ADMIN", "OWNER", "MANAGER"] },
     // { name: "Subscriptions", icon: CreditCard, path: "/subscriptions", roles: ["SUPER_ADMIN", "OWNER"] },
     { name: "Tenant", icon: UserCog, path: "/tenant", roles: ["SUPER_ADMIN", "OWNER", "MANAGER"] },
