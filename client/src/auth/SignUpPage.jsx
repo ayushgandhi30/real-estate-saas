@@ -72,18 +72,13 @@ const SignUpPage = () => {
         <div className="absolute top-0 left-0 w-full h-full bg-[var(--color-primary)] opacity-[0.02] pointer-events-none"></div>
 
         <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-12">
-            <div className="p-2.5 rounded-xl bg-[var(--color-primary)] shadow-lg shadow-[var(--color-primary)]/20">
-              <LayoutDashboard className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-2xl font-bold tracking-tight text-white uppercase">
-              Material<span className="text-[var(--color-primary)]">M</span>
-            </span>
+          <div className="flex items-center mb-12">
+            <img src="/SVGs/logo.jpg" alt="Logo" className="h-30 w-auto rounded-xl shadow-lg" />
           </div>
 
           <h1 className="text-4xl xl:text-5xl font-bold mb-8 leading-tight">
             Start Your Journey <br />
-            <span className="text-[var(--color-primary)]">with MaterialM.</span>
+            <span className="text-[var(--color-primary)]">with us.</span>
           </h1>
 
           <div className="space-y-6">
