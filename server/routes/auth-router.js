@@ -11,4 +11,8 @@ router.get("/all-users", authMiddleware, roleMiddleware("SUPER_ADMIN", "OWNER", 
 router.put("/change-password", authMiddleware, authController.changePassword)
 router.put("/profile", authMiddleware, authController.updateProfile)
 
+
+router.post("/forgot-password", authController.forgotPassword);
+router.post("/reset-password/:token", authController.resetPassword);
+
 module.exports = router

@@ -44,7 +44,11 @@ const user_Schema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         index: true
-    }
+    },
+
+
+    resetToken: String,
+    resetTokenExpiry: Date,
 }, { timestamps: true })
 
 const User = mongoose.model("User", user_Schema)

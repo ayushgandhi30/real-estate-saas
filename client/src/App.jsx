@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import PublicRoute from './store/PubliRoute.jsx'
 import SignInPage from './auth/SignInPage.jsx'
 import SignUpPage from './auth/SignUpPage.jsx'
+import ForgotPassword from './pages/ForgotPassword.jsx'
+import ResetPassword from './pages/ResetPassword.jsx'
 import ProtectedRoute from './store/ProtectedRoute.jsx'
 import Sidebar from './layouts/Sidebar.jsx'
 import Layout from './layouts/Layout.jsx'
@@ -41,6 +43,8 @@ function App() {
           <Route element={<PublicRoute />}>
             <Route path="/" element={<SignInPage />} />
             <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/logout" element={<Logout />} />
           </Route>
 

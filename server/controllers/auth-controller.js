@@ -1,6 +1,8 @@
 const User = require("../models/User-model.js")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const sendEmail = require("../utils/sendEmail");
 
 
 
@@ -229,4 +231,87 @@ const getManagers = async (req, res) => {
     }
 };
 
-module.exports = { register, login, user, getAllUsers, getManagers, changePassword, updateProfile }
+const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            return res.status(400).json({ message: "Email is required" });
+        }
+
+        const user = await User.findOne({ email });
+        // For security, don't confirm if user exists or not
+        if (!user) {
+            return res.status(200).json({ message: "If your email is registered, you will receive a reset link shortly." });
+        }
+
+        const token = crypto.randomBytes(32).toString("hex");
+        const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+        user.resetToken = hashedToken;
+        user.resetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes
+
+        await user.save();
+
+        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+        const resetLink = `${frontendUrl}/reset-password/${token}`;
+
+        try {
+            await sendEmail(user.email, resetLink);
+            res.status(200).json({ message: "Reset link sent to your email" });
+        } catch (emailError) {
+            console.error("Email sending failed:", emailError);
+            console.log("\x1b[33m%s\x1b[0m", "--- DEV MODE: Password Reset Link ---");
+            console.log("\x1b[36m%s\x1b[0m", resetLink);
+            console.log("\x1b[33m%s\x1b[0m", "--------------------------------------");
+            
+            // Still allow the process to work in development by showing the link in terminal
+            res.status(200).json({ 
+                message: "Reset link generated. (Email service error: Please check your EMAIL and EMAIL_PASS in .env. Note: Gmail requires an 'App Password' if 2FA is enabled.)" 
+            });
+        }
+    } catch (error) {
+        console.error("Forgot password internal error:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    try {
+        const { password } = req.body;
+        if (!password) {
+            return res.status(400).json({ message: "Password is required" });
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({ message: "Password must be at least 6 characters long" });
+        }
+
+        const hashedToken = crypto
+            .createHash("sha256")
+            .update(req.params.token)
+            .digest("hex");
+
+        const user = await User.findOne({
+            resetToken: hashedToken,
+            resetTokenExpiry: { $gt: Date.now() },
+        });
+
+        if (!user) {
+            return res.status(400).json({ message: "Invalid or expired reset token" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        user.password = hashedPassword;
+        user.resetToken = undefined;
+        user.resetTokenExpiry = undefined;
+
+        await user.save();
+
+        res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+        console.error("Reset password error:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+module.exports = { register, login, user, getAllUsers, getManagers, changePassword, updateProfile, forgotPassword, resetPassword }

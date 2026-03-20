@@ -128,9 +128,11 @@ const SignInPage = () => {
                                     <Lock className="w-4 h-4 text-[var(--color-primary)]" />
                                     <span className="text-sm font-medium text-[var(--text-card)] uppercase tracking-wider">Password</span>
                                 </div>
-                                <span className="text-[var(--color-primary)] text-xs font-semibold cursor-pointer hover:underline underline-offset-4">
-                                    Forgot?
-                                </span>
+                                <NavLink to="/forgot-password" title="reset password">
+                                    <span className="text-[var(--color-primary)] text-xs font-semibold cursor-pointer hover:underline underline-offset-4">
+                                        Forgot?
+                                    </span>
+                                </NavLink>
                             </div>
                             <Input
                                 type="password"
