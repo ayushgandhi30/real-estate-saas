@@ -71,30 +71,17 @@ export default function ManagerDashboard() {
     );
 
     return (
-        <div className="min-h-screen bg-[var(--bg-main)] p-4 sm:p-6 lg:p-8 space-y-10 font-['Inter']">
-            
+        <div className="min-h-screen bg-[var(--bg-main)] p-4 sm:p-6 lg:p-0 space-y-5 font-['Inter']">
+
             {/* Header / Command Center */}
             <header className="flex flex-col xl:flex-row xl:items-end justify-between gap-8 pb-4">
                 <div className="space-y-2">
-                    <div className="flex items-center gap-3">
-                        <div className="px-3 py-1 bg-indigo-600 text-white rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                           <Activity size={10} /> Operational Center Active
-                        </div>
-                        <div className="flex items-center gap-2 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-40">
-                            Manager ID: {user?.id?.slice(-8).toUpperCase() || "ROOT"}
-                        </div>
-                    </div>
-                    <h1 className="text-4xl font-black text-[var(--color-secondary)] tracking-tight">Strategy & Operations</h1>
-                    <p className="text-[var(--text-muted)] font-medium text-sm">Welcome back, <span className="text-indigo-600 font-bold">{user?.name}</span>. Here is your portfolio tactical briefing.</p>
+                    <h1 className="text-4xl font-black text-[var(--color-secondary)] tracking-tight">Manager Dashboard</h1>
                 </div>
                 <div className="flex flex-wrap items-center gap-4">
                     <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.1em] bg-white px-6 py-3.5 rounded-2xl border border-gray-100 text-[var(--text-muted)] shadow-sm">
                         <Calendar size={14} className="text-indigo-500" />
                         {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.1em] bg-gray-900 text-white px-6 py-3.5 rounded-2xl shadow-xl shadow-gray-200">
-                        <ShieldCheck size={14} className="text-emerald-400" />
-                        System Integrity: Verified
                     </div>
                 </div>
             </header>
@@ -102,24 +89,20 @@ export default function ManagerDashboard() {
             {/* Tactical KPI Matrix */}
             <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
-                    { label: "Assets Controlled", value: stats?.totalUnits || 0, icon: Building2, color: "indigo", desc: "Total individual units" },
-                    { label: "Live Occupancy", value: stats?.activeTenants || 0, icon: Users, color: "emerald", desc: "Active tenant accounts" },
-                    { label: "Inventory Lead", value: stats?.vacantUnits || 0, icon: Key, color: "amber", desc: "Units available for lease" },
-                    { label: "Pending Fixes", value: stats?.pendingMaintenance || 0, icon: Wrench, color: "rose", desc: "Open maintenance issues" },
+                    { label: "Total Units", value: stats?.totalUnits || 0, icon: Building2, color: "indigo", desc: "Total individual units" },
+                    { label: "Active Tenants", value: stats?.activeTenants || 0, icon: Users, color: "emerald", desc: "Active tenant accounts" },
+                    { label: "Vacant Units", value: stats?.vacantUnits || 0, icon: Key, color: "amber", desc: "Units available for lease" },
+                    { label: "Pending Maintenance", value: stats?.pendingMaintenance || 0, icon: Wrench, color: "rose", desc: "Open maintenance issues" },
                 ].map((stat, i) => (
                     <div key={i} className="bg-white p-7 rounded-[2.5rem] border border-gray-100 shadow-sm group transition-all duration-500 hover:shadow-md relative overflow-hidden">
                         <div className="flex items-center justify-between mb-6 relative z-10">
                             <div className={`p-4 rounded-2xl bg-${stat.color}-50 text-${stat.color}-600 shadow-sm border border-${stat.color}-100 transition-all duration-700 group-hover:bg-${stat.color}-600 group-hover:text-white group-hover:rotate-[360deg]`}>
                                 <stat.icon size={20} />
                             </div>
-                            <div className={`text-[10px] font-black ${stat.color === 'rose' && stat.value > 0 ? 'text-rose-600 bg-rose-50' : 'text-indigo-600 bg-indigo-50'} px-2 py-1 rounded-lg border border-transparent flex items-center gap-1`}>
-                                {stat.color === 'rose' && stat.value > 0 ? 'CRITICAL' : 'OPTIMAL'}
-                            </div>
                         </div>
                         <div className="relative z-10">
                             <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mb-1.5 opacity-50">{stat.label}</p>
                             <h3 className="text-3xl font-black text-[var(--color-secondary)] tracking-tight group-hover:text-indigo-600 transition-colors">{stat.value}</h3>
-                            <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest mt-1 opacity-40">{stat.desc}</p>
                         </div>
                         <div className={`absolute -right-4 -bottom-4 w-20 h-20 rounded-full bg-${stat.color}-50 scale-0 group-hover:scale-150 transition-transform duration-1000 opacity-40`} />
                     </div>
@@ -128,18 +111,14 @@ export default function ManagerDashboard() {
 
             {/* Analytics Visuals */}
             <section className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                
+
                 {/* Revenue Momentum Chart */}
                 <div className="bg-white p-10 rounded-[3.5rem] border border-gray-100 shadow-sm relative overflow-hidden flex flex-col">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-12 relative z-10">
                         <div className="space-y-1">
                             <h2 className="text-2xl font-black text-[var(--color-secondary)] flex items-center gap-3">
-                                Yield Momentum <TrendingUp className="text-emerald-500" size={24} />
+                                Revenue Report
                             </h2>
-                            <p className="text-[11px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-40">Monthly revenue collection trends</p>
-                        </div>
-                        <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl shadow-sm border border-indigo-100">
-                           <LayoutDashboard size={20} />
                         </div>
                     </div>
 
@@ -152,24 +131,24 @@ export default function ManagerDashboard() {
                                         <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
-                                <XAxis 
-                                   dataKey="name" 
-                                   stroke="#94a3b8" 
-                                   fontSize={10} 
-                                   fontWeight="black" 
-                                   tickLine={false} 
-                                   axisLine={false} 
-                                   dy={20} 
-                                   tick={{ fill: '#94a3b8' }}
+                                <XAxis
+                                    dataKey="name"
+                                    stroke="#94a3b8"
+                                    fontSize={10}
+                                    fontWeight="black"
+                                    tickLine={false}
+                                    axisLine={false}
+                                    dy={20}
+                                    tick={{ fill: '#94a3b8' }}
                                 />
-                                <YAxis 
-                                   stroke="#94a3b8" 
-                                   fontSize={10} 
-                                   fontWeight="black" 
-                                   tickLine={false} 
-                                   axisLine={false} 
-                                   tickFormatter={(v) => `₹${v/1000}k`}
-                                   tick={{ fill: '#94a3b8' }}
+                                <YAxis
+                                    stroke="#94a3b8"
+                                    fontSize={10}
+                                    fontWeight="black"
+                                    tickLine={false}
+                                    axisLine={false}
+                                    tickFormatter={(v) => `₹${v / 1000}k`}
+                                    tick={{ fill: '#94a3b8' }}
                                 />
                                 <Tooltip
                                     contentStyle={{ backgroundColor: '#111', borderRadius: '24px', border: 'none', padding: '15px 20px', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)' }}
@@ -185,11 +164,10 @@ export default function ManagerDashboard() {
 
                 {/* Occupancy Logic - Donut Chart */}
                 <div className="bg-white p-10 rounded-[3.5rem] border border-gray-100 shadow-sm flex flex-col relative overflow-hidden">
-                    <div className="mb-12 space-y-1 relative z-10">
+                    <div className="mb-5 space-y-1 relative z-10">
                         <h2 className="text-2xl font-black text-[var(--color-secondary)] flex items-center gap-3">
-                            Asset Utilization <PieChartIcon className="text-indigo-500" size={24} />
+                            Asset Utilization
                         </h2>
-                        <p className="text-[11px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-40">Portfolio occupancy vector distribution</p>
                     </div>
 
                     <div className="h-[300px] w-full relative z-10">
@@ -211,30 +189,18 @@ export default function ManagerDashboard() {
                                         <Cell key={`cell-${i}`} fill={COLORS[i % COLORS.length]} className="hover:opacity-80 transition-all cursor-pointer shadow-xl" />
                                     ))}
                                 </Pie>
-                                <Tooltip 
-                                   contentStyle={{ backgroundColor: '#111', borderRadius: '20px', border: 'none', padding: '10px 15px', color: '#fff' }}
-                                   itemStyle={{ fontWeight: '900', fontSize: '12px' }}
+                                <Tooltip
+                                    contentStyle={{ backgroundColor: '#111', borderRadius: '20px', border: 'none', padding: '10px 15px', color: '#fff' }}
+                                    itemStyle={{ fontWeight: '900', fontSize: '12px' }}
                                 />
                                 <Legend verticalAlign="bottom" height={36} iconType="circle" formatter={(v) => <span className="text-[10px] font-black uppercase text-[var(--text-muted)] ml-2">{v}</span>} />
                             </PieChart>
                         </ResponsiveContainer>
-                        
+
                         {/* Center Metric */}
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-4 text-center">
                             <p className="text-3xl font-black text-[var(--color-secondary)] leading-none">{stats?.totalUnits > 0 ? Math.round((stats.activeTenants / stats.totalUnits) * 100) : 0}%</p>
                             <p className="text-[9px] font-black text-indigo-500 uppercase tracking-widest mt-1">Utilized</p>
-                        </div>
-                    </div>
-
-                    <div className="mt-auto flex justify-around items-center pt-8 border-t border-gray-50 relative z-10">
-                        <div className="text-center group cursor-pointer">
-                            <p className="text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-1 opacity-50">Avg Retention</p>
-                            <p className="text-xl font-black text-indigo-600 transition-transform group-hover:scale-110">94.2%</p>
-                        </div>
-                        <div className="w-px h-10 bg-gray-100" />
-                        <div className="text-center group cursor-pointer">
-                            <p className="text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-1 opacity-50">Market Growth</p>
-                            <p className="text-xl font-black text-emerald-600 transition-transform group-hover:scale-110">+12%</p>
                         </div>
                     </div>
                 </div>
@@ -242,16 +208,14 @@ export default function ManagerDashboard() {
 
             {/* Operational Tables */}
             <section className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                
+
                 {/* Deployment Payments */}
                 <div className="bg-white rounded-[3.5rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
                     <div className="p-10 border-b border-gray-50 flex items-center justify-between">
                         <div className="space-y-1">
                             <h2 className="text-2xl font-black text-[var(--color-secondary)] flex items-center gap-3">
-                                <CreditCard className="text-emerald-500" size={24} />
-                                Ledger Audit
+                                Recent Payments
                             </h2>
-                            <p className="text-[11px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-40">Recent financial inflows</p>
                         </div>
                         <Button variant="secondary" size="md" iconOnly icon={<Navigation size={20} />} />
                     </div>
@@ -259,10 +223,10 @@ export default function ManagerDashboard() {
                         <table className="w-full text-left font-['Inter']">
                             <thead>
                                 <tr className="bg-gray-50/50 text-[var(--text-muted)] text-[9px] uppercase font-black tracking-[0.2em] border-b border-gray-50">
-                                    <th className="px-10 py-5">Origin (Tenant)</th>
-                                    <th className="px-10 py-5">Node (Unit)</th>
-                                    <th className="px-10 py-5 text-right">Yield</th>
-                                    <th className="px-10 py-5 text-right">Log Date</th>
+                                    <th className="px-10 py-5">Name</th>
+                                    <th className="px-10 py-5">Unit No</th>
+                                    <th className="px-10 py-5 text-right">Rent</th>
+                                    <th className="px-10 py-5 text-right">Date</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-50/50">
@@ -278,11 +242,11 @@ export default function ManagerDashboard() {
                                                 <span className="bg-indigo-50 text-indigo-600 text-[10px] font-black px-4 py-1.5 rounded-xl border border-indigo-100 shadow-sm">{p.unitId?.unitNumber}</span>
                                             </td>
                                             <td className="px-10 py-6 text-right">
-                                               <p className="text-[15px] font-black text-emerald-600 tracking-tight">₹{p.totalAmount.toLocaleString()}</p>
-                                               <p className="text-[8px] font-black text-[var(--text-muted)] uppercase opacity-30 mt-0.5 tracking-tighter shadow-indigo-100">Settled Full</p>
+                                                <p className="text-[15px] font-black text-emerald-600 tracking-tight">₹{p.totalAmount.toLocaleString()}</p>
+                                                <p className="text-[8px] font-black text-[var(--text-muted)] uppercase opacity-30 mt-0.5 tracking-tighter shadow-indigo-100">Settled Full</p>
                                             </td>
                                             <td className="px-10 py-6 text-right text-[11px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-60">
-                                               {new Date(p.paidAt).toLocaleDateString('en-US', { day: '2-digit', month: 'short' })}
+                                                {new Date(p.paidAt).toLocaleDateString('en-US', { day: '2-digit', month: 'short' })}
                                             </td>
                                         </tr>
                                     ))
@@ -297,14 +261,12 @@ export default function ManagerDashboard() {
                     <div className="p-10 border-b border-gray-50 flex items-center justify-between">
                         <div className="space-y-1">
                             <h2 className="text-2xl font-black text-[var(--color-secondary)] flex items-center gap-3">
-                                <Clock className="text-amber-500" size={24} />
-                                Lease Timeframes
+                                upcoming Expiries
                             </h2>
-                            <p className="text-[11px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-40">Imminent structural renewals</p>
                         </div>
                         <div className="relative">
-                           <Bell className="text-amber-500 animate-swing" size={24} />
-                           {upcomingExpiries.length > 0 && <div className="absolute -top-1 -right-1 w-3 h-3 bg-rose-600 rounded-full border-2 border-white" />}
+                            <Bell className="text-amber-500 animate-swing" size={24} />
+                            {upcomingExpiries.length > 0 && <div className="absolute -top-1 -right-1 w-3 h-3 bg-rose-600 rounded-full border-2 border-white" />}
                         </div>
                     </div>
                     <div className="overflow-x-auto">
@@ -312,7 +274,6 @@ export default function ManagerDashboard() {
                             <thead>
                                 <tr className="bg-gray-50/50 text-[var(--text-muted)] text-[9px] uppercase font-black tracking-[0.2em] border-b border-gray-50">
                                     <th className="px-10 py-5">Entity</th>
-                                    <th className="px-10 py-5">Node</th>
                                     <th className="px-10 py-5 text-right">Expiry Offset</th>
                                     <th className="px-10 py-5 text-right">Manifest</th>
                                 </tr>
@@ -326,12 +287,10 @@ export default function ManagerDashboard() {
                                     upcomingExpiries.map((lease) => (
                                         <tr key={lease._id} className="hover:bg-amber-50/30 transition-all group border-l-4 border-l-transparent hover:border-l-amber-500">
                                             <td className="px-10 py-6 text-sm font-black text-[var(--color-secondary)] group-hover:text-amber-700 transition-colors uppercase tracking-tight">{lease.userId?.name}</td>
-                                            <td className="px-10 py-6">
-                                                <span className="bg-slate-900 text-white text-[10px] font-black px-4 py-1.5 rounded-xl shadow-lg shadow-gray-200">{lease.unitId?.unitNumber}</span>
-                                            </td>
+
                                             <td className="px-10 py-6 text-right">
-                                               <p className="text-[13px] font-black text-gray-900 tracking-tight">{new Date(lease.leaseEnd).toLocaleDateString()}</p>
-                                               <p className="text-[8px] font-black text-rose-600 uppercase mt-0.5 tracking-tighter italic">Critical Renewal Window</p>
+                                                <p className="text-[13px] font-black text-gray-900 tracking-tight">{new Date(lease.leaseEnd).toLocaleDateString()}</p>
+                                                <p className="text-[8px] font-black text-rose-600 uppercase mt-0.5 tracking-tighter italic">Critical Renewal Window</p>
                                             </td>
                                             <td className="px-10 py-6 text-right">
                                                 <Button size="xs" variant="danger" className="animate-pulse">AUTHORIZE</Button>
@@ -341,9 +300,6 @@ export default function ManagerDashboard() {
                                 )}
                             </tbody>
                         </table>
-                    </div>
-                    <div className="p-8 bg-gray-50/30 mt-auto border-t border-gray-50 text-center">
-                       <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] opacity-30 italic">End of Strategic Operational Briefing</p>
                     </div>
                 </div>
             </section>

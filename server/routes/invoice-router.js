@@ -17,4 +17,4 @@ router.delete("/invoice/:id", authMiddleware, roleMiddleware("MANAGER"), invoice
 // Pay Invoice (TENANT only)
 router.patch("/pay/:id", authMiddleware, roleMiddleware("TENANT"), invoiceController.payInvoice);
 
-module.exports = router;
+module.exports = router;

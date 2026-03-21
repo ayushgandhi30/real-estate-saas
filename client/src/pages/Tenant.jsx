@@ -619,136 +619,140 @@ const Tenant = () => {
             {isAddingTenant && (
                 <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-300">
                     <div className="absolute inset-0 bg-white/40 backdrop-blur-md" onClick={() => { setIsAddingTenant(false); setEditId(null); setFormData(initialFormData); }}></div>
-                    <div className="relative w-full max-w-4xl bg-white rounded-[3.5rem] shadow-lg border border-gray-100 overflow-hidden max-h-[90vh] flex flex-col">
+                    <div className="relative w-full max-w-4xl bg-white rounded-[2rem] shadow-lg border border-gray-100 overflow-hidden flex flex-col">
 
-                        <div className="px-10 py-8 border-b border-gray-50 flex items-center justify-between bg-white z-10">
+                        <div className="px-6 py-1 border-b border-gray-50 flex items-center justify-between bg-white z-10">
                             <div>
-                                <h2 className="text-2xl font-black text-[var(--color-secondary)] tracking-tight">
-                                    {editId ? "Modify Resident Record" : "Resident Onboarding"}
+                                <h2 className="text-[18px] font-black text-[var(--color-secondary)] tracking-tight">
+                                    {editId ? "Edit Tenant" : "Add Tenant"}
                                 </h2>
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] opacity-60">Establishized formalized lease authority</p>
                             </div>
-                            <Button onClick={() => { setIsAddingTenant(false); setEditId(null); setFormData(initialFormData); }} iconOnly variant="secondary" size="md" icon={<X size={24} />} className="hover:bg-rose-50 hover:text-rose-600" />
+                            <Button onClick={() => { setIsAddingTenant(false); setEditId(null); setFormData(initialFormData); }} iconOnly variant="secondary" size="sm" icon={<X size={20} />} className="hover:bg-rose-50 hover:text-rose-600" />
                         </div>
 
-                        <form className="p-10 pt-8 space-y-12 overflow-y-auto custom-scrollbar" onSubmit={handleFormSubmit}>
+                        <form className="p-6" onSubmit={handleFormSubmit}>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <div className="space-y-4">
+                                    {/* Identity Section */}
+                                    <section className="space-y-3">
+                                        <div className="flex items-center gap-2">
+                                            <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg shadow-sm"><Users size={16} /></div>
+                                            <h3 className="text-xs font-black text-[var(--color-secondary)] uppercase tracking-[0.1em]">Tenant Details</h3>
+                                        </div>
 
-                            {/* Identity Section */}
-                            <section className="space-y-8">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl shadow-sm"><Users size={20} /></div>
-                                    <h3 className="text-sm font-black text-[var(--color-secondary)] uppercase tracking-[0.1em]">Identity Manifest</h3>
+                                        <div className="p-5 bg-gray-50/50 rounded-2xl border border-gray-100 space-y-4">
+                                            <div className="pb-3 border-b border-gray-100 flex items-center justify-between">
+                                                <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest flex items-center gap-2"><Briefcase size={12} /> Sync Existing User</p>
+                                                <select
+                                                    className="bg-white border border-gray-100 text-[11px] font-bold rounded-lg px-3 py-1.5 outline-none shadow-sm cursor-pointer hover:bg-gray-50"
+                                                    onChange={(e) => {
+                                                        const selected = tenantUsers.find(u => u._id === e.target.value);
+                                                        if (selected) setFormData({ ...formData, name: selected.name, email: selected.email, phone: selected.phone || "" });
+                                                    }}
+                                                >
+                                                    <option value="">Select Existing User</option>
+                                                    {tenantUsers.map(u => <option key={u._id} value={u._id}>{u.name} ({u.email})</option>)}
+                                                </select>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <Input label="Name" value={formData.name || ""} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required variant="formInput" placeholder="Tenant Name" />
+                                                <Input label="Phone" value={formData.phone || ""} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} required variant="formInput" placeholder="Phone Number" />
+                                            </div>
+                                            <Input label="Email" type="email" value={formData.email || ""} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required variant="formInput" placeholder="Email Address" />
+                                        </div>
+                                    </section>
+
+                                    {/* Asset Allocation */}
+                                    <section className="space-y-3">
+                                        <div className="flex items-center gap-2">
+                                            <div className="p-1.5 bg-purple-50 text-purple-600 rounded-lg shadow-sm"><Home size={16} /></div>
+                                            <h3 className="text-xs font-black text-[var(--color-secondary)] uppercase tracking-[0.1em]">Property Allocation</h3>
+                                        </div>
+                                        <div className="p-5 bg-gray-50/50 rounded-2xl border border-gray-100 space-y-4">
+                                            <div className="space-y-1.5">
+                                                <label className="text-[var(--text-secondary)] text-sm font-semibold ml-1">Property</label>
+                                                <div className="relative">
+                                                    <select required className="w-full bg-white border border-gray-300 focus:border-indigo-400 text-[var(--text-secondary)] rounded-xl px-4 py-2.5 outline-none transition-all cursor-pointer shadow-sm appearance-none" value={formData.propertyId || ""} onChange={(e) => handlePropertyChange(e.target.value)}>
+                                                        <option value="">Select Property</option>
+                                                        {properties.map(p => <option key={p._id} value={p._id}>{p.propertyName}</option>)}
+                                                    </select>
+                                                    <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                                                </div>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-1.5">
+                                                    <label className="text-[var(--text-secondary)] text-sm font-semibold ml-1">Floor</label>
+                                                    <div className="relative">
+                                                        <select required disabled={!formData.propertyId} className="w-full bg-white border border-gray-300 focus:border-indigo-400 text-[var(--text-secondary)] rounded-xl px-4 py-2.5 outline-none transition-all cursor-pointer shadow-sm disabled:opacity-50 appearance-none" value={formData.floorId || ""} onChange={(e) => setFormData({ ...formData, floorId: e.target.value, unitId: "", rent: "", deposit: "" })}>
+                                                            <option value="">Select Floor</option>
+                                                            {floors.map(f => <option key={f._id} value={f._id}>{f.name}</option>)}
+                                                        </select>
+                                                        <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <label className="text-[var(--text-secondary)] text-sm font-semibold ml-1">Unit</label>
+                                                    <div className="relative">
+                                                        <select required disabled={!formData.floorId} className="w-full bg-white border border-gray-300 focus:border-indigo-400 text-[var(--text-secondary)] rounded-xl px-4 py-2.5 outline-none transition-all cursor-pointer shadow-sm disabled:opacity-50 appearance-none" value={formData.unitId || ""} onChange={(e) => handleUnitChange(e.target.value)}>
+                                                            <option value="">Select Unit</option>
+                                                            {units.filter(u => (u.floorId?._id || u.floorId)?.toString() === formData.floorId?.toString()).map(u => <option key={u._id} value={u._id}>{u.unitNumber} ({u.unitType})</option>)}
+                                                        </select>
+                                                        <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
                                 </div>
 
-                                <div className="p-8 bg-gray-50/50 rounded-[2.5rem] border border-gray-100 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                    <div className="md:col-span-2 lg:col-span-3 pb-4 border-b border-gray-100 flex items-center justify-between">
-                                        <p className="text-[10px] font-black text-indigo-600 uppercase tracking-widest flex items-center gap-2"><Briefcase size={12} /> Sync Existing Identity Matrix</p>
-                                        <select
-                                            className="bg-white border border-gray-100 text-[11px] font-bold rounded-xl px-4 py-2 outline-none shadow-sm cursor-pointer hover:bg-gray-50"
-                                            onChange={(e) => {
-                                                const selected = tenantUsers.find(u => u._id === e.target.value);
-                                                if (selected) setFormData({ ...formData, name: selected.name, email: selected.email, phone: selected.phone || "" });
-                                            }}
-                                        >
-                                            <option value="">Select from Central User Core</option>
-                                            {tenantUsers.map(u => <option key={u._id} value={u._id}>{u.name} ({u.email})</option>)}
-                                        </select>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">Legal Name</label>
-                                        <input required className="w-full bg-white border border-transparent focus:border-[var(--color-primary)]/20 rounded-2xl px-6 py-3.5 text-xs font-bold text-[var(--color-secondary)] shadow-sm focus:outline-none transition-all" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">Auth Identifier (Mail)</label>
-                                        <input type="email" required className="w-full bg-white border border-transparent focus:border-[var(--color-primary)]/20 rounded-2xl px-6 py-3.5 text-xs font-bold text-[var(--color-secondary)] shadow-sm focus:outline-none transition-all" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">Telecom Access</label>
-                                        <input required className="w-full bg-white border border-transparent focus:border-[var(--color-primary)]/20 rounded-2xl px-6 py-3.5 text-xs font-bold text-[var(--color-secondary)] shadow-sm focus:outline-none transition-all" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
-                                    </div>
+                                <div>
+                                    {/* Financial Framework */}
+                                    <section className="space-y-3 h-[calc(100%-1rem)]">
+                                        <div className="flex items-center gap-2">
+                                            <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg shadow-sm"><IndianRupee size={16} /></div>
+                                            <h3 className="text-xs font-black text-[var(--color-secondary)] uppercase tracking-[0.1em]">Financials & Timeline</h3>
+                                        </div>
+                                        <div className="p-5 bg-emerald-50/30 rounded-2xl border border-emerald-100 space-y-4 h-[calc(100%-2.5rem)]">
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <Input type="date" label="Lease Start" value={formData.leaseStart || ""} onChange={(e) => setFormData({ ...formData, leaseStart: e.target.value })} required variant="formInput" />
+                                                <Input type="date" label="Lease End" value={formData.leaseEnd || ""} onChange={(e) => setFormData({ ...formData, leaseEnd: e.target.value })} required variant="formInput" />
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <Input type="number" label="Monthly Rent (₹)" value={formData.rent || ""} onChange={(e) => setFormData({ ...formData, rent: e.target.value })} required variant="formInput" />
+                                                <Input type="number" label="Security Deposit (₹)" value={formData.deposit || ""} onChange={(e) => setFormData({ ...formData, deposit: e.target.value })} required variant="formInput" />
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4 mt-2">
+                                                <div className="space-y-1.5">
+                                                    <label className="text-[var(--text-secondary)] text-sm font-semibold ml-1">Lease Status</label>
+                                                    <div className="relative">
+                                                        <select className="w-full bg-white border border-emerald-200 focus:border-emerald-400 text-[var(--color-secondary)] rounded-xl px-4 py-2.5 outline-none shadow-sm cursor-pointer appearance-none" value={formData.leaseStatus || "Active"} onChange={(e) => setFormData({ ...formData, leaseStatus: e.target.value })}>
+                                                            <option value="Active">Operational / Active</option>
+                                                            <option value="Expiring">Alert / Expiring</option>
+                                                            <option value="Terminated">Closed / Terminated</option>
+                                                        </select>
+                                                        <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-1.5">
+                                                    <label className="text-[var(--text-secondary)] text-sm font-semibold ml-1">Payment Status</label>
+                                                    <div className="relative">
+                                                        <select className="w-full bg-white border border-emerald-200 focus:border-emerald-400 text-[var(--color-secondary)] rounded-xl px-4 py-2.5 outline-none shadow-sm cursor-pointer appearance-none" value={formData.paymentStatus || "Pending"} onChange={(e) => setFormData({ ...formData, paymentStatus: e.target.value })}>
+                                                            <option value="Pending">Fiscal Pending</option>
+                                                            <option value="Paid">Liability Settled</option>
+                                                        </select>
+                                                        <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
                                 </div>
-                            </section>
+                            </div>
 
-                            {/* Asset Allocation */}
-                            <section className="space-y-8">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-3 bg-purple-50 text-purple-600 rounded-2xl shadow-sm"><Home size={20} /></div>
-                                    <h3 className="text-sm font-black text-[var(--color-secondary)] uppercase tracking-[0.1em]">Asset Allocation</h3>
-                                </div>
-                                <div className="grid md:grid-cols-3 gap-8">
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">Property Hub</label>
-                                        <select required className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 text-xs font-black uppercase text-[var(--color-secondary)] transition-all cursor-pointer focus:outline-none shadow-sm" value={formData.propertyId} onChange={(e) => handlePropertyChange(e.target.value)}>
-                                            <option value="">Select Property</option>
-                                            {properties.map(p => <option key={p._id} value={p._id}>{p.propertyName}</option>)}
-                                        </select>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">Vertical Level</label>
-                                        <select required disabled={!formData.propertyId} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 text-xs font-black uppercase text-[var(--color-secondary)] transition-all cursor-pointer focus:outline-none shadow-sm disabled:opacity-30" value={formData.floorId} onChange={(e) => setFormData({ ...formData, floorId: e.target.value, unitId: "", rent: "", deposit: "" })}>
-                                            <option value="">Select Floor</option>
-                                            {floors.map(f => <option key={f._id} value={f._id}>{f.name}</option>)}
-                                        </select>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">Asset Unit</label>
-                                        <select required disabled={!formData.floorId} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 text-xs font-black uppercase text-[var(--color-secondary)] transition-all cursor-pointer focus:outline-none shadow-sm disabled:opacity-30" value={formData.unitId} onChange={(e) => handleUnitChange(e.target.value)}>
-                                            <option value="">Select Unit</option>
-                                            {units.filter(u => (u.floorId?._id || u.floorId)?.toString() === formData.floorId?.toString()).map(u => <option key={u._id} value={u._id}>{u.unitNumber} ({u.unitType})</option>)}
-                                        </select>
-                                    </div>
-                                </div>
-                            </section>
-
-                            {/* Financial Framework */}
-                            <section className="space-y-8">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl shadow-sm"><IndianRupee size={20} /></div>
-                                    <h3 className="text-sm font-black text-[var(--color-secondary)] uppercase tracking-[0.1em]">Financial & Timeline Framework</h3>
-                                </div>
-                                <div className="p-10 bg-gray-50/50 rounded-[3.5rem] border border-gray-100 space-y-10">
-                                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-emerald-700 uppercase tracking-widest ml-1">Activation Cycle</label>
-                                            <input type="date" required className="w-full bg-white border border-transparent focus:border-emerald-200 rounded-2xl px-6 py-3.5 text-xs font-bold text-[var(--color-secondary)] shadow-sm focus:outline-none transition-all" value={formData.leaseStart} onChange={(e) => setFormData({ ...formData, leaseStart: e.target.value })} />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-emerald-700 uppercase tracking-widest ml-1">Termination Cycle</label>
-                                            <input type="date" required className="w-full bg-white border border-transparent focus:border-emerald-200 rounded-2xl px-6 py-3.5 text-xs font-bold text-[var(--color-secondary)] shadow-sm focus:outline-none transition-all" value={formData.leaseEnd} onChange={(e) => setFormData({ ...formData, leaseEnd: e.target.value })} />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-emerald-700 uppercase tracking-widest ml-1">Monthly Yield (₹)</label>
-                                            <input type="number" required className="w-full bg-white border border-transparent focus:border-emerald-200 rounded-2xl px-6 py-3.5 text-xs font-black text-[var(--color-secondary)] shadow-sm focus:outline-none transition-all" value={formData.rent} onChange={(e) => setFormData({ ...formData, rent: e.target.value })} />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black text-emerald-700 uppercase tracking-widest ml-1">Security Reserve (₹)</label>
-                                            <input type="number" required className="w-full bg-white border border-transparent focus:border-emerald-200 rounded-2xl px-6 py-3.5 text-xs font-black text-[var(--color-secondary)] shadow-sm focus:outline-none transition-all" value={formData.deposit} onChange={(e) => setFormData({ ...formData, deposit: e.target.value })} />
-                                        </div>
-                                    </div>
-                                    <div className="grid md:grid-cols-2 gap-8 pt-4">
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-widest ml-1">Status Designation</label>
-                                            <select className="w-full h-14 bg-white border border-gray-100 rounded-2xl px-6 text-[11px] font-black uppercase tracking-widest text-[var(--color-secondary)] focus:outline-none shadow-sm cursor-pointer" value={formData.leaseStatus} onChange={(e) => setFormData({ ...formData, leaseStatus: e.target.value })}>
-                                                <option value="Active">Operational / Active</option>
-                                                <option value="Expiring">Alert / Expiring</option>
-                                                <option value="Terminated">Closed / Terminated</option>
-                                            </select>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-widest ml-1">Fiscal Initialization</label>
-                                            <select className="w-full h-14 bg-white border border-gray-100 rounded-2xl px-6 text-[11px] font-black uppercase tracking-widest text-[var(--color-secondary)] focus:outline-none shadow-sm cursor-pointer" value={formData.paymentStatus} onChange={(e) => setFormData({ ...formData, paymentStatus: e.target.value })}>
-                                                <option value="Pending">Fiscal Pending</option>
-                                                <option value="Paid">Liability Settled</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-
-                            <div className="flex items-center justify-end gap-6 pt-6 sticky bottom-0 bg-white border-t border-gray-50 mt-4 py-8 z-10">
-                                <Button type="button" variant="ghost" size="sm" onClick={() => { setIsAddingTenant(false); setEditId(null); setFormData(initialFormData); }}>Discard Draft</Button>
-                                <Button type="submit" loading={loading} variant="primary" size="lg" icon={editId ? <Edit size={18} /> : <ArrowRight size={18} />}>
-                                    {editId ? "UPDATE MANIFEST" : "AUTHORIZE REGISTRATION"}
+                            <div className="flex items-center justify-end gap-4 pt-5 mt-2 border-t border-gray-50 bg-white">
+                                <Button type="button" variant="ghost" size="sm" onClick={() => { setIsAddingTenant(false); setEditId(null); setFormData(initialFormData); }}>Cancel</Button>
+                                <Button type="submit" htmlType="submit" loading={loading} variant="primary" size="md" icon={editId ? <Edit size={16} /> : <CheckCircle2 size={16} />}>
+                                    {editId ? "Update Tenant" : "Save Tenant"}
                                 </Button>
                             </div>
                         </form>

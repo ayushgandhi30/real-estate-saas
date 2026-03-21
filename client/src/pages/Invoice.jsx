@@ -370,15 +370,14 @@ const Invoice = () => {
         (inv.rent || 0) + (inv.utilityCharges || 0) + (inv.maintenanceCharges || 0) + (inv.lateFee || 0);
 
     return (
-        <div className="min-h-screen bg-[var(--bg-main)] p-4 sm:p-6 lg:p-8 font-['Inter'] space-y-8">
+        <div className="min-h-screen bg-[var(--bg-main)] p-4 sm:p-6 lg:p-2 font-['Inter'] space-y-5">
 
             {/* ── HEADER ─────────────────────────────────── */}
             <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 pb-2">
                 <div className="space-y-1">
                     <h1 className="text-3xl font-black text-[var(--color-secondary)] tracking-tight">
-                        Financial Management
+                        Invoice Management
                     </h1>
-                    <p className="text-[var(--text-muted)] font-medium text-sm">Issue invoices, track payments, and manage property yields.</p>
                 </div>
 
                 {role === "manager" && (
@@ -386,7 +385,6 @@ const Invoice = () => {
                         onClick={() => setShowCreate(true)}
                         variant="primary"
                         size="md"
-                        icon={<Plus size={18} />}
                     >
                         CREATE NEW INVOICE
                     </Button>
@@ -536,37 +534,37 @@ const Invoice = () => {
                                                 </td>
                                                 <td className="px-8 py-7">
                                                     <div className="flex items-center justify-end gap-1">
-                                                        <Button 
-                                                            onClick={() => setSelectedInvoice(inv)} 
-                                                            variant="secondary" 
-                                                            size="xs" 
-                                                            iconOnly 
-                                                            icon={<Eye size={16} />} 
+                                                        <Button
+                                                            onClick={() => setSelectedInvoice(inv)}
+                                                            variant="secondary"
+                                                            size="xs"
+                                                            iconOnly
+                                                            icon={<Eye size={16} />}
                                                             title="Inspector"
                                                         />
-                                                        <Button 
-                                                            onClick={() => downloadInvoicePDF(inv)} 
-                                                            variant="secondary" 
-                                                            size="xs" 
-                                                            iconOnly 
-                                                            icon={<Download size={16} />} 
+                                                        <Button
+                                                            onClick={() => downloadInvoicePDF(inv)}
+                                                            variant="secondary"
+                                                            size="xs"
+                                                            iconOnly
+                                                            icon={<Download size={16} />}
                                                             title="Export PDF"
                                                         />
                                                         {role === "manager" && (
-                                                            <Button 
-                                                                onClick={() => handleDelete(inv._id)} 
-                                                                variant="danger" 
-                                                                size="xs" 
-                                                                iconOnly 
-                                                                icon={<Trash size={16} />} 
+                                                            <Button
+                                                                onClick={() => handleDelete(inv._id)}
+                                                                variant="danger"
+                                                                size="xs"
+                                                                iconOnly
+                                                                icon={<Trash size={16} />}
                                                                 title="Purge Record"
                                                             />
                                                         )}
                                                         {role === "tenant" && !isPaid && (
-                                                            <Button 
-                                                                onClick={() => handlePay(inv._id)} 
-                                                                variant="primary" 
-                                                                size="xs" 
+                                                            <Button
+                                                                onClick={() => handlePay(inv._id)}
+                                                                variant="primary"
+                                                                size="xs"
                                                                 className="ml-2 font-black uppercase tracking-widest"
                                                             >
                                                                 Pay Now
@@ -620,29 +618,29 @@ const Invoice = () => {
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-3">
-                                            <Button 
-                                                onClick={() => setSelectedInvoice(inv)} 
-                                                variant="secondary" 
-                                                size="sm" 
-                                                icon={<Eye size={14} />} 
+                                            <Button
+                                                onClick={() => setSelectedInvoice(inv)}
+                                                variant="secondary"
+                                                size="sm"
+                                                icon={<Eye size={14} />}
                                                 className="w-full"
                                             >
                                                 Inspect
                                             </Button>
-                                            <Button 
-                                                onClick={() => downloadInvoicePDF(inv)} 
-                                                variant="primary" 
-                                                size="sm" 
-                                                icon={<Download size={14} />} 
+                                            <Button
+                                                onClick={() => downloadInvoicePDF(inv)}
+                                                variant="primary"
+                                                size="sm"
+                                                icon={<Download size={14} />}
                                                 className="w-full bg-gray-900 shadow-black/10"
                                             >
                                                 PDF
                                             </Button>
                                             {role === "tenant" && !isPaid && (
-                                                <Button 
-                                                    onClick={() => handlePay(inv._id)} 
-                                                    variant="primary" 
-                                                    size="md" 
+                                                <Button
+                                                    onClick={() => handlePay(inv._id)}
+                                                    variant="primary"
+                                                    size="md"
                                                     className="col-span-2 tracking-widest"
                                                 >
                                                     Finalize Payment
@@ -666,15 +664,15 @@ const Invoice = () => {
                                 <h2 className="text-2xl font-black text-[var(--color-secondary)] tracking-tight">Ledger Entry</h2>
                                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] opacity-60">Generate Secure Digital Invoice</p>
                             </div>
-                            <Button 
-                                onClick={() => { setShowCreate(false); setFormData(initialFormData); }} 
-                                variant="secondary" 
-                                size="sm" 
-                                iconOnly 
-                                icon={<X size={20} />} 
+                            <Button
+                                onClick={() => { setShowCreate(false); setFormData(initialFormData); }}
+                                variant="secondary"
+                                size="sm"
+                                iconOnly
+                                icon={<X size={20} />}
                             />
                         </div>
-                        
+
                         <form onSubmit={handleSubmit} className="p-10 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
                             <div className="space-y-1.5">
                                 <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">Target Tenant Record</label>
@@ -711,11 +709,11 @@ const Invoice = () => {
                                 <textarea rows="3" placeholder="Additional details or instructions..." value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 text-[13px] font-bold text-[var(--color-secondary)] transition-all focus:outline-none" />
                             </div>
 
-                            <Button 
-                                type="submit" 
-                                disabled={submitting} 
-                                variant="primary" 
-                                size="lg" 
+                            <Button
+                                type="submit"
+                                disabled={submitting}
+                                variant="primary"
+                                size="lg"
                                 className="w-full py-5 rounded-[2rem] bg-gray-900 shadow-xl shadow-gray-200 hover:shadow-red-200 tracking-[0.2em]"
                                 loading={submitting}
                                 loadingText="Finalizing Transaction..."
