@@ -302,7 +302,7 @@ export default function LeaseAgrement() {
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
                     {/* Backdrop */}
                     <div
-                        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300"
+                        className="fixed inset-0 bg-black/60 backdrop-blur-md animate-in fade-in duration-300"
                         onClick={() => setSelectedLease(null)}
                     />
 

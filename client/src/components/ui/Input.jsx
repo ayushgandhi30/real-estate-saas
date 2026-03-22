@@ -13,25 +13,26 @@ export default function Input({
     variant = "default",
     className = "",
     labelClassName = "",
+    icon: Icon,
     ...props
 }) {
     const [showPassword, setShowPassword] = useState(false);
     const isPassword = type === "password";
 
     const base =
-        "w-full px-4 py-3  outline-none transition text-[var(--color-black)]";
+        "w-full px-4 py-3 outline-none transition-all duration-200 text-[var(--color-black)] bg-white shadow-sm hover:shadow-md focus:shadow-md";
 
     const variants = {
         default: `
-      border border-gray-600
-      focus:border-[var(--color-primary)]
-      text-[var(--text-secondary)] rounded-xl
-    `,
+            border border-gray-100
+            focus:border-[var(--color-primary)]/40
+            text-[var(--text-secondary)] rounded-xl
+        `,
         formInput: `
-    border border-gray-400
-      focus:border-[var(--color-primary)]
-      text-[var(--text-secondary)] rounded-full
-    `
+            border border-gray-100
+            focus:border-[var(--color-primary)]/40
+            text-[var(--text-secondary)] rounded-xl
+        `
     };
 
     return (
@@ -42,7 +43,13 @@ export default function Input({
                 </label>
             )}
 
-            <div className="relative">
+            <div className="relative group">
+                {Icon && (
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[var(--color-primary)] transition-colors duration-300">
+                        <Icon size={18} strokeWidth={2.5} />
+                    </div>
+                )}
+                
                 <input
                     type={isPassword && showPassword ? "text" : type}
                     name={name}
@@ -57,12 +64,15 @@ export default function Input({
                     placeholder={placeholder}
                     required={required}
                     className={`
-            ${base}
-            ${variants[variant]}
-            ${type === "number" ? "no-spinner" : ""}
-            ${isPassword ? "pr-12" : ""}
-            ${className}
-          `}
+                        ${base}
+                        ${variants[variant]}
+                        ${Icon ? "pl-12" : "px-5"}
+                        ${isPassword ? "pr-12" : "pr-5"}
+                        ${type === "number" ? "no-spinner" : ""}
+                        h-14
+                        font-bold
+                        ${className}
+                    `}
                     {...props}
                 />
 

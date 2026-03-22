@@ -657,7 +657,8 @@ const Invoice = () => {
 
             {/* ── MODALS (Unified Design) ───────────────────── */}
             {showCreate && (
-                <div className="fixed inset-0 bg-white/20 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-300">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-md" onClick={() => { setShowCreate(false); setFormData(initialFormData); }}></div>
                     <div className="bg-white border border-gray-100 rounded-[3rem] w-full max-w-xl shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden">
                         <div className="px-10 pT-8 border-b border-gray-50 flex items-center justify-between">
                             <div className="space-y-1">
@@ -726,7 +727,8 @@ const Invoice = () => {
             )}
 
             {selectedInvoice && (
-                <div className="fixed inset-0 bg-white/20 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-300">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-md" onClick={() => setSelectedInvoice(null)}></div>
                     <div className="bg-white border border-gray-100 rounded-[3rem] w-full max-w-2xl shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden">
                         <div className="px-10 pt-8 border-b border-gray-50 flex items-center justify-between bg-gray-50/30">
                             <div className="space-y-1">

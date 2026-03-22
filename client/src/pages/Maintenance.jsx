@@ -254,7 +254,7 @@ export default function Maintenance() {
                 <div className="flex gap-4">
                     <div className="relative">
                         <select
-                            className="bg-white border border-gray-100 rounded-2xl px-6 py-3 text-[13px] font-black text-[var(--color-secondary)] uppercase tracking-wider focus:outline-none focus:border-[var(--color-primary)]/20 focus:ring-4 focus:ring-[var(--color-primary)]/5 transition-all cursor-pointer shadow-sm pr-12 appearance-none"
+                            className="bg-white border border-gray-100 rounded-2xl px-6 py-3 text-[13px] font-black text-[var(--color-secondary)] uppercase tracking-wider focus:outline-none focus:border-[var(--color-primary)]/20 focus:ring-4 focus:ring-[var(--color-primary)]/40 transition-all cursor-pointer shadow-sm hover:shadow-md focus:shadow-md pr-12 appearance-none"
                             value={filter.status}
                             onChange={(e) => setFilter({ ...filter, status: e.target.value })}
                         >
@@ -267,7 +267,7 @@ export default function Maintenance() {
                     </div>
                     <div className="relative">
                         <select
-                            className="bg-white border border-gray-100 rounded-2xl px-6 py-3 text-[13px] font-black text-[var(--color-secondary)] uppercase tracking-wider focus:outline-none focus:border-[var(--color-primary)]/20 focus:ring-4 focus:ring-[var(--color-primary)]/5 transition-all cursor-pointer shadow-sm pr-12 appearance-none"
+                            className="bg-white border border-gray-100 rounded-2xl px-6 py-3 text-[13px] font-black text-[var(--color-secondary)] uppercase tracking-wider focus:outline-none focus:border-[var(--color-primary)]/20 focus:ring-4 focus:ring-[var(--color-primary)]/40 transition-all cursor-pointer shadow-sm hover:shadow-md focus:shadow-md pr-12 appearance-none"
                             value={filter.priority}
                             onChange={(e) => setFilter({ ...filter, priority: e.target.value })}
                         >
@@ -352,7 +352,7 @@ export default function Maintenance() {
             {/* Create Request Modal */}
             {showForm && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
-                    <div className="absolute inset-0 bg-white/40 backdrop-blur-md" onClick={() => setShowForm(false)}></div>
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-md" onClick={() => setShowForm(false)}></div>
                     <div className="relative bg-white w-full max-w-2xl rounded-[3rem] border border-gray-100 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden">
                         <div className="px-10 pt-8 border-b border-gray-50 flex items-center justify-between">
                             <div className="space-y-1">
@@ -384,7 +384,7 @@ export default function Maintenance() {
                                             <select
                                                 name="propertyId"
                                                 required
-                                                className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-[var(--color-primary)]/20 rounded-2xl pl-12 pr-12 py-4 text-[13px] font-bold text-[var(--color-secondary)] transition-all appearance-none"
+                                                className="w-full bg-white border border-gray-100 focus:border-[var(--color-primary)]/40 rounded-2xl pl-12 pr-12 py-4 text-[13px] font-bold text-[var(--color-secondary)] transition-all shadow-sm hover:shadow-md focus:shadow-md appearance-none cursor-pointer"
                                                 value={formData.propertyId}
                                                 onChange={handleInputChange}
                                             >
@@ -404,7 +404,7 @@ export default function Maintenance() {
                                         <div className="relative">
                                             <select
                                                 name="category"
-                                                className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 text-[13px] font-bold text-[var(--color-secondary)] transition-all appearance-none"
+                                                className="w-full bg-white border border-gray-100 focus:border-[var(--color-primary)]/40 rounded-2xl px-6 py-4 text-[13px] font-bold text-[var(--color-secondary)] transition-all shadow-sm hover:shadow-md focus:shadow-md appearance-none cursor-pointer"
                                                 value={formData.category}
                                                 onChange={handleInputChange}
                                             >
@@ -424,7 +424,7 @@ export default function Maintenance() {
                                         <div className="relative">
                                             <select
                                                 name="priority"
-                                                className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 text-[13px] font-bold text-[var(--color-secondary)] transition-all appearance-none"
+                                                className="w-full bg-white border border-gray-100 focus:border-[var(--color-primary)]/40 rounded-2xl px-6 py-4 text-[13px] font-bold text-[var(--color-secondary)] transition-all shadow-sm hover:shadow-md focus:shadow-md appearance-none cursor-pointer"
                                                 value={formData.priority}
                                                 onChange={handleInputChange}
                                             >

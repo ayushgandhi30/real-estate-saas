@@ -333,7 +333,7 @@ const Subscriptions = () => {
             {/* Modal Tier Constructor */}
             {openForm && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
-                    <div className="absolute inset-0 bg-white/40 backdrop-blur-md" onClick={resetForm}></div>
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-md" onClick={resetForm}></div>
 
                     <div className="relative bg-white w-full max-w-2xl rounded-[3rem] border border-gray-100 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden">
                         

@@ -113,86 +113,50 @@ const SignUpPage = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <div className="space-y-2">
-                <label className="flex items-center gap-2 ml-1">
-                  <span className="font-semibold text-sm text-[var(--text-secondary)] opacity-90">Full Name</span>
-                </label>
-                <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <User className="w-5 h-5 text-gray-400 group-focus-within:text-[var(--color-primary)] transition-colors" />
-                  </div>
-                  <Input
-                    type="text"
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    placeholder="John Doe"
-                    className="w-full pl-11 bg-white border-gray-200 focus:bg-white focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 h-14 transition-all rounded-xl font-medium shadow-sm hover:border-gray-300"
-                    required
-                  />
-                </div>
-              </div>
+              <Input
+                label="Full Name"
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="John Doe"
+                icon={User}
+                required
+              />
 
-              <div className="space-y-2">
-                <label className="flex items-center gap-2 ml-1">
-                  <span className="font-semibold text-sm text-[var(--text-secondary)] opacity-90">Email Address</span>
-                </label>
-                <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <Mail className="w-5 h-5 text-gray-400 group-focus-within:text-[var(--color-primary)] transition-colors" />
-                  </div>
-                  <Input
-                    type="email"
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="john@example.com"
-                    className="w-full pl-11 bg-white border-gray-200 focus:bg-white focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 h-14 transition-all rounded-xl font-medium shadow-sm hover:border-gray-300"
-                    required
-                  />
-                </div>
-              </div>
+              <Input
+                label="Email Address"
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="john@example.com"
+                icon={Mail}
+                required
+              />
             </div>
 
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 ml-1">
-                <span className="font-semibold text-sm text-[var(--text-secondary)] opacity-90">Password</span>
-              </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="w-5 h-5 text-gray-400 group-focus-within:text-[var(--color-primary)] transition-colors" />
-                </div>
-                <Input
-                  type="password"
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  className="w-full pl-11 bg-white border-gray-200 focus:bg-white focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 h-14 transition-all rounded-xl font-medium shadow-sm hover:border-gray-300"
-                  required
-                />
-              </div>
-            </div>
+            <Input
+              label="Password"
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="••••••••"
+              icon={Lock}
+              required
+            />
 
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 ml-1">
-                <span className="font-semibold text-sm text-[var(--text-secondary)] opacity-90">Confirm Password</span>
-              </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <ShieldCheck className="w-5 h-5 text-gray-400 group-focus-within:text-[var(--color-primary)] transition-colors" />
-                </div>
-                <Input
-                  type="password"
-                  name="confirmPassword"
-                  value={form.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  className="w-full pl-11 bg-white border-gray-200 focus:bg-white focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 h-14 transition-all rounded-xl font-medium shadow-sm hover:border-gray-300"
-                  required
-                />
-              </div>
-            </div>
+            <Input
+              label="Confirm Password"
+              type="password"
+              name="confirmPassword"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              placeholder="••••••••"
+              icon={ShieldCheck}
+              required
+            />
 
             {error && (
               <div className="p-3.5 rounded-xl bg-red-50 text-red-600 border border-red-200 text-sm font-medium animate-shake flex items-center gap-2">

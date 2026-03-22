@@ -355,10 +355,10 @@ const Property = () => {
             {/* Add Property Modal */}
             {openForm && (
                 <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-300">
-                    <div className="absolute inset-0 bg-white/40 backdrop-blur-md" onClick={resetForm}></div>
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-md" onClick={resetForm}></div>
                     <div className="relative w-full max-w-5xl bg-white rounded-[2rem] shadow-lg border border-gray-100 overflow-hidden flex flex-col">
 
-                        <div className="px-8 py-5 border-b border-gray-50 flex items-center justify-between bg-white z-10">
+                        <div className="px-8 pt-5 border-b border-gray-50 flex items-center justify-between bg-white z-10">
                             <div>
                                 <h2 className="text-xl font-black text-[var(--color-secondary)] tracking-tight">
                                     {isEditing ? "Modify Property" : "Create New Property"}
@@ -367,150 +367,154 @@ const Property = () => {
                             <Button onClick={resetForm} iconOnly variant="secondary" size="sm" icon={<X size={20} />} className="hover:bg-rose-50 hover:text-rose-600" />
                         </div>
 
-                        <form className="p-8 pt-6" onSubmit={handleSubmit}>
+                        <form className="px-8 py-3" onSubmit={handleSubmit}>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 {/* Core Specification */}
                                 <section className="space-y-6">
-                                <div className="space-y-6">
-                                    <Input
-                                        label="Property Name"
-                                        name="propertyName"
-                                        value={formData.propertyName}
-                                        onChange={handleChange}
-                                        required
-                                        variant="formInput"
-                                        placeholder="e.g. Skyline Corporate Center"
-                                    />
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-3 bg-rose-50 text-rose-600 rounded-2xl shadow-sm"><MapPin size={20} /></div>
+                                        <h3 className="text-sm font-black text-[var(--color-secondary)] uppercase tracking-[0.1em]">Property Details</h3>
+                                    </div>
+                                    <div className="space-y-6">
+                                        <Input
+                                            label="Property Name"
+                                            name="propertyName"
+                                            value={formData.propertyName}
+                                            onChange={handleChange}
+                                            required
+                                            variant="formInput"
+                                            placeholder="e.g. Skyline Corporate Center"
+                                        />
 
-                                    <div className="grid grid-cols-2 gap-8">
-                                        <div className="space-y-2">
-                                            <label className="block text-[var(--text-secondary)] text-sm font-semibold">Property Type</label>
-                                            <div className="relative">
-                                                <select
-                                                    name="propertyType"
-                                                    value={formData.propertyType}
-                                                    onChange={handleChange}
-                                                    required
-                                                    className="w-full px-4 py-3 border border-gray-600 focus:border-[var(--color-primary)] text-[var(--text-secondary)] rounded-xl outline-none transition appearance-none cursor-pointer"
-                                                >
-                                                    <option value="RESIDENTIAL">Residential Asset</option>
-                                                    <option value="COMMERCIAL">Commercial Hub</option>
-                                                    <option value="INDUSTRIAL">Industrial Site</option>
-                                                </select>
-                                                <ChevronDown size={14} className="absolute right-6 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none opacity-40" />
-                                            </div>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="block text-[var(--text-secondary)] text-sm font-semibold">Status</label>
-                                            <div className="flex items-center h-[52px] px-6 bg-gray-50 rounded-2xl border border-transparent hover:bg-white hover:border-indigo-100 transition-all cursor-pointer group" onClick={() => setFormData({ ...formData, isActive: !formData.isActive })}>
-                                                <div className={`w-8 h-4 rounded-full relative transition-all duration-300 ${formData.isActive ? 'bg-indigo-600' : 'bg-gray-300'}`}>
-                                                    <div className={`absolute top-0.5 w-3 h-3 bg-white rounded-full transition-all duration-300 ${formData.isActive ? 'left-[18px]' : 'left-0.5'}`} />
+                                        <div className="grid grid-cols-2 gap-8">
+                                            <div className="space-y-2">
+                                                <label className="block text-[var(--text-secondary)] text-sm font-semibold">Property Type</label>
+                                                <div className="relative">
+                                                    <select
+                                                        name="propertyType"
+                                                        value={formData.propertyType}
+                                                        onChange={handleChange}
+                                                        required
+                                                        className="w-full px-4 py-3 border border-gray-100 focus:border-[var(--color-primary)]/40 text-[var(--text-secondary)] rounded-xl outline-none transition-all duration-200 bg-white shadow-sm hover:shadow-md focus:shadow-md appearance-none cursor-pointer text-sm font-semibold"
+                                                    >
+                                                        <option value="RESIDENTIAL">Residential Asset</option>
+                                                        <option value="COMMERCIAL">Commercial Hub</option>
+                                                        <option value="INDUSTRIAL">Industrial Site</option>
+                                                    </select>
+                                                    <ChevronDown size={14} className="absolute right-6 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none opacity-40" />
                                                 </div>
-                                                <span className="ml-3 text-[10px] font-black uppercase text-[var(--color-secondary)]">Mark as Operational</span>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="block text-[var(--text-secondary)] text-sm font-semibold">Status</label>
+                                                <div className="flex items-center h-[52px] px-6 bg-gray-50 rounded-2xl border border-transparent hover:bg-white hover:border-indigo-100 transition-all cursor-pointer group" onClick={() => setFormData({ ...formData, isActive: !formData.isActive })}>
+                                                    <div className={`w-8 h-4 rounded-full relative transition-all duration-300 ${formData.isActive ? 'bg-indigo-600' : 'bg-gray-300'}`}>
+                                                        <div className={`absolute top-0.5 w-3 h-3 bg-white rounded-full transition-all duration-300 ${formData.isActive ? 'left-[18px]' : 'left-0.5'}`} />
+                                                    </div>
+                                                    <span className="ml-3 text-[10px] font-black uppercase text-[var(--color-secondary)]">Mark as Operational</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    {user?.role === "OWNER" && (
+                                        {user?.role === "OWNER" && (
+                                            <div className="space-y-2">
+                                                <label className="block text-[var(--text-secondary)] text-sm font-semibold">Property Manager</label>
+                                                <div className="relative">
+                                                    <select
+                                                        name="manager"
+                                                        value={formData.manager}
+                                                        onChange={handleChange}
+                                                        className="w-full px-4 py-3 border border-gray-100 focus:border-[var(--color-primary)]/40 text-[var(--text-secondary)] rounded-xl outline-none transition-all duration-200 bg-white shadow-sm hover:shadow-md focus:shadow-md appearance-none cursor-pointer text-sm font-semibold"
+                                                    >
+                                                        <option value="">Retain Direct Command (No Manager)</option>
+                                                        {managers.map(m => <option key={m._id} value={m._id}>{m.name} ({m.email})</option>)}
+                                                    </select>
+                                                    <ChevronDown size={14} className="absolute right-6 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none opacity-40" />
+                                                </div>
+                                            </div>
+                                        )}
+
                                         <div className="space-y-2">
-                                            <label className="block text-[var(--text-secondary)] text-sm font-semibold">Property Manager</label>
-                                            <div className="relative">
-                                                <select
-                                                    name="manager"
-                                                    value={formData.manager}
-                                                    onChange={handleChange}
-                                                    className="w-full px-4 py-3 border border-gray-600 focus:border-[var(--color-primary)] text-[var(--text-secondary)] rounded-xl outline-none transition appearance-none cursor-pointer"
-                                                >
-                                                    <option value="">Retain Direct Command (No Manager)</option>
-                                                    {managers.map(m => <option key={m._id} value={m._id}>{m.name} ({m.email})</option>)}
-                                                </select>
-                                                <ChevronDown size={14} className="absolute right-6 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none opacity-40" />
-                                            </div>
+                                            <label className="block text-[var(--text-secondary)] text-sm font-semibold">Property Description</label>
+                                            <textarea
+                                                name="description"
+                                                value={formData.description}
+                                                onChange={handleChange}
+                                                className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 text-xs font-medium text-[var(--color-secondary)] shadow-sm focus:outline-none min-h-[100px] resize-none"
+                                                placeholder="Specify property highlights, structural details, or strategic advantages..."
+                                            />
                                         </div>
-                                    )}
+                                    </div>
+                                </section>
 
-                                    <div className="space-y-2">
-                                        <label className="block text-[var(--text-secondary)] text-sm font-semibold">Property Description</label>
-                                        <textarea
-                                            name="description"
-                                            value={formData.description}
-                                            onChange={handleChange}
-                                            className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 text-xs font-medium text-[var(--color-secondary)] shadow-sm focus:outline-none min-h-[100px] resize-none"
-                                            placeholder="Specify property highlights, structural details, or strategic advantages..."
-                                        />
+                                {/* Logistics Location */}
+                                <section className="space-y-6">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-3 bg-rose-50 text-rose-600 rounded-2xl shadow-sm"><MapPin size={20} /></div>
+                                        <h3 className="text-sm font-black text-[var(--color-secondary)] uppercase tracking-[0.1em]">Geographical Logistics</h3>
                                     </div>
-                                </div>
-                            </section>
 
-                            {/* Logistics Location */}
-                            <section className="space-y-6">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-3 bg-rose-50 text-rose-600 rounded-2xl shadow-sm"><MapPin size={20} /></div>
-                                    <h3 className="text-sm font-black text-[var(--color-secondary)] uppercase tracking-[0.1em]">Geographical Logistics</h3>
-                                </div>
-
-                                <div className="p-8 bg-gray-50/50 rounded-[2.5rem] border border-gray-100 space-y-6">
-                                    <div className="grid md:grid-cols-2 gap-8">
-                                        <Input
-                                            label="Location"
-                                            name="location"
-                                            value={formData.location}
-                                            onChange={handleChange}
-                                            required
-                                            variant="formInput"
-                                            placeholder="e.g. Bandra West"
-                                        />
-                                        <Input
-                                            label="City"
-                                            name="city"
-                                            value={formData.city}
-                                            onChange={handleChange}
-                                            variant="formInput"
-                                            placeholder="e.g. Mumbai"
-                                        />
-                                    </div>
-                                    <div className="grid md:grid-cols-3 gap-6">
-                                        <Input
-                                            label="State"
-                                            name="state"
-                                            value={formData.state}
-                                            onChange={handleChange}
-                                            variant="formInput"
-                                            placeholder="Maharashtra"
-                                        />
-                                        <Input
-                                            label="Zip Code"
-                                            name="zipCode"
-                                            value={formData.zipCode}
-                                            onChange={handleChange}
-                                            variant="formInput"
-                                            placeholder="400050"
-                                        />
-                                        <Input
-                                            label="Country"
-                                            name="country"
-                                            value={formData.country}
-                                            onChange={handleChange}
-                                            variant="formInput"
-                                            placeholder="India"
-                                        />
-                                    </div>
-                                    <div className="space-y-2 pt-2">
-                                        <label className="block text-[var(--text-secondary)] text-sm font-semibold">Address</label>
-                                        <textarea
-                                            name="address"
-                                            value={formData.address}
-                                            onChange={handleChange}
-                                            required
-                                            className="w-full bg-white border border-transparent focus:border-rose-100 rounded-2xl px-6 py-4 text-xs font-medium text-[var(--color-secondary)] shadow-sm focus:outline-none min-h-[80px] resize-none"
-                                            placeholder="Enter precise logistical address coordinate..."
-                                        />
-                                    </div>
+                                    <div className="p-8 bg-gray-50/50 rounded-[2.5rem] border border-gray-100 space-y-6">
+                                        <div className="grid md:grid-cols-2 gap-8">
+                                            <Input
+                                                label="Location"
+                                                name="location"
+                                                value={formData.location}
+                                                onChange={handleChange}
+                                                required
+                                                variant="formInput"
+                                                placeholder="e.g. Bandra West"
+                                            />
+                                            <Input
+                                                label="City"
+                                                name="city"
+                                                value={formData.city}
+                                                onChange={handleChange}
+                                                variant="formInput"
+                                                placeholder="e.g. Mumbai"
+                                            />
+                                        </div>
+                                        <div className="grid md:grid-cols-3 gap-6">
+                                            <Input
+                                                label="State"
+                                                name="state"
+                                                value={formData.state}
+                                                onChange={handleChange}
+                                                variant="formInput"
+                                                placeholder="Maharashtra"
+                                            />
+                                            <Input
+                                                label="Zip Code"
+                                                name="zipCode"
+                                                value={formData.zipCode}
+                                                onChange={handleChange}
+                                                variant="formInput"
+                                                placeholder="400050"
+                                            />
+                                            <Input
+                                                label="Country"
+                                                name="country"
+                                                value={formData.country}
+                                                onChange={handleChange}
+                                                variant="formInput"
+                                                placeholder="India"
+                                            />
+                                        </div>
+                                        <div className="space-y-2 pt-2">
+                                            <label className="block text-[var(--text-secondary)] text-sm font-semibold">Address</label>
+                                            <textarea
+                                                name="address"
+                                                value={formData.address}
+                                                onChange={handleChange}
+                                                required
+                                                className="w-full bg-white border border-transparent focus:border-rose-100 rounded-2xl px-6 py-4 text-xs font-medium text-[var(--color-secondary)] shadow-sm focus:outline-none min-h-[80px] resize-none"
+                                                placeholder="Enter precise logistical address coordinate..."
+                                            />
+                                        </div>
                                     </div>
                                 </section>
                             </div>
 
-                            <div className="flex items-center justify-end gap-6 pt-6 mt-6 border-t border-gray-50 bg-white">
+                            <div className="flex items-center justify-end gap-6 pt-6  border-t border-gray-50 bg-white">
                                 <Button type="button" variant="ghost" size="sm" onClick={resetForm}>Cancel</Button>
                                 <Button type="submit" htmlType="submit" variant="primary" size="lg" icon={isEditing ? <Edit size={18} /> : <ArrowRight size={18} />}>
                                     {isEditing ? "Update Property" : "Create Property"}

@@ -278,7 +278,7 @@ const User = () => {
             {/* Identity Modal */}
             {openForm && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
-                    <div className="absolute inset-0 bg-white/40 backdrop-blur-md" onClick={resetForm}></div>
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-md" onClick={resetForm}></div>
 
                     <div className="relative bg-white w-full max-w-lg rounded-[3.5rem] border border-gray-100 shadow-lg overflow-hidden">
 
@@ -345,7 +345,7 @@ const User = () => {
                                             name="role"
                                             value={formData.role}
                                             onChange={handleChange}
-                                            className="w-full px-4 py-3 pl-10 border border-gray-600 focus:border-[var(--color-primary)] text-[var(--text-secondary)] rounded-xl outline-none transition appearance-none cursor-pointer"
+                                            className="w-full px-4 py-3 pl-10 border border-gray-100 focus:border-[var(--color-primary)]/40 text-[var(--text-secondary)] rounded-xl outline-none transition-all duration-200 bg-white shadow-sm hover:shadow-md focus:shadow-md appearance-none cursor-pointer text-sm font-semibold"
                                             disabled={["MANAGER", "OWNER"].includes(currentUser?.role) && isEditing}
                                         >
                                             {currentUser?.role === "MANAGER" && <option value="TENANT">Tenant</option>}

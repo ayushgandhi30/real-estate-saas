@@ -601,7 +601,7 @@ const FloorUnit = () => {
       {/* Floor Modal */}
       {openFloorForm && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-300 font-['Inter']">
-          <div className="absolute inset-0 bg-white/40 backdrop-blur-md" onClick={() => { setOpenFloorForm(false); setEditFloorId(null); setFloorData(initialFloorData); }}></div>
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-md" onClick={() => { setOpenFloorForm(false); setEditFloorId(null); setFloorData(initialFloorData); }}></div>
           <div className="relative w-full max-w-xl bg-white rounded-[2rem] shadow-[0_40px_100px_-20_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden flex flex-col">
 
             <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between bg-white z-10">
@@ -622,7 +622,7 @@ const FloorUnit = () => {
                       onChange={handleFloorChange}
                       required
                       disabled={isEditingFloor}
-                      className="w-full px-4 py-3 border border-gray-600 focus:border-[var(--color-primary)] text-[var(--text-secondary)] rounded-xl outline-none transition appearance-none cursor-pointer disabled:opacity-50"
+                      className="w-full px-4 py-3 border border-gray-100 focus:border-[var(--color-primary)]/40 text-[var(--text-secondary)] rounded-xl outline-none transition-all duration-200 bg-white shadow-sm hover:shadow-md focus:shadow-md appearance-none cursor-pointer text-sm font-semibold disabled:opacity-50"
                     >
                       <option value="">-- Choose Host Asset --</option>
                       {properties.map(p => <option key={p._id} value={p._id}>{p.propertyName}</option>)}
@@ -673,7 +673,7 @@ const FloorUnit = () => {
       {/* Unit Modal */}
       {openUnitForm && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-300">
-          <div className="absolute inset-0 bg-white/40 backdrop-blur-md" onClick={() => { setOpenUnitForm(false); resetUnitForm(); }}></div>
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-md" onClick={() => { setOpenUnitForm(false); resetUnitForm(); }}></div>
           <div className="relative w-full max-w-4xl bg-white rounded-[2rem] shadow-[0_40px_100px_-20_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden flex flex-col">
 
             <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between bg-white z-10">
@@ -696,7 +696,7 @@ const FloorUnit = () => {
                     <div className="space-y-2">
                       <label className="block text-[var(--text-secondary)] text-sm font-semibold">Property</label>
                       <div className="relative">
-                        <select name="propertyId" value={unitData.propertyId} onChange={handleUnitChange} required className="w-full px-4 py-3 border border-gray-600 focus:border-[var(--color-primary)] text-[var(--text-secondary)] rounded-xl outline-none transition appearance-none cursor-pointer">
+                        <select name="propertyId" value={unitData.propertyId} onChange={handleUnitChange} required className="w-full px-4 py-3 border border-gray-100 focus:border-[var(--color-primary)]/40 text-[var(--text-secondary)] rounded-xl outline-none transition-all duration-200 bg-white shadow-sm hover:shadow-md focus:shadow-md appearance-none cursor-pointer text-sm font-semibold">
                           <option value="">-- Choose Asset --</option>
                           {properties.map(p => <option key={p._id} value={p._id}>{p.propertyName}</option>)}
                         </select>
@@ -706,7 +706,7 @@ const FloorUnit = () => {
                     <div className="space-y-2">
                       <label className="block text-[var(--text-secondary)] text-sm font-semibold">Floor</label>
                       <div className="relative">
-                        <select name="floorId" value={unitData.floorId} onChange={handleUnitChange} required disabled={!selectedPropertyForUnit} className="w-full px-4 py-3 border border-gray-600 focus:border-[var(--color-primary)] text-[var(--text-secondary)] rounded-xl outline-none transition appearance-none cursor-pointer disabled:opacity-50">
+                        <select name="floorId" value={unitData.floorId} onChange={handleUnitChange} required disabled={!selectedPropertyForUnit} className="w-full px-4 py-3 border border-gray-100 focus:border-[var(--color-primary)]/40 text-[var(--text-secondary)] rounded-xl outline-none transition-all duration-200 bg-white shadow-sm hover:shadow-md focus:shadow-md appearance-none cursor-pointer text-sm font-semibold disabled:opacity-50">
                           <option value="">-- Choose Floor --</option>
                           {filteredFloorsForUnit.map(f => <option key={f._id} value={f._id}>{f.name} (Lvl {f.floorNumber})</option>)}
                         </select>
@@ -725,7 +725,7 @@ const FloorUnit = () => {
                       />
                       <div className="space-y-2">
                         <label className="block text-[var(--text-secondary)] text-sm font-semibold">Type</label>
-                        <select name="unitType" value={unitData.unitType} onChange={handleUnitChange} className="w-full px-4 py-3 border border-gray-600 focus:border-[var(--color-primary)] text-[var(--text-secondary)] rounded-xl outline-none transition appearance-none cursor-pointer">
+                        <select name="unitType" value={unitData.unitType} onChange={handleUnitChange} className="w-full px-4 py-3 border border-gray-100 focus:border-[var(--color-primary)]/40 text-[var(--text-secondary)] rounded-xl outline-none transition-all duration-200 bg-white shadow-sm hover:shadow-md focus:shadow-md appearance-none cursor-pointer text-sm font-semibold">
                           {["Flat", "Shop", "Office", "Warehouse", "Parking"].map(t => <option key={t} value={t}>{t}</option>)}
                         </select>
                       </div>
