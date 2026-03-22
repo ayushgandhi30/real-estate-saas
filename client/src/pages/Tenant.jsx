@@ -726,9 +726,9 @@ const Tenant = () => {
                                                     <label className="text-[var(--text-secondary)] text-sm font-semibold ml-1">Lease Status</label>
                                                     <div className="relative">
                                                         <select className="w-full bg-white border border-emerald-200 focus:border-emerald-400 text-[var(--color-secondary)] rounded-xl px-4 py-2.5 outline-none shadow-sm cursor-pointer appearance-none" value={formData.leaseStatus || "Active"} onChange={(e) => setFormData({ ...formData, leaseStatus: e.target.value })}>
-                                                            <option value="Active">Operational / Active</option>
-                                                            <option value="Expiring">Alert / Expiring</option>
-                                                            <option value="Terminated">Closed / Terminated</option>
+                                                            <option value="Active">Active</option>
+                                                            <option value="Expiring">Expiring</option>
+                                                            <option value="Terminated">Terminated</option>
                                                         </select>
                                                         <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                                                     </div>
@@ -737,8 +737,8 @@ const Tenant = () => {
                                                     <label className="text-[var(--text-secondary)] text-sm font-semibold ml-1">Payment Status</label>
                                                     <div className="relative">
                                                         <select className="w-full bg-white border border-emerald-200 focus:border-emerald-400 text-[var(--color-secondary)] rounded-xl px-4 py-2.5 outline-none shadow-sm cursor-pointer appearance-none" value={formData.paymentStatus || "Pending"} onChange={(e) => setFormData({ ...formData, paymentStatus: e.target.value })}>
-                                                            <option value="Pending">Fiscal Pending</option>
-                                                            <option value="Paid">Liability Settled</option>
+                                                            <option value="Pending">Pending</option>
+                                                            <option value="Paid">Paid</option>
                                                         </select>
                                                         <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
                                                     </div>
@@ -749,7 +749,7 @@ const Tenant = () => {
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-end gap-4 pt-5 mt-2 border-t border-gray-50 bg-white">
+                            <div className="flex items-center justify-end gap-4 pt-5 mt-2  border-t border-gray-50 bg-white">
                                 <Button type="button" variant="ghost" size="sm" onClick={() => { setIsAddingTenant(false); setEditId(null); setFormData(initialFormData); }}>Cancel</Button>
                                 <Button type="submit" htmlType="submit" loading={loading} variant="primary" size="md" icon={editId ? <Edit size={16} /> : <CheckCircle2 size={16} />}>
                                     {editId ? "Update Tenant" : "Save Tenant"}

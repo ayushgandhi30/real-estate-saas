@@ -1,5 +1,5 @@
 const User = require("../models/User-model.js")
-const bcrypt = require("bcryptjs")
+const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
@@ -22,12 +22,10 @@ const register = async (req, res) => {
             return res.status(400).json({ message: "User already exists" });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-
         const user = await User.create({
             name,
             email,
-            password: hashedPassword,
+            password, // Hashing handled by User model pre-save hook
             role: "TENANT", // All public signups are tenants by default
             phone
         });
@@ -56,11 +54,13 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log("Login attempt for:", email);
         if (!email || !password) {
             return res.status(400).json({ message: "All fields are required" })
         }
 
         const user = await User.findOne({ email })
+        console.log("User found:", user ? "Yes" : "No");
         if (!user) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
@@ -73,15 +73,18 @@ const login = async (req, res) => {
             return res.status(403).json({ message: "Your account is inactive." });
         }
 
-
+        console.log("Comparing passwords...");
         const isMatch = await bcrypt.compare(password, user.password)
+        console.log("Password match:", isMatch);
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
         // Update last login timestamp
         user.lastLoginAt = new Date();
+        console.log("Saving user last login...");
         await user.save();
+        console.log("User saved.");
 
         const token = jwt.sign(
             { id: user._id, role: user.role },
@@ -100,6 +103,7 @@ const login = async (req, res) => {
             },
         });
     } catch (error) {
+        console.error("Login Error Details:", error);
         res.status(500).json({ message: error.message });
     }
 }
@@ -176,8 +180,7 @@ const changePassword = async (req, res) => {
             return res.status(400).json({ message: "New password must be different from current password" });
         }
 
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        existingUser.password = hashedPassword;
+        existingUser.password = newPassword; // Model pre-save hook handles hashing
         await existingUser.save();
 
         return res.status(200).json({ message: "Password updated successfully" });
@@ -300,8 +303,7 @@ const resetPassword = async (req, res) => {
             return res.status(400).json({ message: "Invalid or expired reset token" });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        user.password = hashedPassword;
+        user.password = password; // Model pre-save hook handles hashing
         user.resetToken = undefined;
         user.resetTokenExpiry = undefined;
 

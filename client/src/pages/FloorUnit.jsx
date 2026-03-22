@@ -661,7 +661,7 @@ const FloorUnit = () => {
 
               <div className="flex items-center justify-end gap-4 pt-4 mt-4 border-t border-gray-50 bg-white">
                 <Button type="button" htmlType="submit" variant="ghost" size="sm" onClick={() => { setOpenFloorForm(false); setEditFloorId(null); setFloorData(initialFloorData); }}>Cancel</Button>
-                <Button type="submit" variant="primary" size="md">
+                <Button type="submit" htmlType="submit" variant="primary" size="md">
                   {isEditingFloor ? "Update" : "Save"}
                 </Button>
               </div>
@@ -827,8 +827,8 @@ const FloorUnit = () => {
               </div>
 
               <div className="flex items-center justify-end gap-4 pt-4 mt-6 border-t border-gray-50 bg-white">
-                <Button type="button" variant="ghost" size="sm" onClick={() => { setOpenUnitForm(false); resetUnitForm(); }}>Cancel</Button>
-                <Button type="submit" variant="primary" size="md">
+                <Button type="button" htmlType="submit" variant="ghost" size="sm" onClick={() => { setOpenUnitForm(false); resetUnitForm(); }}>Cancel</Button>
+                <Button type="submit" htmlType="submit" variant="primary" size="md">
                   {isEditingUnit ? "Update" : "Save"}
                 </Button>
               </div>

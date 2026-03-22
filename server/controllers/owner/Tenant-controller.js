@@ -5,7 +5,7 @@ const Floor = require("../../models/Floor-model");
 const User = require("../../models/User-model");
 const Owner = require("../../models/Owner-model");
 
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 
 const createTenant = async (req, res) => {
     try {
@@ -60,13 +60,12 @@ const createTenant = async (req, res) => {
         // Find or Create User
         let user = await User.findOne({ email });
         if (!user) {
-            // Create a new tenant user
-            const hashedPassword = await bcrypt.hash("Tenant@123", 10);
+            // Create a new tenant user - Hashing handled by User model pre-save hook
             user = await User.create({
                 name,
                 email,
                 phone,
-                password: hashedPassword,
+                password: "Tenant@123",
                 role: "TENANT",
                 isActive: true,
                 createdBy: loggedInUserId

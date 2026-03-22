@@ -1,6 +1,5 @@
 const User = require("../../models/User-model.js")
 const Owner = require("../../models/Owner-model.js")
-const bcrypt = require("bcrypt")
 
 const addUser = async (req, res) => {
     try {
@@ -12,7 +11,6 @@ const addUser = async (req, res) => {
         if (useExists) {
             return res.status(400).json({ msg: "User is already exists" })
         }
-        const hashedPassword = await bcrypt.hash(password, 10);
         
         let finalRole = role;
         if (req.user.role === "MANAGER") {
@@ -27,7 +25,7 @@ const addUser = async (req, res) => {
         const newUser = await User.create({
             name,
             email,
-            password: hashedPassword,
+            password, // Model pre-save hook handles hashing
             phone,
             role: finalRole || "TENANT", 
             createdBy: req.user._id
@@ -65,21 +63,27 @@ const updateUser = async (req, res) => {
             return res.status(403).json({ message: "Unauthorized to update this user" });
         }
 
-        const user = await User.findByIdAndUpdate(
-            userId,
-            req.body,
-            { new: true }
-        ).select("-password");
-
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
+        // Create update object and handle password conditionally
+        const updates = { ...req.body };
+        
+        // If password is empty string, don't update it
+        if (updates.password === "" || updates.password === undefined) {
+            delete updates.password;
         }
+
+        // We use findById and save() to ensure the pre-save hook for password hashing works
+        Object.assign(userToUpdate, updates);
+        const updatedUser = await userToUpdate.save();
+        
+        const userResult = updatedUser.toObject();
+        delete userResult.password;
 
         res.status(200).json({
             message: "User updated successfully",
-            user,
+            user: userResult,
         });
     } catch (error) {
+        console.error("Update User Error:", error);
         res.status(500).json({ message: error.message });
     }
 };

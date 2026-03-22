@@ -354,10 +354,9 @@ export default function Maintenance() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
                     <div className="absolute inset-0 bg-white/40 backdrop-blur-md" onClick={() => setShowForm(false)}></div>
                     <div className="relative bg-white w-full max-w-2xl rounded-[3rem] border border-gray-100 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden">
-                        <div className="px-10 py-8 border-b border-gray-50 flex items-center justify-between">
+                        <div className="px-10 pt-8 border-b border-gray-50 flex items-center justify-between">
                             <div className="space-y-1">
-                                <h2 className="text-2xl font-black text-[var(--color-secondary)] tracking-tight">Facility Request</h2>
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] opacity-60">Report an active asset maintenance issue</p>
+                                <h2 className="text-2xl font-black text-[var(--color-secondary)] tracking-tight">New Request</h2>
                             </div>
                             <Button onClick={() => setShowForm(false)} iconOnly variant="secondary" size="xs" icon={<X size={20} />} className="hover:bg-rose-50 hover:text-rose-600" />
                         </div>
@@ -365,7 +364,7 @@ export default function Maintenance() {
                         <form onSubmit={handleCreateRequest} className="p-10 space-y-8">
                             <div className="space-y-6">
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">ISSUE IDENTITY</label>
+                                    <label className="text-[12px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">Issue Title</label>
                                     <input
                                         type="text"
                                         name="title"
@@ -379,7 +378,7 @@ export default function Maintenance() {
 
                                 {isPropertySelectRequired && (
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">TARGET ASSET</label>
+                                        <label className="text-[12px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">Property</label>
                                         <div className="relative">
                                             <Building2 size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-primary)]" />
                                             <select
@@ -389,7 +388,7 @@ export default function Maintenance() {
                                                 value={formData.propertyId}
                                                 onChange={handleInputChange}
                                             >
-                                                <option value="">Select Target Property...</option>
+                                                <option value="">Select Property...</option>
                                                 {properties.map(p => (
                                                     <option key={p._id} value={p._id}>{p.propertyName}</option>
                                                 ))}
@@ -401,7 +400,7 @@ export default function Maintenance() {
 
                                 <div className="grid grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">DOMAIN</label>
+                                        <label className="text-[12px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">Category</label>
                                         <div className="relative">
                                             <select
                                                 name="category"
@@ -421,7 +420,7 @@ export default function Maintenance() {
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">SEVERITY</label>
+                                        <label className="text-[12px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">Priority</label>
                                         <div className="relative">
                                             <select
                                                 name="priority"
@@ -440,7 +439,7 @@ export default function Maintenance() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">DETAILED INTELLIGENCE</label>
+                                    <label className="text-[12px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">Description</label>
                                     <textarea
                                         name="description"
                                         required
@@ -454,9 +453,9 @@ export default function Maintenance() {
                             </div>
 
                             <div className="flex items-center justify-end gap-5">
-                                <Button type="button" variant="ghost" size="sm" onClick={() => setShowForm(false)}>Cancel Operation</Button>
-                                <Button type="submit" loading={submitting} variant="primary" size="lg" icon={<AlertCircle size={16} />}>
-                                    SUBMIT INTELLIGENCE
+                                <Button type="button" htmlType="submit" variant="ghost" size="sm" onClick={() => setShowForm(false)}>Cancel</Button>
+                                <Button type="submit" htmlType="submit" loading={submitting} variant="primary" size="lg">
+                                    Submit
                                 </Button>
                             </div>
                         </form>

@@ -75,145 +75,114 @@ const Profile = () => {
 
 
    return (
-      <div className="max-h-screen bg-[var(--bg-main)]  p-4 sm:p-6 lg:p-0 space-y-5 font-['Inter']">
+      <div className="min-h-screen bg-[var(--bg-main)] p-4 sm:p-6 lg:p-0 space-y-5 font-['Inter']">
 
-         {/* Header Area */}
-         <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
-            <div className="space-y-1">
-               <h1 className="font-black text-[var(--color-secondary)] tracking-tight">Profile & Security</h1>
-
-            </div>
+         {/* Header */}
+         <header className="max-w-7xl mx-auto w-full">
+            <h1 className="text-2xl font-black text-[var(--color-secondary)] tracking-tight">
+               Profile & Security
+            </h1>
          </header>
 
-         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10">
 
-            {/* Left Column: Profile Card */}
-            <div className="lg:col-span-1">
-               {/* Personal Card */}
-               <div className="bg-white rounded-[3.5rem] border border-gray-100 shadow-sm p-10 flex flex-col items-center text-center relative overflow-hidden group">
-                  <div className="absolute top-0 left-0 w-full h-32 bg-gray-50 transition-colors" />
+            {/* Profile Avatar Section */}
+            <div className="lg:col-span-4 translate-y-2">
+               <div className="bg-white rounded-[2rem] border border-gray-100 p-10 flex flex-col items-center text-center shadow-sm relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-indigo-600" />
 
-                  <div className="relative z-10 mt-6 mb-8">
-                     <div className="w-28 h-28 rounded-[3rem] bg-white p-2 shadow-2xl transition-all duration-500">
-                        <div className="w-full h-full rounded-[2.5rem] bg-indigo-600 flex items-center justify-center text-5xl font-black text-white transition-all">
-                           {formData?.name?.[0] || "U"}
-                        </div>
+                  <div className="relative">
+                     <div className="w-24 h-24 rounded-3xl bg-indigo-600 flex items-center justify-center text-3xl font-black text-white shadow-2xl transition-transform hover:scale-105 duration-500">
+                        {formData?.name?.[0] || "U"}
                      </div>
-                     <Button
-                        variant="secondary"
-                        size="xs"
-                        iconOnly
-                        icon={<Camera size={18} />}
-                        className="absolute bottom-2 right-2 shadow-xl hover:bg-slate-900 hover:text-white"
-                     />
+                     <button className="absolute -bottom-2 -right-2 p-2 bg-white border border-gray-100 rounded-xl shadow-lg text-indigo-600 hover:bg-slate-900 hover:text-white transition-all">
+                        <Camera size={14} />
+                     </button>
                   </div>
 
-                  <div className="space-y-2 relative z-10 w-full">
-                     <h3 className="text-2xl font-black text-[var(--color-secondary)] tracking-tight uppercase">{formData?.name}</h3>
-                     <div className="inline-flex px-4 py-1.5 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-indigo-100">
+                  <div className="mt-8 space-y-2">
+                     <h3 className="text-lg font-black text-[var(--color-secondary)] uppercase tracking-tight">
+                        {formData?.name}
+                     </h3>
+                     <span className="inline-flex px-4 py-1.5 bg-indigo-50/50 text-indigo-600 text-[9px] font-black uppercase tracking-[0.2em] rounded-full border border-indigo-100/50">
                         {formData?.role}
-                     </div>
+                     </span>
                   </div>
                </div>
             </div>
 
-            {/* Right Column: Personal Information Form */}
-            <div className="lg:col-span-2">
-               <section className="bg-white rounded-[4rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-                  <div className="p-10 sm:p-5 border-b border-gray-50 flex items-center justify-between">
-                     <div className="space-y-1">
-                        <h2 className="text-2xl font-black text-[var(--color-secondary)] flex items-center gap-3 uppercase">
+            {/* Information Form */}
+            <div className="lg:col-span-8">
+               <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
+                  <div className="px-10 py-8 border-b border-gray-50 flex items-center justify-between">
+                     <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-indigo-600 border border-gray-100">
+                           <User size={18} />
+                        </div>
+                        <h2 className="text-xs font-black text-[var(--color-secondary)] uppercase tracking-[0.1em]">
                            Personal Information
                         </h2>
                      </div>
-                     <div className="p-4 bg-gray-50 text-[var(--color-secondary)] rounded-2xl border border-gray-100">
-                        <User size={24} />
-                     </div>
                   </div>
 
-                  <div className="p-10 sm:p-5 space-y-10">
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="space-y-2">
-                           <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-[0.2em] ml-2">Full Name</label>
-                           <div className="relative flex items-center">
-                              <User size={16} className="absolute left-6 text-gray-400" />
-                              <input
-                                 type="text"
-                                 name="name"
-                                 value={formData.name}
-                                 onChange={handleChange}
-                                 className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-indigo-100 rounded-[2rem] pl-14 pr-8 py-5 text-sm font-black text-[var(--color-secondary)] shadow-sm focus:outline-none transition-all"
-                                 placeholder="Full Name"
-                              />
-                           </div>
-                        </div>
-                        <div className="space-y-2">
-                           <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-[0.2em] ml-2">Email Address</label>
-                           <div className="relative flex items-center">
-                              <Mail size={16} className="absolute left-6 text-gray-400" />
-                              <input
-                                 type="email"
-                                 name="email"
-                                 value={formData.email}
-                                 onChange={handleChange}
-                                 className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-indigo-100 rounded-[2rem] pl-14 pr-8 py-5 text-sm font-black text-[var(--color-secondary)] shadow-sm focus:outline-none transition-all"
-                                 placeholder="Email Address"
-                              />
-                           </div>
-                        </div>
-                        <div className="space-y-2">
-                           <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-[0.2em] ml-2">Phone Number</label>
-                           <div className="relative flex items-center">
-                              <Phone size={16} className="absolute left-6 text-gray-400" />
-                              <input
-                                 type="text"
-                                 name="phone"
-                                 value={formData.phone}
-                                 onChange={handleChange}
-                                 className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-indigo-100 rounded-[2rem] pl-14 pr-8 py-5 text-sm font-black text-[var(--color-secondary)] shadow-sm focus:outline-none transition-all"
-                                 placeholder="Phone Number"
-                              />
-                           </div>
-                        </div>
-                        <div className="space-y-2 opacity-60">
-                           <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] ml-2">Assigned Role</label>
-                           <div className="relative flex items-center">
-                              <ShieldCheck size={16} className="absolute left-6 text-gray-400" />
-                              <input
-                                 type="text"
-                                 value={formData.role}
-                                 readOnly
-                                 className="w-full bg-gray-100 border border-transparent rounded-[2rem] pl-14 pr-8 py-5 text-sm font-black text-gray-500 cursor-not-allowed shadow-none"
-                              />
-                           </div>
-                        </div>
+                  <div className="p-10 space-y-8">
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                        <Input
+                           label="Full Name"
+                           name="name"
+                           value={formData.name}
+                           onChange={handleChange}
+                           placeholder="Your full name"
+                           labelClassName="text-[12px] font-black  uppercase text-gray-400 ml-1"
+                           className="bg-gray-50/50 border-gray-100 rounded-xl h-12 text-sm font-bold"
+                        />
+
+                        <Input
+                           label="Email Address"
+                           type="email"
+                           name="email"
+                           value={formData.email}
+                           onChange={handleChange}
+                           placeholder="Your email"
+                           labelClassName="text-[12px] font-black uppercase text-gray-400 ml-1"
+                           className="bg-gray-50/50 border-gray-100 rounded-xl h-12 text-sm font-bold"
+                        />
+
+                        <Input
+                           label="Contact Number"
+                           name="phone"
+                           value={formData.phone}
+                           onChange={handleChange}
+                           placeholder="Your phone"
+                           labelClassName="text-[12px] font-black uppercase text-gray-400 ml-1"
+                           className="bg-gray-50/50 border-gray-100 rounded-xl h-12 text-sm font-bold"
+                        />
+
+                        <Input
+                           label="System Role"
+                           value={formData.role}
+                           readOnly
+                           labelClassName="text-[12px] font-black uppercase text-gray-400 ml-1"
+                           className="bg-gray-50 border-gray-100 rounded-xl h-12 text-sm font-bold opacity-50 cursor-not-allowed"
+                        />
                      </div>
 
-                     <div className="flex items-center justify-end pt-6">
+                     <div className="flex justify-end pt-4">
                         <Button
                            onClick={handleSave}
                            loading={isSavingProfile}
                            variant="primary"
                            size="lg"
-                           icon={<Save size={16} />}
+                           className="w-full sm:w-auto px-10 py-4 h-14 rounded-xl bg-slate-900 border-none shadow-xl shadow-slate-200 t uppercase text-[10px] font-black"
+                           icon={<Save size={14} />}
                         >
-                           Save Profile
+                           Commit Changes
                         </Button>
                      </div>
                   </div>
-               </section>
+               </div>
             </div>
          </div>
-         {/* Global Animations */}
-         <style>{`
-                @keyframes fade-in {
-                   from { opacity: 0; transform: translateY(20px); }
-                   to { opacity: 1; transform: translateY(0); }
-                }
-                .animate-in {
-                   animation: fade-in 1s cubic-bezier(0.16, 1, 0.3, 1);
-                }
-             `}</style>
       </div>
    );
 };

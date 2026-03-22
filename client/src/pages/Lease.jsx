@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { 
-    FileText, 
-    Home, 
-    CreditCard, 
-    IndianRupee, 
-    ClipboardList, 
-    Loader2, 
+import {
+    FileText,
+    Home,
+    CreditCard,
+    IndianRupee,
+    ClipboardList,
+    Loader2,
     AlertCircle,
     Download,
     Calendar,
@@ -118,7 +118,7 @@ export default function Lease() {
     ];
 
     return (
-        <div className="min-h-screen bg-[var(--bg-main)] p-4 sm:p-6 lg:p-8 space-y-8 font-['Inter']">
+        <div className="min-h-screen bg-[var(--bg-main)] p-4 sm:p-6 lg:p-0 space-y-5 font-['Inter']">
 
             {/* Page Header */}
             <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 pb-2">
@@ -126,15 +126,14 @@ export default function Lease() {
                     <h1 className="text-3xl font-black text-[var(--color-secondary)] tracking-tight">
                         Lease Intelligence
                     </h1>
-                    <p className="text-[var(--text-muted)] font-medium text-sm">Review agreement clauses, financial terms, and residency status.</p>
                 </div>
-                <Button 
-                    variant="primary" 
-                    size="md" 
+                <Button
+                    variant="primary"
+                    size="md"
                     icon={<Download size={16} />}
                     className="bg-gray-900 tracking-widest font-black uppercase hover:bg-black"
                 >
-                    EXPORT AGREEMENT
+                    Download
                 </Button>
             </header>
 
@@ -145,34 +144,33 @@ export default function Lease() {
                     <div className="absolute top-0 right-0 p-10 opacity-[0.03] group-hover:scale-125 transition-transform duration-1000">
                         <FileText size={180} />
                     </div>
-                    
+
                     <div className="flex items-center gap-4 mb-10">
                         <div className="p-4 bg-indigo-50 text-indigo-600 rounded-3xl">
                             <FileText size={24} />
                         </div>
-                        <h2 className="text-xl font-black text-[var(--color-secondary)] tracking-tight uppercase tracking-wider">Document Identity</h2>
+                        <h2 className="text-xl font-black text-[var(--color-secondary)] tracking-tight uppercase tracking-wider">Lease Details</h2>
                     </div>
 
                     <div className="grid grid-cols-2 gap-y-8 relative z-10">
                         <div className="space-y-1">
-                            <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Lease Alpha ID</p>
+                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">Lease ID</p>
                             <p className="text-xl font-black text-[var(--color-secondary)] tracking-tight">LSE-{leaseData._id.slice(-8).toUpperCase()}</p>
                         </div>
                         <div className="space-y-1">
-                            <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Operational Status</p>
-                            <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${
-                                leaseData.leaseStatus === 'Active' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-rose-50 text-rose-600 border-rose-100'
-                            }`}>
+                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">Status</p>
+                            <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${leaseData.leaseStatus === 'Active' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-rose-50 text-rose-600 border-rose-100'
+                                }`}>
                                 <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${leaseData.leaseStatus === 'Active' ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
                                 {leaseData.leaseStatus}
                             </span>
                         </div>
                         <div className="space-y-1">
-                            <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Maturity Date</p>
+                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">Lease End Date</p>
                             <p className="text-sm font-bold text-[var(--color-secondary)]">{formatDate(leaseData.leaseEnd)}</p>
                         </div>
                         <div className="space-y-1">
-                            <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Total Tenure</p>
+                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">Total Tenure</p>
                             <p className="text-sm font-bold text-[var(--color-secondary)]">{calculateDuration(leaseData.leaseStart, leaseData.leaseEnd)}</p>
                         </div>
                     </div>
@@ -183,33 +181,33 @@ export default function Lease() {
                     <div className="absolute top-0 right-0 p-10 opacity-[0.03] group-hover:scale-125 transition-transform duration-1000">
                         <Home size={180} />
                     </div>
-                    
+
                     <div className="flex items-center gap-4 mb-10">
                         <div className="p-4 bg-purple-50 text-purple-600 rounded-3xl">
                             <Home size={24} />
                         </div>
-                        <h2 className="text-xl font-black text-[var(--color-secondary)] tracking-tight uppercase tracking-wider">Asset Information</h2>
+                        <h2 className="text-xl font-black text-[var(--color-secondary)] tracking-tight uppercase tracking-wider">Property Details</h2>
                     </div>
 
                     <div className="space-y-8 relative z-10">
                         <div className="space-y-1">
-                            <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Property Designation</p>
+                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">Property Name</p>
                             <p className="text-xl font-black text-[var(--color-secondary)] tracking-tight">{leaseData.propertyId?.propertyName || "Corporate Asset"}</p>
                         </div>
-                        
+
                         <div className="grid grid-cols-2 gap-6 pt-2">
                             <div className="p-5 bg-gray-50 rounded-[2rem] border border-gray-100">
-                                <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-1">Unit ID</p>
+                                <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-1">Unit Number</p>
                                 <p className="text-sm font-black text-[var(--color-secondary)]">Suite {leaseData.unitId?.unitNumber || "N/A"}</p>
                             </div>
                             <div className="p-5 bg-gray-50 rounded-[2rem] border border-gray-100">
-                                <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-1">Level</p>
+                                <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-1">Floor</p>
                                 <p className="text-sm font-black text-[var(--color-secondary)]">{leaseData.floorId?.name || "N/A"}</p>
                             </div>
                         </div>
 
                         <div className="space-y-1">
-                            <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-1"><ShieldCheck size={10} /> Verified Location</p>
+                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-1"><ShieldCheck size={10} /> Property Address</p>
                             <p className="text-xs font-medium text-[var(--text-muted)]/80 leading-relaxed max-w-sm">{leaseData.propertyId?.address || "Registered Address Data Not Available"}</p>
                         </div>
                     </div>
@@ -221,43 +219,43 @@ export default function Lease() {
                         <IndianRupee size={240} />
                     </div>
 
-                    <div className="flex items-center gap-4 mb-12">
+                    <div className="flex items-center gap-4 mb-5">
                         <div className="p-4 bg-emerald-50 text-emerald-600 rounded-3xl">
                             <IndianRupee size={24} />
                         </div>
-                        <h2 className="text-xl font-black text-[var(--color-secondary)] tracking-tight uppercase tracking-wider">Economic Framework</h2>
+                        <h2 className="text-xl font-black text-[var(--color-secondary)] tracking-tight uppercase tracking-wider">Financial Terms</h2>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         <div className="space-y-2 p-6 bg-emerald-50/30 rounded-[2.5rem] border border-emerald-50">
-                            <p className="text-[10px] font-black text-emerald-700/60 uppercase tracking-widest">Monthly Yield</p>
+                            <p className="text-[12px] font-black text-emerald-700/60 uppercase tracking-widest">Monthly Rent</p>
                             <p className="text-3xl font-black text-emerald-700">{formatCurrency(leaseData.rent)}</p>
                         </div>
                         <div className="space-y-2 p-6 bg-gray-50 rounded-[2.5rem] border border-gray-100">
-                            <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Security Reserve</p>
+                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">Security Deposit</p>
                             <p className="text-2xl font-black text-[var(--color-secondary)]">{formatCurrency(leaseData.deposit)}</p>
                         </div>
                         <div className="space-y-2 p-6 bg-amber-50/40 rounded-[2.5rem] border border-amber-50">
-                            <p className="text-[10px] font-black text-amber-700/60 uppercase tracking-widest">Settlement Cycle</p>
+                            <p className="text-[12px] font-black text-amber-700/60 uppercase tracking-widest">Payment Cycle</p>
                             <p className="text-xl font-black text-amber-900 leading-tight">Net 5 of Month</p>
                         </div>
                         <div className="space-y-2 p-6 bg-rose-50/40 rounded-[2.5rem] border border-rose-50">
-                            <p className="text-[10px] font-black text-rose-700/60 uppercase tracking-widest">Delinquency Penalty</p>
+                            <p className="text-[12px] font-black text-rose-700/60 uppercase tracking-widest">Late Fee</p>
                             <p className="text-xl font-black text-rose-900">{formatCurrency(leaseData.lateFees || 100)} / Diem</p>
                         </div>
                     </div>
 
-                    <div className="mt-12 pt-10 border-t border-gray-50 grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div className="mt-5 pt-10 border-t border-gray-50 grid grid-cols-1 md:grid-cols-3 gap-10">
                         <div className="space-y-1">
-                            <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest">Aggregate Paid</p>
+                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">Aggregate Paid</p>
                             <p className="text-lg font-black text-[var(--color-secondary)] opacity-40">{formatCurrency(leaseData.totalCollected || 0)}</p>
                         </div>
                         <div className="space-y-1">
-                            <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest">Outstanding Liability</p>
+                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">Outstanding Liability</p>
                             <p className="text-lg font-black text-rose-600">{formatCurrency(leaseData.pending || 0)}</p>
                         </div>
                         <div className="space-y-1">
-                            <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest">Maintenance Provision</p>
+                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">Maintenance Provision</p>
                             <p className="text-lg font-black text-[var(--color-secondary)] opacity-40">{formatCurrency(leaseData.maintenanceCost || 0)}</p>
                         </div>
                     </div>
@@ -266,11 +264,11 @@ export default function Lease() {
 
             {/* 4. Clauses & Rules */}
             <section className="bg-white rounded-[3rem] border border-gray-100 overflow-hidden shadow-[0_20px_50px_-15px_rgba(0,0,0,0.03)] p-10 lg:p-12">
-                <div className="flex items-center gap-4 mb-10">
+                <div className="flex items-center gap-4 mb-0">
                     <div className="p-4 bg-rose-50 text-rose-600 rounded-3xl">
                         <ClipboardList size={24} />
                     </div>
-                    <h2 className="text-xl font-black text-[var(--color-secondary)] tracking-tight uppercase tracking-wider">Governing Clauses</h2>
+                    <h2 className="text-xl font-black text-[var(--color-secondary)] tracking-tight uppercase tracking-wider">Lease Rules</h2>
                 </div>
 
                 <div className="grid lg:grid-cols-5 gap-12 lg:items-center">

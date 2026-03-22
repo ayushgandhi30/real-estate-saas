@@ -275,7 +275,7 @@ const Invoice = () => {
         currentY = drawSectionHeader("Charges Breakdown", currentY);
         autoTable(doc, {
             startY: currentY,
-            head: [["Description", "Amount (INR)"]],
+            head: [["Description", "Amount (₹)"]],
             body: [
                 ["Monthly Rent", `₹ ${inv.rent?.toLocaleString()}`],
                 ["Maintenance Charges", `₹ ${inv.maintenanceCharges?.toLocaleString()}`],
@@ -481,7 +481,7 @@ const Invoice = () => {
                                         <th className="px-8 py-5 tracking-widest">Serial</th>
                                         <th className="px-8 py-5 tracking-widest">Tenant Profile</th>
                                         <th className="px-8 py-5 tracking-widest">Billing Cycle</th>
-                                        <th className="px-8 py-5 tracking-widest">Yield</th>
+                                        <th className="px-8 py-5 tracking-widest">Yield (₹)</th>
                                         <th className="px-8 py-5 tracking-widest">Settlement Date</th>
                                         <th className="px-8 py-5 tracking-widest text-center">Status</th>
                                         <th className="px-8 py-5 text-right tracking-widest">Operations</th>
@@ -517,7 +517,7 @@ const Invoice = () => {
                                                 <td className="px-8 py-7">
                                                     <div className="flex flex-col">
                                                         <span className="text-lg font-black text-[var(--color-secondary)]">₹{total.toLocaleString()}</span>
-                                                        <span className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-40">Gross Amount</span>
+                                                        <span className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-40">Gross Amount (₹)</span>
                                                     </div>
                                                 </td>
                                                 <td className="px-8 py-7 text-[12px] font-bold text-[var(--text-muted)]">
@@ -659,10 +659,9 @@ const Invoice = () => {
             {showCreate && (
                 <div className="fixed inset-0 bg-white/20 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-300">
                     <div className="bg-white border border-gray-100 rounded-[3rem] w-full max-w-xl shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden">
-                        <div className="px-10 py-8 border-b border-gray-50 flex items-center justify-between">
+                        <div className="px-10 pT-8 border-b border-gray-50 flex items-center justify-between">
                             <div className="space-y-1">
-                                <h2 className="text-2xl font-black text-[var(--color-secondary)] tracking-tight">Ledger Entry</h2>
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] opacity-60">Generate Secure Digital Invoice</p>
+                                <h2 className="text-2xl font-black text-[var(--color-secondary)] tracking-tight">New Invoice</h2>
                             </div>
                             <Button
                                 onClick={() => { setShowCreate(false); setFormData(initialFormData); }}
@@ -675,7 +674,7 @@ const Invoice = () => {
 
                         <form onSubmit={handleSubmit} className="p-10 space-y-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">Target Tenant Record</label>
+                                <label className="text-[12px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">Select Tenant</label>
                                 <div className="relative">
                                     <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-primary)]" />
                                     <select
@@ -696,31 +695,154 @@ const Invoice = () => {
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <Input label="BILLING CYCLE" required placeholder="e.g. March 2026" value={formData.month} onChange={(e) => setFormData({ ...formData, month: e.target.value })} className="bg-gray-50 border-transparent rounded-2xl px-5 h-14 font-bold" />
-                                <Input label="BASE RENT (₹)" type="number" required placeholder="0.00" value={formData.rent} onChange={(e) => setFormData({ ...formData, rent: e.target.value })} className="bg-gray-50 border-transparent rounded-2xl px-5 h-14 font-black" />
-                                <Input label="UTILITY YIELD (₹)" type="number" placeholder="0.00" value={formData.utilityCharges} onChange={(e) => setFormData({ ...formData, utilityCharges: e.target.value })} className="bg-gray-50 border-transparent rounded-2xl px-5 h-14 font-bold" />
-                                <Input label="MAINTENANCE (₹)" type="number" placeholder="0.00" value={formData.maintenanceCharges} onChange={(e) => setFormData({ ...formData, maintenanceCharges: e.target.value })} className="bg-gray-50 border-transparent rounded-2xl px-5 h-14 font-bold" />
-                                <Input label="LATE FEE ACCRUAL (₹)" type="number" placeholder="0.00" value={formData.lateFee} onChange={(e) => setFormData({ ...formData, lateFee: e.target.value })} className="bg-gray-50 border-transparent rounded-2xl px-5 h-14 font-bold" />
-                                <Input label="MATURITY DATE" type="date" required value={formData.dueDate} onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })} className="bg-gray-50 border-transparent rounded-2xl px-5 h-14 font-bold" />
+                                <Input label="MONTH" required placeholder="e.g. March 2026" value={formData.month} onChange={(e) => setFormData({ ...formData, month: e.target.value })} className="bg-gray-50 border-transparent rounded-2xl px-5 h-14 font-bold" />
+                                <Input label="BASE RENT (₹)" type="number" required placeholder="0.00" value={formData.rent} onChange={(e) => setFormData({ ...formData, rent: e.target.value })} className="bg-gray-50 border-transparent rounded-2xl px-5 h-14 font-bold" />
+                                <Input label="UTILITY CHARGES (₹)" type="number" placeholder="0.00" value={formData.utilityCharges} onChange={(e) => setFormData({ ...formData, utilityCharges: e.target.value })} className="bg-gray-50 border-transparent rounded-2xl px-5 h-14 font-bold" />
+                                <Input label="MAINTENANCE" type="number" placeholder="0.00" value={formData.maintenanceCharges} onChange={(e) => setFormData({ ...formData, maintenanceCharges: e.target.value })} className="bg-gray-50 border-transparent rounded-2xl px-5 h-14 font-bold" />
+                                <Input label="LATE FEE" type="number" placeholder="0.00" value={formData.lateFee} onChange={(e) => setFormData({ ...formData, lateFee: e.target.value })} className="bg-gray-50 border-transparent rounded-2xl px-5 h-14 font-bold" />
+                                <Input label="DUE DATE" type="date" required value={formData.dueDate} onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })} className="bg-gray-50 border-transparent rounded-2xl px-5 h-14 font-bold" />
                             </div>
 
                             <div className="space-y-1.5">
-                                <label className="text-[10px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">Contextual Notes</label>
+                                <label className="text-[12px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1">DESCTIPTION</label>
                                 <textarea rows="3" placeholder="Additional details or instructions..." value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} className="w-full bg-gray-50 border border-transparent focus:bg-white focus:border-[var(--color-primary)]/20 rounded-2xl px-6 py-4 text-[13px] font-bold text-[var(--color-secondary)] transition-all focus:outline-none" />
                             </div>
 
                             <Button
                                 type="submit"
                                 disabled={submitting}
+                                htmlType="submit"
                                 variant="primary"
                                 size="lg"
-                                className="w-full py-5 rounded-[2rem] bg-gray-900 shadow-xl shadow-gray-200 hover:shadow-red-200 tracking-[0.2em]"
+                                className="w-full pb-5 rounded-[2rem] bg-gray-900 shadow-xl shadow-gray-200 hover:shadow-red-200 tracking-[0.2em]"
                                 loading={submitting}
                                 loadingText="Finalizing Transaction..."
                             >
-                                Issue Digital Invoice
+                                {editId ? "UPDATE INVOICE" : "CREATE INVOICE"}
                             </Button>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {selectedInvoice && (
+                <div className="fixed inset-0 bg-white/20 backdrop-blur-md flex items-center justify-center z-50 p-4 animate-in fade-in duration-300">
+                    <div className="bg-white border border-gray-100 rounded-[3rem] w-full max-w-2xl shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden">
+                        <div className="px-10 pt-8 border-b border-gray-50 flex items-center justify-between bg-gray-50/30">
+                            <div className="space-y-1">
+                                <h2 className="text-2xl font-black text-[var(--color-secondary)] tracking-tight">Invoice Details</h2>
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] opacity-60">
+                                    {selectedInvoice.invoiceNumber || "Digital Statement"}
+                                </p>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <Button
+                                    onClick={() => downloadInvoicePDF(selectedInvoice)}
+                                    variant="secondary"
+                                    size="sm"
+                                    icon={<Download size={16} />}
+                                    title="Download Statement"
+                                />
+                                <Button
+                                    onClick={() => setSelectedInvoice(null)}
+                                    variant="secondary"
+                                    size="sm"
+                                    iconOnly
+                                    icon={<X size={20} />}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="p-10 space-y-3 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                            <div className="flex items-start justify-between">
+                                <div className="flex items-center gap-5">
+                                    <div className="w-16 h-16 rounded-[22px] bg-slate-100 flex items-center justify-center text-xl font-black text-[var(--color-secondary)] shadow-sm border-2 border-white">
+                                        {getTenantName(selectedInvoice)[0]}
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-black text-[var(--color-secondary)] leading-tight">{getTenantName(selectedInvoice)}</h3>
+                                        <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mt-1">Unit {getUnitNumber(selectedInvoice)}</p>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <span className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-black uppercase tracking-widest border ${selectedInvoice.status === "Paid"
+                                        ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                                        : "bg-amber-50 text-amber-600 border-amber-100"
+                                        }`}>
+                                        <span className={`w-2 h-2 rounded-full ${selectedInvoice.status === "Paid" ? "bg-emerald-600" : "bg-amber-600"}`} />
+                                        {selectedInvoice.status}
+                                    </span>
+                                    <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mt-2">{selectedInvoice.month}</p>
+                                </div>
+                            </div>
+
+                            <div className="bg-gray-50/50 rounded-[2rem] border border-gray-100 overflow-hidden">
+                                <div className="px-8 py-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+                                    <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Description</span>
+                                    <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Amount (₹)</span>
+                                </div>
+                                <div className="p-4 space-y-1">
+                                    {[
+                                        { label: "Monthly Rent", value: selectedInvoice.rent, icon: Home },
+                                        { label: "Utility Charges", value: selectedInvoice.utilityCharges, icon: Zap },
+                                        { label: "Maintenance Fee", value: selectedInvoice.maintenanceCharges, icon: Wrench },
+                                        { label: "Late Surcharge", value: selectedInvoice.lateFee, icon: Tag },
+                                    ].map((item, i) => (
+                                        item.value > 0 && (
+                                            <div key={i} className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white transition-colors">
+                                                <div className="flex items-center gap-3">
+                                                    <item.icon size={14} className="text-[var(--text-muted)]" />
+                                                    <span className="text-sm font-bold text-[var(--color-secondary)]">{item.label}</span>
+                                                </div>
+                                                <span className="text-sm font-black text-[var(--color-secondary)]">₹{item.value?.toLocaleString()}</span>
+                                            </div>
+                                        )
+                                    ))}
+                                </div>
+                                <div className="px-8 py-6 bg-white border-t border-gray-100 flex items-center justify-between">
+                                    <div className="flex flex-col">
+                                        <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mb-1">Due Date</span>
+                                        <span className="text-sm font-black text-[var(--color-secondary)]">{formatDate(selectedInvoice.dueDate)}</span>
+                                    </div>
+                                    <div className="text-right">
+                                        <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] block mb-1">Total Amount</span>
+                                        <span className="text-3xl font-black text-[var(--color-primary)] tracking-tighter">₹{getTotal(selectedInvoice).toLocaleString()}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {selectedInvoice.notes && (
+                                <div className="space-y-3">
+                                    <label className="text-[12px] font-black text-[var(--color-secondary)] uppercase tracking-widest ml-1 opacity-50">Notes</label>
+                                    <div className="bg-amber-50/30 border border-amber-100/50 rounded-2xl p-6 text-sm font-medium text-[var(--color-secondary)] leading-relaxed italic">
+                                        "{selectedInvoice.notes}"
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="flex gap-4 pt-4">
+                                {role === "tenant" && selectedInvoice.status !== "Paid" && (
+                                    <Button
+                                        onClick={() => { handlePay(selectedInvoice._id); setSelectedInvoice(null); }}
+                                        variant="primary"
+                                        size="lg"
+                                        className="flex-1 py-5 rounded-[2rem] bg-gray-900 shadow-xl shadow-gray-200 hover:shadow-red-200 tracking-[0.2em]"
+                                    >
+                                        FINALIZE SETTLEMENT
+                                    </Button>
+                                )}
+                                {role === "manager" && (
+                                    <Button
+                                        onClick={() => { handleDelete(selectedInvoice._id); setSelectedInvoice(null); }}
+                                        variant="danger"
+                                        size="lg"
+                                        className="flex-1 py-5 rounded-[2rem] tracking-[0.2em]"
+                                    >
+                                        PURGE RECORD
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
