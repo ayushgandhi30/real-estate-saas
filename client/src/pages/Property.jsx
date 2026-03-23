@@ -263,7 +263,7 @@ const Property = () => {
                         <table className="w-full text-left font-['Inter']">
                             <thead className="bg-gray-50/50 border-b border-gray-50">
                                 <tr>
-                                    <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Property Details</th>
+                                    <th className="px-8 pt-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Property Details</th>
                                     {user?.role === "SUPER_ADMIN" && (
                                         <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Owner</th>
                                     )}
@@ -277,7 +277,7 @@ const Property = () => {
                                 {filteredProperties.length > 0 ? (
                                     filteredProperties.map((property) => (
                                         <tr key={property._id} className="hover:bg-gray-50/50 transition-all group border-l-4 border-l-transparent hover:border-l-[var(--color-primary)]">
-                                            <td className="px-8 py-7">
+                                            <td className="px-8">
                                                 <div className="flex items-center gap-4">
                                                     <div className="w-10 h-10 rounded-[14px] bg-slate-100 flex items-center justify-center text-[var(--color-primary)] group-hover:bg-[var(--color-primary)] group-hover:text-white transition-all shadow-sm">
                                                         <Building2 size={20} />
@@ -564,7 +564,7 @@ function ViewProperty({ property, onClose }) {
             <div className="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 flex flex-col max-h-[90vh]">
 
                 {/* Header */}
-                <div className="px-8 py-6 border-b border-gray-50 flex items-center justify-between bg-white sticky top-0 z-10">
+                <div className="px-8 pt-6 border-b border-gray-50 flex items-center justify-between bg-white sticky top-0 z-10">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600">
                             <Building2 size={24} />
@@ -572,7 +572,7 @@ function ViewProperty({ property, onClose }) {
                         <div>
                             <h2 className="text-xl font-black text-[var(--color-secondary)] tracking-tight">Property Details</h2>
                             <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest leading-none mt-1">
-                                {property.propertyType} • #{property._id.slice(-6).toUpperCase()}
+                                {property.propertyType}
                             </p>
                         </div>
                     </div>
@@ -664,7 +664,6 @@ function ViewProperty({ property, onClose }) {
                         <span className={`w-1.5 h-1.5 rounded-full ${property.isActive ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
                         {property.isActive ? 'Active Status' : 'Inactive Status'}
                     </span>
-                    <p className="text-[8px] font-bold text-[var(--text-muted)] uppercase tracking-widest opacity-50 italic">Property Registry ID: {property._id}</p>
                 </div>
             </div>
         </div>

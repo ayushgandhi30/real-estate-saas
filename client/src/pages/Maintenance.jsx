@@ -308,7 +308,7 @@ export default function Maintenance() {
                                     </div>
 
                                     <div className="space-y-1">
-                                        <h4 className="text-2xl font-black text-[var(--color-secondary)] group-hover:text-[var(--color-primary)] transition-colors tracking-tight line-clamp-1">{req.title}</h4>
+                                        <h4 className="text-xl font-black text-[var(--color-secondary)] group-hover:text-[var(--color-primary)] transition-colors tracking-tight line-clamp-1">{req.title}</h4>
                                         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold text-[var(--text-muted)]">
                                             <span className="flex items-center gap-2"><Calendar size={14} className="opacity-40" /> {new Date(req.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                                             <span className="flex items-center gap-2"><Building2 size={14} className="opacity-40" /> {req.propertyId?.propertyName || "Common Infrastructure"}</span>

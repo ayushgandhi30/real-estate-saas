@@ -134,7 +134,7 @@ const OwnerDashboard = () => {
           <div className="h-[350px] w-full mt-auto relative z-10">
             {stats?.incomeChart?.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={stats.incomeChart} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                <AreaChart data={stats.incomeChart} margin={{ top: 0, right: 0, left: -20, bottom: 10 }}>
                   <defs>
                     <linearGradient id="yieldGlow" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#10b981" stopOpacity={0.15} />
@@ -165,7 +165,7 @@ const OwnerDashboard = () => {
                     itemStyle={{ color: '#10b981', fontWeight: '900', fontSize: '14px' }}
                     labelStyle={{ color: '#64748b', marginBottom: '8px', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '1px' }}
                     cursor={{ stroke: '#10b981', strokeWidth: 2, strokeDasharray: '4 4' }}
-                    formatter={(v) => [`₹${v.toLocaleString()}`, "YIELD"]}
+                    formatter={(v) => [`₹${v.toLocaleString()}`, "Rent"]}
                   />
                   <Area
                     type="monotone"
@@ -260,7 +260,7 @@ const OwnerDashboard = () => {
           <div className="grid grid-cols-2 gap-8 relative z-10">
             <div className="p-6 bg-gray-50/50 rounded-[2.5rem] border border-gray-100">
               <p className="text-3xl font-black text-rose-600 mb-1">{stats?.pendingMaintenanceApprovals || 0}</p>
-              <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-60">Waitlist for Approval</p>
+              <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-60">Pending Maintenance Approvals </p>
             </div>
             <div className="p-6 bg-gray-50/50 rounded-[2.5rem] border border-gray-100 flex flex-col justify-center">
               <div className="flex items-center gap-2 mb-2">
@@ -271,7 +271,7 @@ const OwnerDashboard = () => {
             </div>
           </div>
 
-          <div className="mt-10 flex items-center justify-between relative z-10">
+          <div className="mt-5 flex items-center justify-between relative z-10">
             <Button variant="ghost" size="xs" onClick={() => { }} icon={<ArrowUpRight size={14} />}>
               Deployment Queue
             </Button>

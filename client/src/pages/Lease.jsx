@@ -247,15 +247,15 @@ export default function Lease() {
 
                     <div className="mt-5 pt-10 border-t border-gray-50 grid grid-cols-1 md:grid-cols-3 gap-10">
                         <div className="space-y-1">
-                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">Aggregate Paid</p>
+                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">Total Paid</p>
                             <p className="text-lg font-black text-[var(--color-secondary)] opacity-40">{formatCurrency(leaseData.totalCollected || 0)}</p>
                         </div>
                         <div className="space-y-1">
-                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">Outstanding Liability</p>
+                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">Total Due</p>
                             <p className="text-lg font-black text-rose-600">{formatCurrency(leaseData.pending || 0)}</p>
                         </div>
                         <div className="space-y-1">
-                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">Maintenance Provision</p>
+                            <p className="text-[12px] font-black text-[var(--text-muted)] uppercase tracking-widest">Maintenance Cost</p>
                             <p className="text-lg font-black text-[var(--color-secondary)] opacity-40">{formatCurrency(leaseData.maintenanceCost || 0)}</p>
                         </div>
                     </div>

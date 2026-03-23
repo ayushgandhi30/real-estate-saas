@@ -1,27 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     IndianRupee,
     Calendar,
-    Home,
     BarChart3,
     Receipt,
-    Wrench,
     TrendingUp,
     Download,
-    ChevronDown,
-    MoreVertical,
-    CheckCircle2,
-    Clock,
-    ArrowUpRight,
-    ArrowDownRight
+    MoreVertical
 } from "lucide-react";
+import {
+    AreaChart,
+    Area,
+    Tooltip,
+    ResponsiveContainer,
+    PieChart,
+    Pie,
+    Cell
+} from "recharts";
 import { useAuth } from "../store/auth";
 import Button from "../components/ui/Button";
 
 const RevenueReport = () => {
     const { token } = useAuth();
-    const [data, setData] = React.useState(null);
-    const [loading, setLoading] = React.useState(true);
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [showAllTransactions, setShowAllTransactions] = useState(false);
+
+    const formatToRupee = (val) => {
+        if (!val) return "₹0";
+        if (typeof val === 'string') {
+            return val.replace('$', '₹');
+        }
+        return `₹${val.toLocaleString()}`;
+    };
 
     React.useEffect(() => {
         const fetchStats = async () => {
@@ -57,21 +68,36 @@ const RevenueReport = () => {
     }
 
     const { stats, transactions, efficiency, breakdown } = data || {
-        stats: { totalRevenue: "₹0", monthlyRevenue: "₹0", occupancyRate: "0%", pendingRent: "₹0", netProfit: "₹0" },
+        stats: { totalRevenue: 0, monthlyRevenue: 0, occupancyRate: "0%", pendingRent: 0, netProfit: 0 },
         transactions: [],
         efficiency: 0,
         breakdown: {
-            rent: { collected: "₹0", pending: "₹0", lateFees: "₹0" },
-            other: { parking: "₹0", utilities: "₹0", services: "₹0" },
-            expenses: { maintenance: "₹0", repairs: "₹0", utilities: "₹0" }
+            rent: { collected: 0, pending: 0, lateFees: 0 }
         }
     };
 
     const statsConfig = [
-        { title: "Total Revenue", value: stats.totalRevenue, change: "+0%", trending: "up", icon: IndianRupee, color: "bg-blue-50 text-blue-600" },
-        { title: "Monthly Revenue", value: stats.monthlyRevenue, change: "+0%", trending: "up", icon: Calendar, color: "bg-indigo-50 text-indigo-600" },
-        { title: "Occupancy Rate", value: stats.occupancyRate, change: "+0%", trending: "up", icon: BarChart3, color: "bg-emerald-50 text-emerald-600" },
-        { title: "Pending Rent", value: stats.pendingRent, change: "+0%", trending: "down", icon: Receipt, color: "bg-rose-50 text-rose-600" },
+        { title: "Total Revenue", value: formatToRupee(stats.totalRevenue), icon: IndianRupee, color: "bg-blue-50 text-blue-600" },
+        { title: "Monthly Revenue", value: formatToRupee(stats.monthlyRevenue), icon: Calendar, color: "bg-indigo-50 text-indigo-600" },
+        { title: "Occupancy Rate", value: stats.occupancyRate, icon: BarChart3, color: "bg-emerald-50 text-emerald-600" },
+        { title: "Pending Rent", value: formatToRupee(stats.pendingRent), icon: IndianRupee, color: "bg-rose-50 text-rose-600" },
+    ];
+
+    const displayedTransactions = showAllTransactions ? transactions : transactions.slice(0, 3);
+
+    const pulseData = [
+        { name: 'Mon', value: 4000 },
+        { name: 'Tue', value: 3000 },
+        { name: 'Wed', value: 5000 },
+        { name: 'Thu', value: 2780 },
+        { name: 'Fri', value: 1890 },
+        { name: 'Sat', value: 2390 },
+        { name: 'Sun', value: 3490 },
+    ];
+
+    const occupancyMixData = [
+        { name: 'Occupied', value: efficiency || 75, color: '#10b981' },
+        { name: 'Vacant', value: 100 - (efficiency || 75), color: '#f59e0b' }
     ];
 
     return (
@@ -99,33 +125,30 @@ const RevenueReport = () => {
                 ))}
             </section>
 
-            {/* --- CORE INSIGHTS --- */}
+            {/* --- CORE INSIGHTS & BREAKDOWNS --- */}
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-
-                {/* Left: Net Profit Hero & Breakdowns */}
-                <div className="xl:col-span-2 space-y-8">
-
-                    {/* Net Profit Card */}
-                    <div className="relative group overflow-hidden bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.05)]">
+                {/* Net Profit Hero */}
+                <div className="xl:col-span-2">
+                    <div className="relative group overflow-hidden bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.05)] h-full">
                         <div className="absolute -right-20 -top-20 w-80 h-80 bg-[var(--color-primary)]/5 blur-[100px] rounded-full group-hover:bg-[var(--color-primary)]/10 transition-all duration-700"></div>
 
-                        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-                            <div>
-                                <span className="text-sm font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mb-3 text-xl">Total Net Profit</span>
+                        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8 h-full">
+                            <div className="flex-1 flex flex-col justify-center">
+                                <span className="text-sm font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mb-3">Total Net Profit</span>
                                 <div className="flex items-baseline gap-4">
-                                    <span className="text-4xl font-black text-[var(--color-secondary)] tracking-tighter">{stats.netProfit}</span>
+                                    <span className="text-4xl font-black text-[var(--color-secondary)] tracking-tighter">{formatToRupee(stats.netProfit)}</span>
                                     <div className="flex items-center gap-1 text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full text-xs font-black italic">
                                         <TrendingUp size={14} /> ACTIVE GROWTH
                                     </div>
                                 </div>
-                                <p className="text-[var(--text-muted)] mt-6 text-sm max-w-md font-medium leading-relaxed">Your net profit is calculated after maintenance and expenses. Keep track of your overheads for better efficiency.</p>
+                                <p className="text-[var(--text-muted)] mt-6 text-sm max-w-md font-medium leading-relaxed italic opacity-80">"Intelligence is the ability to adapt to change. Watch your yield grow."</p>
                             </div>
 
-                            <div className="flex flex-col items-center gap-3">
-                                <div className="relative w-32 h-32 flex items-center justify-center">
+                            <div className="flex flex-col items-center justify-center gap-3 pr-4">
+                                <div className="relative w-40 h-40 flex items-center justify-center">
                                     <svg className="w-full h-full -rotate-90">
-                                        <circle cx="64" cy="64" r="58" fill="transparent" stroke="#f8fafc" strokeWidth="8" />
-                                        <circle cx="64" cy="64" r="58" fill="transparent" stroke="url(#revenueGrad)" strokeWidth="8" strokeDasharray="364" strokeDashoffset={364 * (1 - (efficiency || 0) / 100)} strokeLinecap="round" />
+                                        <circle cx="80" cy="80" r="70" fill="transparent" stroke="#f8fafc" strokeWidth="12" />
+                                        <circle cx="80" cy="80" r="70" fill="transparent" stroke="url(#revenueGrad)" strokeWidth="12" strokeDasharray="440" strokeDashoffset={440 * (1 - (efficiency || 0) / 100)} strokeLinecap="round" />
                                         <defs>
                                             <linearGradient id="revenueGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                                                 <stop offset="0%" stopColor="var(--color-primary)" />
@@ -134,53 +157,34 @@ const RevenueReport = () => {
                                         </defs>
                                     </svg>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                        <span className="text-3xl font-black text-[var(--color-secondary)] leading-none">{efficiency}%</span>
-                                        <span className="text-[9px] uppercase font-black text-[var(--text-muted)] mt-1 tracking-widest text-center">Occupancy</span>
+                                        <span className="text-4xl font-black text-[var(--color-secondary)] leading-none">{efficiency}%</span>
+                                        <span className="text-[10px] uppercase font-black text-[var(--text-muted)] mt-2 tracking-widest text-center">Efficiency</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    {/* Breakdown Cards */}
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <SummaryCard
-                            title="Rent Income"
-                            icon={Receipt}
-                            items={[
-                                { label: "Collected", value: breakdown.rent.collected, color: "text-emerald-600" },
-                                { label: "Pending", value: breakdown.rent.pending, color: "text-rose-600" },
-                                { label: "Late Fees", value: breakdown.rent.lateFees }
-                            ]}
-                        />
-                        <SummaryCard
-                            title="Other Income"
-                            icon={IndianRupee}
-                            items={[
-                                { label: "Parking", value: breakdown.other.parking },
-                                { label: "Utilities", value: breakdown.other.utilities },
-                                { label: "Services", value: breakdown.other.services }
-                            ]}
-                        />
-                        <SummaryCard
-                            title="Expenses"
-                            icon={Wrench}
-                            items={[
-                                { label: "Property Maint.", value: breakdown.expenses.maintenance },
-                                { label: "Repairs", value: breakdown.expenses.repairs, color: "text-amber-600" },
-                                { label: "Utilities", value: breakdown.expenses.utilities }
-                            ]}
-                        />
-                    </div>
                 </div>
 
-                {/* Right: Charts Sidecar */}
-                <div className="space-y-6">
-                    <MiniChartSection title="Revenue Pulse" />
-                    <MiniChartSection title="Occupancy Mix" />
-
+                {/* Breakdown Summary Sidecar */}
+                <div className="xl:col-span-1">
+                    <SummaryCard
+                        title="Rent Income"
+                        icon={Receipt}
+                        items={[
+                            { label: "Collected", value: formatToRupee(breakdown.rent.collected), color: "text-emerald-600" },
+                            { label: "Pending", value: formatToRupee(breakdown.rent.pending), color: "text-rose-600" },
+                            { label: "Late Fees", value: formatToRupee(breakdown.rent.lateFees) }
+                        ]}
+                    />
                 </div>
             </div>
+
+            {/* --- ANALYTICS LAYER (NEW SIDE-BY-SIDE LAYOUT) --- */}
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <MiniChartSection title="Revenue Pulse" type="area" chartData={pulseData} />
+                <MiniChartSection title="Occupancy Mix" type="pie" chartData={occupancyMixData} />
+            </section>
 
             {/* --- TRANSACTION TABLE --- */}
             <section className="bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden shadow-[0_20px_50px_-15px_rgba(0,0,0,0.03)]">
@@ -189,7 +193,9 @@ const RevenueReport = () => {
                         <div className="w-1.5 h-6 bg-[var(--color-primary)] rounded-full"></div>
                         <h3 className="text-xl font-black text-[var(--color-secondary)] tracking-tight">Transaction History</h3>
                     </div>
-                    <Button variant="ghost" size="xs">See All</Button>
+                    <Button variant="ghost" size="xs" onClick={() => setShowAllTransactions(!showAllTransactions)}>
+                        {showAllTransactions ? "Show Less" : "See All"}
+                    </Button>
                 </div>
 
                 {/* Desktop/Tablet view */}
@@ -206,7 +212,7 @@ const RevenueReport = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
-                            {transactions.map((t, i) => (
+                            {displayedTransactions.map((t, i) => (
                                 <tr key={i} className="hover:bg-gray-50/50 transition-colors group cursor-default">
                                     <td className="px-10 py-8 whitespace-nowrap text-[13px] font-bold text-[var(--text-muted)]">{t.date}</td>
                                     <td className="px-10 py-8 whitespace-nowrap">
@@ -216,7 +222,7 @@ const RevenueReport = () => {
                                     <td className="px-10 py-8 whitespace-nowrap">
                                         <span className="text-[10px] font-black text-[var(--text-muted)] bg-gray-100 px-2 py-1 rounded lowercase">{t.invoice}</span>
                                     </td>
-                                    <td className="px-10 py-8 whitespace-nowrap text-right font-black text-[var(--color-secondary)] text-lg">{t.amount}</td>
+                                    <td className="px-10 py-8 whitespace-nowrap text-right font-black text-[var(--color-secondary)] text-lg">{formatToRupee(t.amount)}</td>
                                     <td className="px-10 py-8 whitespace-nowrap text-center">
                                         <StatusPill status={t.status} />
                                     </td>
@@ -228,7 +234,7 @@ const RevenueReport = () => {
 
                 {/* Mobile view */}
                 <div className="md:hidden p-4 space-y-4">
-                    {transactions.map((t, i) => (
+                    {displayedTransactions.map((t, i) => (
                         <div key={i} className="p-6 space-y-4 bg-gray-50/50 border border-gray-100 rounded-3xl hover:bg-white transition-all shadow-sm">
                             <div className="flex justify-between items-start">
                                 <div className="flex items-center gap-3">
@@ -244,7 +250,7 @@ const RevenueReport = () => {
                             </div>
                             <div className="flex justify-between items-center pt-2 border-t border-gray-100">
                                 <div className="text-[10px] font-black text-[var(--text-muted)] bg-gray-100 px-2 py-1 rounded">{t.invoice}</div>
-                                <div className="font-black text-xl text-[var(--color-secondary)]">{t.amount}</div>
+                                <div className="font-black text-xl text-[var(--color-secondary)]">{formatToRupee(t.amount)}</div>
                             </div>
                         </div>
                     ))}
@@ -256,21 +262,14 @@ const RevenueReport = () => {
 
 /* --- ENHANCED HELPER COMPONENTS --- */
 
-const StatCard = ({ title, value, change, trending, icon: Icon, color }) => (
-    <div className="premium-card rounded-[2.5rem] p-1.5 ">
+const StatCard = ({ title, value, icon: Icon, color }) => (
+    <div className="premium-card rounded-[2.5rem] p-1.5 group">
         <div className="bg-white p-6 rounded-[2.2rem]">
             <div className={`w-12 h-12 rounded-2xl ${color} flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform duration-500`}>
                 <Icon size={22} />
             </div>
             <p className="text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em] mb-1">{title}</p>
             <h3 className="text-2xl font-black text-[var(--color-secondary)] tracking-tight">{value}</h3>
-            <div className={`mt-3 flex items-center gap-1.5 text-xs font-black ${trending === "up" ? "text-emerald-600" : "text-rose-600"}`}>
-                <div className={`p-1 rounded-full ${trending === "up" ? "bg-emerald-50" : "bg-rose-50"}`}>
-                    {trending === "up" ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
-                </div>
-                {change}
-                <span className="text-[var(--text-muted)] opacity-40 italic ml-1 font-bold">vs last month</span>
-            </div>
         </div>
     </div>
 );
@@ -311,20 +310,50 @@ const StatusPill = ({ status }) => {
     );
 };
 
-const MiniChartSection = ({ title }) => (
-    <div className="bg-white border border-gray-100 rounded-[2.5rem] p-6 h-48 flex flex-col group overflow-hidden shadow-sm hover:shadow-md transition-all">
+const MiniChartSection = ({ title, type, chartData }) => (
+    <div className="bg-white border border-gray-100 rounded-[2.5rem] p-6 h-64 flex flex-col group overflow-hidden shadow-sm hover:shadow-md transition-all">
         <div className="flex items-center justify-between mb-4">
             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] opacity-60 group-hover:opacity-100 transition-opacity">{title}</h3>
             <MoreVertical size={14} className="text-[var(--text-muted)] opacity-30" />
         </div>
-        <div className="flex-1 flex items-end justify-between gap-1.5 px-2 pb-2 border-b border-gray-50">
-            {[40, 70, 45, 90, 65, 80, 50, 85].map((h, i) => (
-                <div
-                    key={i}
-                    style={{ height: `${h}%` }}
-                    className="flex-1 w-full bg-gray-100 rounded-t-lg group-hover:bg-[var(--color-primary)] group-hover:shadow-[0_0_15px_rgba(231,76,60,0.2)] transition-all duration-500"
-                />
-            ))}
+        <div className="flex-1 w-full">
+            {type === "area" ? (
+                <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={chartData}>
+                        <defs>
+                            <linearGradient id="colorPulse" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="var(--color-primary)" stopOpacity={0.1} />
+                                <stop offset="95%" stopColor="var(--color-primary)" stopOpacity={0} />
+                            </linearGradient>
+                        </defs>
+                        <Area type="monotone" dataKey="value" stroke="var(--color-primary)" fillOpacity={1} fill="url(#colorPulse)" strokeWidth={3} />
+                        <Tooltip
+                            contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
+                            labelStyle={{ display: 'none' }}
+                        />
+                    </AreaChart>
+                </ResponsiveContainer>
+            ) : (
+                <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                        <Pie
+                            data={chartData}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={45}
+                            outerRadius={65}
+                            paddingAngle={5}
+                            dataKey="value"
+                            stroke="none"
+                        >
+                            {chartData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                            ))}
+                        </Pie>
+                        <Tooltip />
+                    </PieChart>
+                </ResponsiveContainer>
+            )}
         </div>
     </div>
 );

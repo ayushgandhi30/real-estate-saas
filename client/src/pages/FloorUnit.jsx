@@ -388,7 +388,7 @@ const FloorUnit = () => {
         {[
           { icon: Layers, label: "Structural Levels", val: floors.length, color: "text-indigo-600", bg: "bg-indigo-50" },
           { icon: LayoutGrid, label: "Live Units", val: units.length, color: "text-purple-600", bg: "bg-purple-50" },
-          { icon: IndianRupee, label: "Projected Rev", val: `₹${units.reduce((acc, u) => acc + (u.rentAmount || 0), 0).toLocaleString()}`, color: "text-emerald-600", bg: "bg-emerald-50" }
+          { icon: IndianRupee, label: "Total Rev", val: `₹${units.reduce((acc, u) => acc + (u.rentAmount || 0), 0).toLocaleString()}`, color: "text-emerald-600", bg: "bg-emerald-50" }
         ].map((stat, idx) => (
           <div key={idx} className="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-5 transition-transform hover:scale-[1.02] duration-300">
             <div className={`w-14 h-14 rounded-2xl ${stat.bg} ${stat.color} flex items-center justify-center shadow-sm`}>
@@ -676,7 +676,7 @@ const FloorUnit = () => {
           <div className="fixed inset-0 bg-black/60 backdrop-blur-md" onClick={() => { setOpenUnitForm(false); resetUnitForm(); }}></div>
           <div className="relative w-full max-w-4xl bg-white rounded-[2rem] shadow-[0_40px_100px_-20_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden flex flex-col">
 
-            <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between bg-white z-10">
+            <div className="px-6 pt-4 border-b border-gray-50 flex items-center justify-between bg-white z-10">
               <div>
                 <h2 className="text-xl font-black text-[var(--color-secondary)] tracking-tight">{isEditingUnit ? "Edit Unit" : "Create Unit"}</h2>
               </div>
@@ -687,12 +687,12 @@ const FloorUnit = () => {
               <div className="grid md:grid-cols-2 gap-8">
 
                 {/* Identification & Layout */}
-                <section className="space-y-4">
+                <section className="space-y-1">
                   <div className="flex items-center gap-3">
                     <h3 className="text-[11px] font-black text-[var(--color-secondary)] uppercase tracking-[0.1em]">Unit Details</h3>
                   </div>
 
-                  <div className="space-y-4 bg-gray-50/50 p-5 rounded-[2rem] border border-gray-100">
+                  <div className="space-y-2 bg-gray-50/50 p-5 rounded-[2rem] border border-gray-100">
                     <div className="space-y-2">
                       <label className="block text-[var(--text-secondary)] text-sm font-semibold">Property</label>
                       <div className="relative">
@@ -732,10 +732,9 @@ const FloorUnit = () => {
                     </div>
                   </div>
 
-                  <div className="p-5 bg-gray-50/50 rounded-[2rem] border border-gray-100 space-y-4">
+                  <div className="p-5 bg-gray-50/50 rounded-[2rem] border border-gray-100 space-y-2">
                     <div className="flex items-center gap-2 mb-2">
-                      <Scale size={14} className="text-gray-400" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)]">Configuration Metrics</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)]">Unit Detail</span>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <Input
@@ -826,7 +825,7 @@ const FloorUnit = () => {
                 </section>
               </div>
 
-              <div className="flex items-center justify-end gap-4 pt-4 mt-6 border-t border-gray-50 bg-white">
+              <div className="flex items-center justify-end gap-4 pt-1 border-t border-gray-50 bg-white">
                 <Button type="button" htmlType="submit" variant="ghost" size="sm" onClick={() => { setOpenUnitForm(false); resetUnitForm(); }}>Cancel</Button>
                 <Button type="submit" htmlType="submit" variant="primary" size="md">
                   {isEditingUnit ? "Update" : "Save"}

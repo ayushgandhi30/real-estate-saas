@@ -113,7 +113,7 @@ export default function ManagerDashboard() {
             <section className="grid grid-cols-1 lg:grid-cols-2 gap-10">
 
                 {/* Revenue Momentum Chart */}
-                <div className="bg-white p-10 rounded-[3.5rem] border border-gray-100 shadow-sm relative overflow-hidden flex flex-col">
+                <div className="bg-white px-10 py-5 rounded-[3.5rem] border border-gray-100 shadow-sm relative overflow-hidden flex flex-col">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-12 relative z-10">
                         <div className="space-y-1">
                             <h2 className="text-2xl font-black text-[var(--color-secondary)] flex items-center gap-3">
@@ -124,7 +124,7 @@ export default function ManagerDashboard() {
 
                     <div className="h-[320px] w-full mt-auto relative z-10">
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={revenueData.length > 0 ? revenueData : []} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                            <AreaChart data={revenueData.length > 0 ? revenueData : []} margin={{ top: 0, right: 0, left: -20, bottom: 10 }}>
                                 <defs>
                                     <linearGradient id="revenueGlow" x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="5%" stopColor="#6366f1" stopOpacity={0.15} />
@@ -211,7 +211,7 @@ export default function ManagerDashboard() {
 
                 {/* Deployment Payments */}
                 <div className="bg-white rounded-[3.5rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-                    <div className="p-10 border-b border-gray-50 flex items-center justify-between">
+                    <div className="py-2 px-10 border-b border-gray-50 flex items-center justify-between">
                         <div className="space-y-1">
                             <h2 className="text-2xl font-black text-[var(--color-secondary)] flex items-center gap-3">
                                 Recent Payments
@@ -258,7 +258,7 @@ export default function ManagerDashboard() {
 
                 {/* Lease Chronology */}
                 <div className="bg-white rounded-[3.5rem] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-                    <div className="p-10 border-b border-gray-50 flex items-center justify-between">
+                    <div className="px-10 py-4 border-b border-gray-50 flex items-center justify-between">
                         <div className="space-y-1">
                             <h2 className="text-2xl font-black text-[var(--color-secondary)] flex items-center gap-3">
                                 Upcoming Expiries
