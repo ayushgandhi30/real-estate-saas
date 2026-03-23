@@ -119,21 +119,21 @@ const SuperAdminRevenueReport = () => {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <Button variant="secondary" size="md" icon={<Download size={18} />}>
+                    <Button variant="secondary" size="md" icon={<Download size={18} />} className="cursor-pointer">
                         Download Report
                     </Button>
                 </div>
             </header>
 
             {/* 1️⃣ Revenue Summary Cards */}
-            <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
                 {statsConfig.map((stat, idx) => (
-                    <div key={idx} className="bg-white border border-gray-100 p-8 rounded-[2rem] hover:border-[var(--color-primary)]/30 transition-all group relative overflow-hidden shadow-sm hover:shadow-md">
+                    <div key={idx} className="bg-white border border-gray-100 p-6 sm:p-8 rounded-[2rem] hover:border-[var(--color-primary)]/30 transition-all group relative overflow-hidden shadow-sm hover:shadow-md">
                         <div className={`w-12 h-12 rounded-2xl ${stat.color} flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform duration-500`}>
                             <stat.icon size={22} />
                         </div>
                         <p className="text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em] mb-1 opacity-60 group-hover:opacity-100 transition-opacity">{stat.title}</p>
-                        <h3 className="text-2xl font-black text-[var(--color-secondary)] tracking-tighter">{formatCurrency(stat.value)}</h3>
+                        <h3 className="text-xl sm:text-2xl font-black text-[var(--color-secondary)] tracking-tighter">{formatCurrency(stat.value)}</h3>
                         <div className="absolute -bottom-1 -right-1 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
                             <stat.icon size={80} />
                         </div>
@@ -143,14 +143,14 @@ const SuperAdminRevenueReport = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* 2️⃣ Revenue by Owner */}
-                <div className="bg-white border border-gray-100 p-10 rounded-[2.5rem] space-y-8 shadow-sm">
+                <div className="bg-white border border-gray-100 p-6 sm:p-10 rounded-[2.5rem] space-y-8 shadow-sm">
                     <div className="flex items-center justify-between">
                         <h3 className="text-lg font-black text-[var(--color-secondary)] uppercase tracking-widest flex items-center gap-4">
                             <span className="w-1.5 h-6 bg-blue-500 rounded-full"></span>
                             Revenue By Owner
                         </h3>
                     </div>
-                    <div className="h-[300px] w-full">
+                    <div className="h-[250px] sm:h-[300px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={revenueByOwner}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
@@ -165,8 +165,8 @@ const SuperAdminRevenueReport = () => {
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
-                    <div className="overflow-x-auto pt-4">
-                        <table className="w-full text-left">
+                    <div className="overflow-x-auto pt-4 no-scrollbar">
+                        <table className="w-full text-left min-w-[500px]">
                             <thead className="text-[10px] uppercase font-black text-[var(--text-muted)] border-b border-gray-50 opacity-60">
                                 <tr>
                                     <th className="pb-4">Owner Identity</th>
@@ -179,9 +179,9 @@ const SuperAdminRevenueReport = () => {
                                 {revenueByOwner.map((owner, idx) => (
                                     <tr key={idx} className="group hover:bg-gray-50/50 transition-colors">
                                         <td className="py-5 font-black text-[var(--color-secondary)] text-sm">{owner.ownerName}</td>
-                                        <td className="py-5 text-[var(--text-muted)] text-[11px] font-bold uppercase tracking-widest opacity-60">{owner.propertyCount} Properties</td>
+                                        <td className="py-5 text-[var(--text-muted)] text-[11px] font-bold uppercase tracking-widest opacity-60">{owner.propertyCount} Prop.</td>
                                         <td className="py-5 text-[var(--text-muted)] text-[11px] font-bold opacity-60">{owner.totalUnits} Units</td>
-                                        <td className="py-5 text-right font-black text-emerald-600 italic">{formatCurrency(owner.revenue)}</td>
+                                        <td className="py-5 text-right font-black text-emerald-600 italic text-sm">{formatCurrency(owner.revenue)}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -190,19 +190,19 @@ const SuperAdminRevenueReport = () => {
                 </div>
 
                 {/* 3️⃣ Revenue by Property */}
-                <div className="bg-white border border-gray-100 p-10 rounded-[2.5rem] space-y-8 shadow-sm">
+                <div className="bg-white border border-gray-100 p-6 sm:p-10 rounded-[2.5rem] space-y-8 shadow-sm">
                     <div className="flex items-center justify-between">
                         <h3 className="text-lg font-black text-[var(--color-secondary)] uppercase tracking-widest flex items-center gap-4">
                             <span className="w-1.5 h-6 bg-emerald-500 rounded-full"></span>
                             Property Revenue
                         </h3>
                     </div>
-                    <div className="h-[300px] w-full">
+                    <div className="h-[250px] sm:h-[300px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={revenueByProperty} layout="vertical">
                                 <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
                                 <XAxis type="number" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(val) => `₹${val / 1000}k`} />
-                                <YAxis dataKey="propertyName" type="category" stroke="#94a3b8" fontSize={10} width={100} tickLine={false} axisLine={false} />
+                                <YAxis dataKey="propertyName" type="category" stroke="#94a3b8" fontSize={10} width={80} tickLine={false} axisLine={false} />
                                 <Tooltip
                                     cursor={{ fill: '#f8fafc' }}
                                     contentStyle={{ backgroundColor: '#fff', border: '1px solid #f1f5f9', borderRadius: '16px', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
@@ -212,8 +212,8 @@ const SuperAdminRevenueReport = () => {
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
-                    <div className="overflow-x-auto pt-4">
-                        <table className="w-full text-left">
+                    <div className="overflow-x-auto pt-4 no-scrollbar">
+                        <table className="w-full text-left min-w-[500px]">
                             <thead className="text-[10px] uppercase font-black text-[var(--text-muted)] border-b border-gray-50 opacity-60">
                                 <tr>
                                     <th className="pb-4">Asset Name</th>
@@ -228,7 +228,7 @@ const SuperAdminRevenueReport = () => {
                                         <td className="py-5 font-black text-[var(--color-secondary)] text-sm">{prop.propertyName}</td>
                                         <td className="py-5 text-[var(--text-muted)] text-[10px] font-black uppercase opacity-60">{prop.ownerName}</td>
                                         <td className="py-5 text-[var(--text-muted)] text-[11px] font-bold opacity-60">{prop.units} Units</td>
-                                        <td className="py-5 text-right font-black text-blue-600">{formatCurrency(prop.monthlyRevenue)}</td>
+                                        <td className="py-5 text-right font-black text-blue-600 text-sm">{formatCurrency(prop.monthlyRevenue)}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -313,27 +313,27 @@ const SuperAdminRevenueReport = () => {
 
             {/* 6️⃣ Pending Rent Report */}
             <section className="bg-white border border-gray-100 rounded-[2.5rem] overflow-hidden shadow-sm">
-                <div className="p-10 border-b border-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="p-6 sm:p-10 border-b border-gray-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <h3 className="text-lg font-black text-[var(--color-secondary)] uppercase tracking-widest flex items-center gap-4">
                         <span className="w-1.5 h-6 bg-rose-500 rounded-full"></span>
                         pending Rent Report
                     </h3>
                 </div>
-                <div className="overflow-x-auto">
+                <div className="hidden lg:block overflow-x-auto no-scrollbar">
                     <table className="w-full text-left">
                         <thead className="text-[10px] uppercase tracking-widest font-black text-[var(--text-muted)] bg-gray-50/50 opacity-60">
                             <tr>
-                                <th className="px-10 py-6">Tenant Name</th>
-                                <th className="px-10 py-6">Property Name</th>
-                                <th className="px-10 py-6">Rent Due</th>
-                                <th className="px-10 py-6">days Late</th>
-                                <th className="px-10 py-6 text-right">Operational Action</th>
+                                <th className="px-6 sm:px-10 py-6">Tenant Name</th>
+                                <th className="px-6 sm:px-10 py-6">Property Name</th>
+                                <th className="px-6 sm:px-10 py-6">Rent Due</th>
+                                <th className="px-6 sm:px-10 py-6 text-center">delay</th>
+                                <th className="px-6 sm:px-10 py-6 text-right">Operational Action</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
                             {pendingRentReport.map((item, idx) => (
                                 <tr key={idx} className="hover:bg-gray-50/50 group transition-colors">
-                                    <td className="px-10 py-6">
+                                    <td className="px-6 sm:px-10 py-6">
                                         <div className="flex items-center gap-4">
                                             <div className="w-10 h-10 rounded-[14px] bg-slate-100 flex items-center justify-center text-xs font-black text-[var(--color-secondary)] group-hover:bg-[var(--color-primary)] group-hover:text-white transition-all">
                                                 {item.tenant[0]}
@@ -341,15 +341,15 @@ const SuperAdminRevenueReport = () => {
                                             <span className="font-black text-[var(--color-secondary)] text-sm">{item.tenant}</span>
                                         </div>
                                     </td>
-                                    <td className="px-10 py-6 text-[var(--text-muted)] text-[11px] font-bold uppercase tracking-widest opacity-60">{item.property}</td>
-                                    <td className="px-10 py-6 font-black text-[var(--color-secondary)] text-lg tracking-tighter">{formatCurrency(item.amount)}</td>
-                                    <td className="px-10 py-6">
+                                    <td className="px-6 sm:px-10 py-6 text-[var(--text-muted)] text-[11px] font-bold uppercase tracking-widest opacity-60">{item.property}</td>
+                                    <td className="px-6 sm:px-10 py-6 font-black text-[var(--color-secondary)] text-lg tracking-tighter">{formatCurrency(item.amount)}</td>
+                                    <td className="px-6 sm:px-10 py-6 text-center">
                                         <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${item.daysLate > 30 ? 'bg-red-50 text-red-600 border-red-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
-                                            {item.daysLate} Days late
+                                            {item.daysLate}d
                                         </span>
                                     </td>
-                                    <td className="px-10 py-6 text-right">
-                                        <Button variant="ghost" size="xs">Escalate</Button>
+                                    <td className="px-6 sm:px-10 py-6 text-right">
+                                        <Button variant="ghost" size="xs" className="cursor-pointer">Escalate</Button>
                                     </td>
                                 </tr>
                             ))}
@@ -370,6 +370,38 @@ const SuperAdminRevenueReport = () => {
                             )}
                         </tbody>
                     </table>
+                </div>
+
+                {/* Mobile/Tablet Card View */}
+                <div className="lg:hidden p-4 space-y-4 bg-gray-50/50 rounded-b-[2.5rem]">
+                    {pendingRentReport.length === 0 ? (
+                        <div className="py-20 text-center">
+                            <p className="font-black text-[var(--color-secondary)] text-lg tracking-tight uppercase">Perfect Liquidity</p>
+                        </div>
+                    ) : (
+                        pendingRentReport.map((item, idx) => (
+                            <div key={idx} className="p-6 bg-white border border-gray-100 rounded-[2rem] space-y-4 shadow-md hover:shadow-xl transition-all">
+                                <div className="flex justify-between items-start">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-xs font-black text-[var(--color-secondary)]">
+                                            {item.tenant[0]}
+                                        </div>
+                                        <div>
+                                            <p className="font-black text-[var(--color-secondary)] text-sm">{item.tenant}</p>
+                                            <p className="text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-widest opacity-60">{item.property}</p>
+                                        </div>
+                                    </div>
+                                    <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider border ${item.daysLate > 30 ? 'bg-red-50 text-red-600 border-red-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
+                                        {item.daysLate}d late
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                                    <p className="font-black text-[var(--color-secondary)] text-lg">{formatCurrency(item.amount)}</p>
+                                    <Button variant="ghost" size="xs" className="cursor-pointer">Escalate</Button>
+                                </div>
+                            </div>
+                        ))
+                    )}
                 </div>
             </section>
         </div>

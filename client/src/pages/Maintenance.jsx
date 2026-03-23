@@ -292,56 +292,53 @@ export default function Maintenance() {
                     <p className="text-[var(--text-muted)] text-sm font-medium mt-2 max-w-xs">No maintenance tickets matching your filters found.</p>
                 </div>
             ) : (
-                <div className="grid gap-6">
+                <div className="grid gap-6 p-1 bg-gray-50/50 rounded-[2.5rem]">
                     {filteredRequests.map((req) => (
-                        <div key={req._id} className="premium-card p-0 rounded-[2.5rem] group overflow-hidden border border-gray-100">
-                            <div className="p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 bg-white transition-all group-hover:bg-gray-50/30">
+                        <div key={req._id} className="group bg-white px-7 py-3 rounded-[2.5rem] border border-gray-100 space-y-6 shadow-md hover:shadow-2xl transition-all relative overflow-hidden">
+                            {/* Priority Accent Bar */}
+                            <div className={`absolute top-0 left-0 w-1.5 h-full ${req.priority === 'Critical' ? 'bg-rose-500' : req.priority === 'High' ? 'bg-orange-500' : 'bg-blue-500'}`} />
 
+                            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pl-2">
                                 <div className="flex-1 space-y-4">
                                     <div className="flex flex-wrap items-center gap-3">
-                                        <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ${getPriorityStyle(req.priority)} shadow-sm`}>
+                                        <span className={`px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border shadow-sm ${getPriorityStyle(req.priority)}`}>
                                             {req.priority} Priority
                                         </span>
-                                        <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest bg-gray-100 px-3 py-1.5 rounded-full opacity-60">
+                                        <span className="text-[9px] font-black text-indigo-600 uppercase tracking-widest bg-indigo-50 px-3 py-1.5 rounded-xl border border-indigo-100/50">
                                             {req.category}
                                         </span>
                                     </div>
 
                                     <div className="space-y-1">
-                                        <h4 className="text-xl font-black text-[var(--color-secondary)] group-hover:text-[var(--color-primary)] transition-colors tracking-tight line-clamp-1">{req.title}</h4>
-                                        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] font-bold text-[var(--text-muted)]">
-                                            <span className="flex items-center gap-2"><Calendar size={14} className="opacity-40" /> {new Date(req.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                                            <span className="flex items-center gap-2"><Building2 size={14} className="opacity-40" /> {req.propertyId?.propertyName || "Common Infrastructure"}</span>
-                                            <span className="flex items-center gap-2"><User size={14} className="opacity-40" /> {req.createdBy?.name || "Resident Account"}</span>
+                                        <h4 className="text-xl font-black text-[var(--color-secondary)] group-hover:text-[var(--color-primary)] transition-colors tracking-tight">{req.title}</h4>
+                                        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-60">
+                                            <span className="flex items-center gap-2"><Calendar size={13} className="text-indigo-400" /> {new Date(req.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                                            <span className="flex items-center gap-2"><Building2 size={13} className="text-rose-400" /> {req.propertyId?.propertyName || "Infrastructure"}</span>
+                                            <span className="flex items-center gap-2"><User size={13} className="text-emerald-400" /> {req.createdBy?.name || "Resident"}</span>
                                         </div>
                                     </div>
 
-                                    <p className="text-[13px] text-[var(--text-muted)]/80 leading-relaxed font-medium line-clamp-2 max-w-3xl pt-2">{req.description}</p>
+                                    <p className="text-sm text-[var(--text-muted)]/80 leading-relaxed font-medium line-clamp-2 max-w-3xl pt-1 italic">{req.description}</p>
                                 </div>
 
-                                <div className="flex flex-col lg:items-end gap-5 w-full lg:w-auto pt-6 lg:pt-0 lg:pl-10 lg:border-l border-gray-100">
-                                    <div className="flex items-center gap-2">
-                                        {req.status !== "Completed" && (
-                                            <>
-                                                {(role === "OWNER" || (role === "MANAGER" && activeTab === "Received")) && (
-                                                    <div className="flex gap-2">
-                                                        {req.status === "Pending" && (
-                                                            <Button onClick={() => handleUpdateStatus(req._id, "In Progress")} variant="primary" size="sm" className="bg-gray-900 border-gray-900">
-                                                                In Progress
-                                                            </Button>
-                                                        )}
-                                                        <Button onClick={() => handleUpdateStatus(req._id, "Completed")} variant="primary" size="sm" className="bg-emerald-600 border-emerald-600 hover:bg-emerald-700">
-                                                            Completed
-                                                        </Button>
-                                                    </div>
-                                                )}
-                                            </>
-                                        )}
-                                    </div>
-                                    <div className={`inline-flex self-start lg:self-auto items-center gap-2 px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.1em] border shadow-sm ${getStatusStyle(req.status)}`}>
-                                        <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${req.status === 'Completed' ? 'bg-emerald-500' : 'bg-current'}`}></span>
+                                <div className="flex flex-col lg:items-end gap-5 w-full lg:w-auto pt-4 lg:pt-0 lg:pl-10 lg:border-l border-gray-50">
+                                    <div className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] border shadow-sm ${getStatusStyle(req.status)}`}>
+                                        <span className={`w-2 h-2 rounded-full animate-pulse ${req.status === 'Completed' ? 'bg-emerald-500' : 'bg-current'}`}></span>
                                         {req.status}
                                     </div>
+
+                                    {req.status !== "Completed" && (role === "OWNER" || (role === "MANAGER" && activeTab === "Received")) && (
+                                        <div className="flex flex-wrap gap-2">
+                                            {req.status === "Pending" && (
+                                                <Button onClick={() => handleUpdateStatus(req._id, "In Progress")} variant="secondary" size="sm" className="bg-gray-900 border-gray-900 font-black text-[9px] uppercase tracking-widest cursor-pointer">
+                                                    Working
+                                                </Button>
+                                            )}
+                                            <Button onClick={() => handleUpdateStatus(req._id, "Completed")} variant="primary" size="sm" className="bg-emerald-600 border-emerald-600 font-black text-[9px] uppercase tracking-widest cursor-pointer">
+                                                Resolve
+                                            </Button>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

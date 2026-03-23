@@ -204,30 +204,28 @@ const Property = () => {
         <div className="min-h-screen bg-[var(--bg-main)] p-4 sm:p-6 lg:p-0 space-y-5 font-['Inter']">
 
             {/* Header Section */}
-            <header className="flex flex-col xl:flex-row xl:items-end justify-between gap-6 pb-2">
+            <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-4">
                 <div className="space-y-1">
-                    <h1 className="font-black text-[var(--color-secondary)] tracking-tight">
+                    <h1 className="text-2xl sm:text-3xl font-black text-[var(--color-secondary)] tracking-tight">
                         Property Management
                     </h1>
                 </div>
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                    <div className="flex items-center gap-1 bg-white p-1 rounded-2xl border border-gray-100 shadow-sm overflow-x-auto no-scrollbar">
+                <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
+                    <div className="flex flex-wrap items-center gap-1 bg-white p-1 rounded-2xl border border-gray-100 shadow-sm overflow-x-auto no-scrollbar w-full sm:w-auto">
                         {["All", "RESIDENTIAL", "COMMERCIAL", "INDUSTRIAL"].map((type) => (
-                            <Button
+                            <button
                                 key={type}
                                 onClick={() => setFilterType(type)}
-                                variant={filterType === type ? "primary" : "ghost"}
-                                size="xs"
-                                className="whitespace-nowrap"
+                                className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${filterType === type ? 'bg-indigo-600 text-white shadow-lg' : 'text-[var(--text-muted)] hover:bg-gray-50 cursor-pointer'}`}
                             >
                                 {type === "All" ? "All Assets" : type}
-                            </Button>
+                            </button>
                         ))}
                     </div>
                     {(user?.role === "OWNER" || user?.role === "MANAGER") && (
                         <Button
                             onClick={() => { resetForm(); setOpenForm(true); }}
-                            className="w-full sm:w-auto"
+                            className="w-full sm:w-auto cursor-pointer"
                             variant="primary"
                             size="md"
                             icon={<Plus size={18} />}
@@ -240,11 +238,11 @@ const Property = () => {
 
             {/* Content Area */}
             <section className="space-y-6">
-                <div className="relative group w-full lg:w-96">
+                <div className="relative group w-full md:w-96">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] opacity-50 group-focus-within:opacity-100 group-focus-within:text-[var(--color-primary)] transition-all font-bold" size={16} />
                     <input
                         type="text"
-                        placeholder="Search by property name or location..."
+                        placeholder="Search assets..."
                         className="w-full bg-white border border-gray-100 rounded-2xl py-3.5 pl-12 pr-6 text-[13px] font-bold text-[var(--color-secondary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--color-primary)]/20 focus:ring-4 focus:ring-[var(--color-primary)]/5 transition-all shadow-sm"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -259,7 +257,8 @@ const Property = () => {
                         </div>
                     ) : null}
 
-                    <div className="overflow-x-auto">
+                    {/* Desktop Table View */}
+                    <div className="hidden lg:block overflow-x-auto">
                         <table className="w-full text-left font-['Inter']">
                             <thead className="bg-gray-50/50 border-b border-gray-50">
                                 <tr>
@@ -267,9 +266,9 @@ const Property = () => {
                                     {user?.role === "SUPER_ADMIN" && (
                                         <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Owner</th>
                                     )}
-                                    <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Category</th>
-                                    <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Location</th>
-                                    <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest text-right">Total Revenue</th>
+                                    <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest text-center">Category</th>
+                                    <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest text-center">Location</th>
+                                    <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest text-right">Revenue</th>
                                     <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -296,35 +295,30 @@ const Property = () => {
                                                     </div>
                                                 </td>
                                             )}
-                                            <td className="px-8 py-7">
+                                            <td className="px-8 py-7 text-center">
                                                 <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border shadow-sm ${property.propertyType === 'RESIDENTIAL' ? 'bg-indigo-50 text-indigo-600 border-indigo-100' :
                                                     property.propertyType === 'COMMERCIAL' ? 'bg-amber-50 text-amber-600 border-amber-100' :
                                                         'bg-purple-50 text-purple-600 border-purple-100'
                                                     }`}>
-                                                    <span className={`w-1.5 h-1.5 rounded-full ${property.propertyType === 'RESIDENTIAL' ? 'bg-indigo-500' : property.propertyType === 'COMMERCIAL' ? 'bg-amber-500' : 'bg-purple-500'}`} />
                                                     {property.propertyType}
                                                 </span>
                                             </td>
-                                            <td className="px-8 py-7">
-                                                <div className="flex items-center gap-2 text-[12px] font-bold text-[var(--color-secondary)]">
+                                            <td className="px-8 py-7 text-center">
+                                                <div className="flex items-center justify-center gap-2 text-[12px] font-bold text-[var(--color-secondary)]">
                                                     <MapPin size={12} className="text-rose-500" />
                                                     {property.location}
                                                 </div>
                                             </td>
                                             <td className="px-8 py-7 text-right">
-                                                <div className="flex flex-col items-end">
-                                                    <span className="text-[15px] font-black text-emerald-600 tracking-tight">₹{property.totalRevenue?.toLocaleString() || 0}</span>
-                                                    <div className="flex items-center gap-1.5 text-[9px] font-black text-[var(--text-muted)] uppercase mt-1 opacity-40">
-                                                    </div>
-                                                </div>
+                                                <span className="text-[15px] font-black text-emerald-600 tracking-tight">₹{property.totalRevenue?.toLocaleString() || 0}</span>
                                             </td>
                                             <td className="px-8 py-7">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <Button onClick={() => { setSelectedProperty(property); setOpenViewProperty(true); }} iconOnly variant="secondary" size="xs" icon={<Eye size={18} />} title="Inspect Asset" />
                                                     {(user?.role === "OWNER" || user?.role === "MANAGER") && (
                                                         <>
-                                                            <Button onClick={() => handleEdit(property)} iconOnly variant="secondary" size="xs" icon={<Edit size={18} />} title="Modify Asset" className="hover:text-blue-600 hover:border-blue-100" />
-                                                            <Button onClick={() => handleDelete(property._id)} iconOnly variant="secondary" size="xs" icon={<Trash2 size={18} />} title="Purge Asset" className="text-rose-300 hover:text-rose-600 hover:border-rose-100" />
+                                                            <Button onClick={() => handleEdit(property)} iconOnly variant="secondary" size="xs" icon={<Edit size={18} />} title="Modify Asset" className="hover:text-blue-600 hover:border-blue-100 cursor-pointer" />
+                                                            <Button onClick={() => handleDelete(property._id)} iconOnly variant="secondary" size="xs" icon={<Trash2 size={18} />} title="Purge Asset" className="text-rose-300 hover:text-rose-600 hover:border-rose-100 cursor-pointer" />
                                                         </>
                                                     )}
                                                 </div>
@@ -344,6 +338,57 @@ const Property = () => {
                             </tbody>
                         </table>
                     </div>
+
+                    {/* Mobile/Tablet Card Feed */}
+                    <div className="lg:hidden p-4 space-y-4 bg-gray-50/50 rounded-b-[2.5rem]">
+                        {filteredProperties.length === 0 ? (
+                            <div className="py-20 text-center opacity-20 italic font-black uppercase tracking-widest text-lg">No assets logged</div>
+                        ) : (
+                            filteredProperties.map((p) => (
+                                <div key={p._id} className="group bg-white p-7 rounded-[2.5rem] border border-gray-100 space-y-6 shadow-md hover:shadow-2xl transition-all relative overflow-hidden">
+                                    {/* Category Accent Line */}
+                                    <div className={`absolute top-0 left-0 w-1.5 h-full ${p.propertyType === 'RESIDENTIAL' ? 'bg-indigo-500' : p.propertyType === 'COMMERCIAL' ? 'bg-amber-500' : 'bg-purple-500'}`} />
+                                    
+                                    <div className="flex justify-between items-start pl-2">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-xl font-black shadow-lg group-hover:scale-110 transition-transform">
+                                                <Building2 size={24} />
+                                            </div>
+                                            <div>
+                                                <h3 className="font-black text-[var(--color-secondary)] text-sm uppercase tracking-tight leading-none mb-1">{p.propertyName}</h3>
+                                                <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mt-1">₹{p.totalRevenue?.toLocaleString() || 0}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col items-end gap-1">
+                                            <span className="px-3 py-1 bg-white border border-gray-100 rounded-lg text-[8px] font-black text-indigo-600 uppercase shadow-sm">
+                                                {p.propertyType}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="p-5 bg-gray-50/50 rounded-2xl border border-gray-100 flex items-center justify-between ml-2">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-8 h-8 rounded-xl bg-white flex items-center justify-center text-rose-500 shadow-sm">
+                                                <MapPin size={14} />
+                                            </div>
+                                            <span className="text-[11px] font-black text-[var(--color-secondary)] tracking-tight">{p.location}</span>
+                                        </div>
+                                        <button 
+                                            onClick={() => { setSelectedProperty(p); setOpenViewProperty(true); }} 
+                                            className="text-[9px] font-black text-indigo-600 uppercase tracking-widest bg-white px-4 py-2 rounded-xl shadow-sm hover:bg-gray-50 transition-colors border border-gray-100 cursor-pointer"
+                                        >
+                                            Details
+                                        </button>
+                                    </div>
+
+                                    <div className="flex gap-3 pl-2">
+                                        <Button onClick={() => handleEdit(p)} variant="secondary" size="md" className="flex-1 cursor-pointer font-black text-[10px] uppercase tracking-widest" icon={<Edit size={14} />}>Edit</Button>
+                                        <Button onClick={() => handleDelete(p._id)} variant="primary" size="md" className="flex-1 cursor-pointer font-black text-[10px] uppercase tracking-widest" icon={<Trash2 size={14} />}>Delete</Button>
+                                    </div>
+                                </div>
+                            )
+                            ))}
+                    </div>
                 </div>
             </section>
 
@@ -358,16 +403,16 @@ const Property = () => {
                     <div className="fixed inset-0 bg-black/60 backdrop-blur-md" onClick={resetForm}></div>
                     <div className="relative w-full max-w-5xl bg-white rounded-[2rem] shadow-lg border border-gray-100 overflow-hidden flex flex-col">
 
-                        <div className="px-8 pt-5 border-b border-gray-50 flex items-center justify-between bg-white z-10">
+                        <div className="px-6 sm:px-8 pt-6 pb-4 border-b border-gray-50 flex items-center justify-between bg-white z-10 shrink-0">
                             <div>
-                                <h2 className="text-xl font-black text-[var(--color-secondary)] tracking-tight">
+                                <h2 className="text-xl sm:text-2xl font-black text-[var(--color-secondary)] tracking-tight">
                                     {isEditing ? "Modify Property" : "Create New Property"}
                                 </h2>
                             </div>
-                            <Button onClick={resetForm} iconOnly variant="secondary" size="sm" icon={<X size={20} />} className="hover:bg-rose-50 hover:text-rose-600" />
+                            <Button onClick={resetForm} iconOnly variant="secondary" size="sm" icon={<X size={20} />} className="hover:bg-rose-50 hover:text-rose-600 cursor-pointer" />
                         </div>
 
-                        <form className="px-8 py-3" onSubmit={handleSubmit}>
+                        <form className="px-6 sm:px-8 py-6 overflow-y-auto custom-scrollbar flex-1" onSubmit={handleSubmit}>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 {/* Core Specification */}
                                 <section className="space-y-6">
@@ -515,7 +560,7 @@ const Property = () => {
                             </div>
 
                             <div className="flex items-center justify-end gap-6 pt-6  border-t border-gray-50 bg-white">
-                                <Button type="button" variant="ghost" size="sm" onClick={resetForm}>Cancel</Button>
+                                <Button type="button" variant="ghost" size="sm" onClick={resetForm} className="cursor-pointer">Cancel</Button>
                                 <Button type="submit" htmlType="submit" variant="primary" size="lg" icon={isEditing ? <Edit size={18} /> : <ArrowRight size={18} />}>
                                     {isEditing ? "Update Property" : "Create Property"}
                                 </Button>
@@ -582,7 +627,7 @@ function ViewProperty({ property, onClose }) {
                         variant="secondary"
                         size="xs"
                         icon={<X size={18} />}
-                        className="hover:bg-gray-100"
+                        className="hover:bg-gray-100 cursor-pointer"
                     />
                 </div>
 

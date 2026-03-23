@@ -199,7 +199,7 @@ const RevenueReport = () => {
                 </div>
 
                 {/* Desktop/Tablet view */}
-                <div className="hidden md:block overflow-x-auto">
+                <div className="hidden lg:block overflow-x-auto">
                     <table className="w-full text-left">
                         <thead className="text-[10px] uppercase tracking-[0.2em] font-black text-[var(--text-muted)] bg-gray-50/50">
                             <tr>
@@ -233,24 +233,40 @@ const RevenueReport = () => {
                 </div>
 
                 {/* Mobile view */}
-                <div className="md:hidden p-4 space-y-4">
+                <div className="lg:hidden p-4 space-y-4 bg-gray-50/50 rounded-b-[2.5rem]">
                     {displayedTransactions.map((t, i) => (
-                        <div key={i} className="p-6 space-y-4 bg-gray-50/50 border border-gray-100 rounded-3xl hover:bg-white transition-all shadow-sm">
-                            <div className="flex justify-between items-start">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 rounded-2xl bg-white border border-gray-100 flex items-center justify-center text-lg font-black text-[var(--color-secondary)] shadow-sm">
+                        <div key={i} className="group p-6 bg-white border border-gray-100 rounded-[2.5rem] space-y-5 shadow-md hover:shadow-2xl transition-all relative overflow-hidden">
+                            {/* Status Accent Bar */}
+                            <div className={`absolute top-0 left-0 w-1.5 h-full ${t.status === 'Paid' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                            
+                            <div className="flex justify-between items-start pl-2">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-xl font-black shadow-lg group-hover:scale-110 transition-transform">
                                         {t.tenant[0]}
                                     </div>
                                     <div>
-                                        <div className="font-black text-[var(--color-secondary)] text-lg">{t.tenant}</div>
-                                        <div className="text-[11px] font-bold text-[var(--text-muted)] mt-1">{t.date} • Unit {t.unit}</div>
+                                        <p className="font-black text-[var(--color-secondary)] text-base tracking-tight">{t.tenant}</p>
+                                        <p className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em] mt-0.5">{t.date}</p>
                                     </div>
                                 </div>
                                 <StatusPill status={t.status} />
                             </div>
-                            <div className="flex justify-between items-center pt-2 border-t border-gray-100">
-                                <div className="text-[10px] font-black text-[var(--text-muted)] bg-gray-100 px-2 py-1 rounded">{t.invoice}</div>
-                                <div className="font-black text-xl text-[var(--color-secondary)]">{formatToRupee(t.amount)}</div>
+
+                            <div className="flex items-center justify-between bg-gray-50/50 p-5 rounded-2xl border border-gray-100 ml-2">
+                                <div className="space-y-1">
+                                    <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-60">Revenue Unit</p>
+                                    <p className="text-xs font-bold text-[var(--color-secondary)]">{t.unit}</p>
+                                </div>
+                                <div className="space-y-1 text-right">
+                                    <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-60">Settlement</p>
+                                    <p className="text-lg font-black text-[var(--color-secondary)]">{formatToRupee(t.amount)}</p>
+                                </div>
+                            </div>
+                            
+                            <div className="flex justify-center ml-2">
+                                <span className="text-[10px] font-black text-[var(--text-muted)] bg-gray-100 px-4 py-1.5 rounded-full lowercase tracking-widest opacity-60">
+                                    {t.invoice}
+                                </span>
                             </div>
                         </div>
                     ))}

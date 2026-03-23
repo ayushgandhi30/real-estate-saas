@@ -139,15 +139,15 @@ const User = () => {
         <div className="min-h-screen bg-[var(--bg-main)] p-4 sm:p-6 lg:p-0 space-y-5 font-['Inter']">
 
             {/* Header Section */}
-            <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
+            <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-4">
                 <div className="space-y-1">
-                    <h1 className="font-black text-[var(--color-secondary)] tracking-tight">
+                    <h1 className="text-2xl sm:text-3xl font-black text-[var(--color-secondary)] tracking-tight">
                         User Management
                     </h1>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                    <div className="relative group w-full sm:w-80">
+                <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                    <div className="relative group w-full md:w-80">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] opacity-50 group-focus-within:opacity-100 group-focus-within:text-[var(--color-primary)] transition-all" size={16} />
                         <input
                             type="text"
@@ -166,6 +166,7 @@ const User = () => {
                         variant="primary"
                         size="md"
                         icon={<UserPlus size={14} />}
+                        className="w-full sm:w-auto cursor-pointer"
                     >
                         ADD USER
                     </Button>
@@ -175,7 +176,7 @@ const User = () => {
             {/* Content Area */}
             <section className="bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden shadow-sm">
                 {/* Desktop view */}
-                <div className="hidden md:block overflow-x-auto">
+                <div className="hidden lg:block overflow-x-auto">
                     <table className="w-full text-left">
                         <thead className="bg-gray-50/50 border-b border-gray-50">
                             <tr>
@@ -223,8 +224,8 @@ const User = () => {
                                     </td>
                                     <td className="px-8 py-7">
                                         <div className="flex items-center justify-end gap-2">
-                                            <Button onClick={() => handleEdit(user)} iconOnly variant="secondary" size="xs" icon={<Edit size={16} />} title="Modify Record" />
-                                            <Button onClick={() => handleDelete(user._id)} iconOnly variant="secondary" size="xs" icon={<Trash2 size={16} />} title="Delete Identity" className="text-rose-300 hover:text-rose-600 hover:border-rose-100" />
+                                            <Button onClick={() => handleEdit(user)} iconOnly variant="secondary" size="xs" icon={<Edit size={16} />} title="Modify Record" className="cursor-pointer" />
+                                            <Button onClick={() => handleDelete(user._id)} iconOnly variant="secondary" size="xs" icon={<Trash2 size={16} />} title="Delete Identity" className="text-rose-300 hover:text-rose-600 hover:border-rose-100 cursor-pointer" />
                                         </div>
                                     </td>
                                 </tr>
@@ -233,21 +234,24 @@ const User = () => {
                     </table>
                 </div>
 
-                {/* Mobile View */}
-                <div className="md:hidden p-4 space-y-4">
+                {/* Mobile/Tablet View */}
+                <div className="lg:hidden p-4 space-y-4 bg-gray-50/50 rounded-b-[2rem]">
                     {filteredUsers.map((user) => (
-                        <div key={user._id} className={`p-6 bg-gray-50/50 border border-gray-100 rounded-[2.5rem] space-y-5 hover:bg-white transition-all shadow-sm ${user.isBlocked ? "grayscale opacity-50" : ""}`}>
-                            <div className="flex justify-between items-start">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 rounded-2xl bg-white border border-gray-100 flex items-center justify-center text-lg font-black text-[var(--color-secondary)] shadow-sm">
+                        <div key={user._id} className={`group p-6 bg-white border border-gray-100 rounded-[2.5rem] space-y-5 shadow-md hover:shadow-xl transition-all relative overflow-hidden ${user.isBlocked ? "grayscale opacity-50" : ""}`}>
+                            {/* Status Accent Bar */}
+                            <div className={`absolute top-0 left-0 w-1.5 h-full ${user.isBlocked ? 'bg-gray-400' : user.isActive ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                            
+                            <div className="flex justify-between items-start pl-2">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-xl font-black shadow-lg group-hover:scale-110 transition-transform">
                                         {user.name[0]}
                                     </div>
                                     <div>
-                                        <p className="font-black text-[var(--color-secondary)]">{user.name}</p>
-                                        <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mt-0.5 opacity-60 italic">{user.role}</p>
+                                        <p className="font-black text-[var(--color-secondary)] text-base tracking-tight">{user.name}</p>
+                                        <p className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em] mt-0.5">{user.role}</p>
                                     </div>
                                 </div>
-                                <span className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ${user.isBlocked ? "bg-rose-50 text-rose-600 border-rose-100" :
+                                <span className={`px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border shadow-sm ${user.isBlocked ? "bg-rose-50 text-rose-600 border-rose-100" :
                                     user.isActive ? "bg-emerald-50 text-emerald-600 border-emerald-100" :
                                         "bg-amber-50 text-amber-600 border-amber-100"
                                     }`}>
@@ -255,20 +259,20 @@ const User = () => {
                                 </span>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-                                <div className="space-y-0.5">
-                                    <p className="text-[9px] font-black text-[var(--text-muted)] uppercase opacity-40">Identifier</p>
-                                    <p className="text-[11px] font-bold text-[var(--color-secondary)] truncate">{user.email}</p>
+                            <div className="grid grid-cols-2 gap-4 bg-gray-50/50 p-5 rounded-2xl border border-gray-100 ml-2">
+                                <div className="space-y-1">
+                                    <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-60">Identity Handle</p>
+                                    <p className="text-xs font-bold text-[var(--color-secondary)] truncate">@{user.email.split('@')[0]}</p>
                                 </div>
-                                <div className="space-y-0.5 text-right">
-                                    <p className="text-[9px] font-black text-[var(--text-muted)] uppercase opacity-40">Communication</p>
-                                    <p className="text-[11px] font-bold text-[var(--color-secondary)]">{user.phone || "—"}</p>
+                                <div className="space-y-1 text-right">
+                                    <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-60">Contact Stream</p>
+                                    <p className="text-xs font-bold text-[var(--color-secondary)]">{user.phone || 'No Data'}</p>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3">
-                                <Button onClick={() => handleEdit(user)} variant="secondary" size="md" icon={<Edit size={14} />} className="w-full">Update</Button>
-                                <Button onClick={() => handleDelete(user._id)} variant="primary" size="md" icon={<Trash2 size={14} />} className="w-full">Delete</Button>
+                            <div className="flex items-center gap-3 pt-2 pl-2">
+                                <Button onClick={() => handleEdit(user)} variant="secondary" size="md" className="flex-1 cursor-pointer font-black text-[10px] tracking-widest uppercase" icon={<Edit size={14} />}>Update</Button>
+                                <Button onClick={() => handleDelete(user._id)} variant="primary" size="md" className="flex-1 cursor-pointer font-black text-[10px] tracking-widest uppercase" icon={<Trash2 size={14} />}>Delete</Button>
                             </div>
                         </div>
                     ))}
@@ -280,18 +284,18 @@ const User = () => {
                 <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-300">
                     <div className="fixed inset-0 bg-black/60 backdrop-blur-md" onClick={resetForm}></div>
 
-                    <div className="relative bg-white w-full max-w-lg rounded-[3.5rem] border border-gray-100 shadow-lg overflow-hidden">
+                    <div className="relative bg-white w-full max-w-lg rounded-[2.5rem] sm:rounded-[3.5rem] border border-gray-100 shadow-lg overflow-hidden flex flex-col max-h-[90vh]">
 
-                        <div className="px-10 pt-4 border-b border-gray-50 flex items-center justify-between">
+                        <div className="px-6 sm:px-10 pt-6 pb-4 border-b border-gray-50 flex items-center justify-between shrink-0">
                             <div className="space-y-1">
-                                <h3 className="text-2xl font-black text-[var(--color-secondary)] tracking-tight">
+                                <h3 className="text-xl sm:text-2xl font-black text-[var(--color-secondary)] tracking-tight">
                                     {isEditing ? "Edit User" : "New User"}
                                 </h3>
                             </div>
-                            <Button onClick={resetForm} iconOnly variant="secondary" size="sm" icon={<X size={20} />} className="hover:bg-rose-50 hover:text-rose-600" />
+                            <Button onClick={resetForm} iconOnly variant="secondary" size="sm" icon={<X size={20} />} className="hover:bg-rose-50 hover:text-rose-600 cursor-pointer" />
                         </div>
 
-                        <form onSubmit={handleSubmit} className="px-10 pb-10 space-y-8 max-h-[75vh] overflow-y-auto custom-scrollbar">
+                        <form onSubmit={handleSubmit} className="px-6 sm:px-10 py-8 space-y-8 overflow-y-auto custom-scrollbar flex-1">
                             <div className="space-y-6">
                                 <Input
                                     label="Name"
@@ -315,7 +319,7 @@ const User = () => {
                                     onChange={handleChange}
                                 />
 
-                                <div className="grid grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                     <Input
                                         label="Password"
                                         type="password"
@@ -325,6 +329,7 @@ const User = () => {
                                         required={!isEditing}
                                         value={formData.password}
                                         onChange={handleChange}
+                                        className="w-full"
                                     />
                                     <Input
                                         label="Phone"
@@ -334,6 +339,7 @@ const User = () => {
                                         placeholder="Phone Number"
                                         value={formData.phone}
                                         onChange={handleChange}
+                                        className="w-full"
                                     />
                                 </div>
 
@@ -371,7 +377,7 @@ const User = () => {
                             </div>
 
                             <div className="flex justify-end">
-                                <Button type="submit" htmlType="submit" variant="primary" size="lg" className="min-w-[170px]">
+                                <Button type="submit" htmlType="submit" variant="primary" size="lg" className="min-w-[170px] cursor-pointer">
                                     {isEditing ? "UPDATE USER" : "ADD USER"}
                                 </Button>
                             </div>

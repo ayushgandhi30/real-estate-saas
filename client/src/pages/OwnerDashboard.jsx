@@ -257,7 +257,7 @@ const OwnerDashboard = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
             <div className="p-6 bg-gray-50/50 rounded-[2.5rem] border border-gray-100">
               <p className="text-3xl font-black text-rose-600 mb-1">{stats?.pendingMaintenanceApprovals || 0}</p>
               <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-60">Pending Maintenance Approvals </p>

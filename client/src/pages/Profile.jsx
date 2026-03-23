@@ -87,8 +87,8 @@ const Profile = () => {
          <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-10">
 
             {/* Profile Avatar Section */}
-            <div className="lg:col-span-4 translate-y-2">
-               <div className="bg-white rounded-[2rem] border border-gray-100 p-10 flex flex-col items-center text-center shadow-sm relative overflow-hidden">
+            <div className="lg:col-span-4 lg:translate-y-2">
+               <div className="bg-white rounded-[2rem] border border-gray-100 p-6 sm:p-10 flex flex-col items-center text-center shadow-sm relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-full h-1 bg-indigo-600" />
 
                   <div className="relative">
@@ -114,7 +114,7 @@ const Profile = () => {
             {/* Information Form */}
             <div className="lg:col-span-8">
                <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
-                  <div className="px-10 py-8 border-b border-gray-50 flex items-center justify-between">
+                  <div className="px-6 sm:px-10 py-6 sm:py-8 border-b border-gray-50 flex items-center justify-between">
                      <div className="flex items-center gap-4">
                         <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-indigo-600 border border-gray-100">
                            <User size={18} />
@@ -125,7 +125,7 @@ const Profile = () => {
                      </div>
                   </div>
 
-                  <div className="p-10 space-y-8">
+                  <div className="p-6 sm:p-10 space-y-8">
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                         <Input
                            label="Full Name"

@@ -188,36 +188,34 @@ export default function LeaseAgrement() {
         <div className="min-h-screen bg-[var(--bg-main)] p-4 sm:p-6 lg:p-0 space-y-5 font-['Inter']">
 
             {/* Header Section */}
-            <header className="flex flex-col xl:flex-row xl:items-end justify-between gap-6 pb-2">
+            <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-4">
                 <div className="space-y-1">
-                    <h1 className="font-black text-[var(--color-secondary)] tracking-tight">
+                    <h1 className="text-2xl sm:text-3xl font-black text-[var(--color-secondary)] tracking-tight">
                         Lease Management
                     </h1>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                    <div className="relative group w-full sm:w-80">
+                <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+                    <div className="relative group w-full md:w-80">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] opacity-50 group-focus-within:opacity-100 group-focus-within:text-[var(--color-primary)] transition-all" size={16} />
                         <input
                             type="text"
-                            placeholder="Search by name, property or unit..."
+                            placeholder="Search records..."
                             className="w-full bg-white border border-gray-100 rounded-2xl py-3 pl-12 pr-6 text-[13px] font-bold text-[var(--color-secondary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--color-primary)]/20 focus:ring-4 focus:ring-[var(--color-primary)]/5 transition-all shadow-sm"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
 
-                    <div className="flex items-center gap-1 bg-white p-1 rounded-2xl border border-gray-100 shadow-sm">
+                    <div className="flex items-center gap-1 bg-white p-1 rounded-2xl border border-gray-100 shadow-sm w-full sm:w-auto overflow-x-auto no-scrollbar">
                         {["All", "Active", "Expiring"].map((status) => (
-                            <Button
+                            <button
                                 key={status}
                                 onClick={() => setFilterStatus(status)}
-                                variant={filterStatus === status ? "primary" : "ghost"}
-                                size="sm"
-                                className={`px-5 tracking-widest font-black uppercase ${filterStatus === status ? "bg-gray-900 text-white scale-105" : ""}`}
+                                className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${filterStatus === status ? "bg-gray-900 text-white shadow-lg" : "text-[var(--text-muted)] hover:bg-gray-50 cursor-pointer"}`}
                             >
                                 {status}
-                            </Button>
+                            </button>
                         ))}
                     </div>
                 </div>
@@ -225,15 +223,15 @@ export default function LeaseAgrement() {
 
             {/* Table Area */}
             <section className="bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden shadow-sm">
-                <div className="overflow-x-auto">
+                <div className="hidden lg:block overflow-x-auto">
                     <table className="w-full text-left">
                         <thead className="bg-gray-50/50 border-b border-gray-50">
                             <tr>
                                 <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">tenant name</th>
-                                <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Property </th>
-                                <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">lease date</th>
-                                <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Tenant Rent</th>
-                                <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Status</th>
+                                <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest text-center">Property </th>
+                                <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest text-center">lease date</th>
+                                <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest text-center">Tenant Rent</th>
+                                <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest text-center">Status</th>
                                 <th className="px-8 py-5 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest text-right">Actions</th>
                             </tr>
                         </thead>
@@ -247,28 +245,26 @@ export default function LeaseAgrement() {
                                             </div>
                                             <div className="min-w-0">
                                                 <p className="text-sm font-black text-[var(--color-secondary)] truncate max-w-[180px]">{tenant.userId?.name || tenant.name}</p>
-                                                <p className="text-[10px] text-[var(--text-muted)] font-bold truncate max-w-[180px] opacity-60">ID: #{tenant._id.slice(-8).toUpperCase()}</p>
+                                                <p className="text-[10px] text-[var(--text-muted)] font-bold truncate max-w-[180px] opacity-60 uppercase">Contract #{tenant._id.slice(-6)}</p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-8 py-7">
+                                    <td className="px-8 py-7 text-center">
                                         <div className="space-y-0.5">
                                             <p className="text-[13px] font-bold text-[var(--color-secondary)]">{tenant.propertyId?.propertyName}</p>
-                                            <p className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest opacity-60">U-{tenant.unitId?.unitNumber} • {tenant.floorId?.name}</p>
+                                            <p className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest opacity-60">U-{tenant.unitId?.unitNumber}</p>
                                         </div>
                                     </td>
-                                    <td className="px-8 py-7">
+                                    <td className="px-8 py-7 text-center">
                                         <p className="text-[12px] font-bold text-[var(--color-secondary)]">{formatDate(tenant.leaseStart)}</p>
                                         <p className="text-[9px] text-[var(--text-muted)] font-black uppercase tracking-widest mt-1 opacity-40">Until {formatDate(tenant.leaseEnd)}</p>
                                     </td>
-                                    <td className="px-8 py-7">
+                                    <td className="px-8 py-7 text-center">
                                         <span className="text-lg font-black text-[var(--color-secondary)]">{formatCurrency(tenant.rent)}</span>
-                                        <span className="block text-[9px] font-bold text-[var(--text-muted)] uppercase opacity-40">Monthly Net</span>
                                     </td>
-                                    <td className="px-8 py-7">
+                                    <td className="px-8 py-7 text-center">
                                         <span className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ${tenant.leaseStatus === 'Active' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'
                                             }`}>
-                                            <span className={`w-1.5 h-1.5 rounded-full ${tenant.leaseStatus === 'Active' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
                                             {tenant.leaseStatus}
                                         </span>
                                     </td>
@@ -280,6 +276,7 @@ export default function LeaseAgrement() {
                                                 size="xs"
                                                 iconOnly
                                                 icon={<Eye size={18} />}
+                                                className="cursor-pointer"
                                             />
                                             <Button
                                                 onClick={() => handleDownload(tenant)}
@@ -287,6 +284,7 @@ export default function LeaseAgrement() {
                                                 size="xs"
                                                 iconOnly
                                                 icon={<Download size={18} />}
+                                                className="cursor-pointer"
                                             />
                                         </div>
                                     </td>
@@ -294,6 +292,45 @@ export default function LeaseAgrement() {
                             ))}
                         </tbody>
                     </table>
+                </div>                {/* Mobile/Tablet View */}
+                <div className="lg:hidden p-4 space-y-4 bg-gray-50/50 rounded-b-[2.5rem]">
+                    {filteredTenants.map((tenant) => (
+                        <div key={tenant._id} className="group p-6 bg-white border border-gray-100 rounded-[2.5rem] space-y-5 shadow-md hover:shadow-2xl transition-all relative overflow-hidden">
+                            {/* Status Accent Bar */}
+                            <div className={`absolute top-0 left-0 w-1.5 h-full ${tenant.leaseStatus === 'Active' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                            
+                            <div className="flex justify-between items-start pl-2">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-xl font-black shadow-lg group-hover:scale-110 transition-transform">
+                                        {(tenant.userId?.name || tenant.name || 'U')[0]}
+                                    </div>
+                                    <div>
+                                        <p className="font-black text-[var(--color-secondary)] text-base tracking-tight">{tenant.userId?.name || tenant.name}</p>
+                                        <p className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em] mt-0.5">#{tenant._id.slice(-6)}</p>
+                                    </div>
+                                </div>
+                                <span className={`px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest border shadow-sm ${tenant.leaseStatus === 'Active' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
+                                    {tenant.leaseStatus}
+                                </span>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 bg-gray-50/50 p-5 rounded-2xl border border-gray-100 ml-2">
+                                <div className="space-y-1">
+                                    <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-60">Property Asset</p>
+                                    <p className="text-xs font-bold text-[var(--color-secondary)] truncate">{tenant.propertyId?.propertyName}</p>
+                                </div>
+                                <div className="space-y-1 text-right">
+                                    <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-60">Revenue Stream</p>
+                                    <p className="text-xs font-black text-emerald-600">{formatCurrency(tenant.rent)}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3 pt-2 pl-2">
+                                <Button onClick={() => setSelectedLease(tenant)} variant="secondary" size="md" className="flex-1 cursor-pointer font-black text-[10px] tracking-widest uppercase" icon={<Eye size={14} />}>Details</Button>
+                                <Button onClick={() => handleDownload(tenant)} variant="primary" size="md" className="flex-1 cursor-pointer font-black text-[10px] tracking-widest uppercase" icon={<Download size={14} />}>Export</Button>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </section>
 
@@ -310,14 +347,14 @@ export default function LeaseAgrement() {
                     <div className="relative w-full max-w-xl bg-white rounded-[2.5rem] shadow-lg overflow-hidden animate-in zoom-in-95 duration-300 flex flex-col max-h-[90vh]">
 
                         {/* Header */}
-                        <div className="px-8 py-6 border-b border-gray-50 flex items-center justify-between bg-white sticky top-0 z-10">
+                        <div className="px-6 sm:px-8 py-6 border-b border-gray-50 flex items-center justify-between bg-white sticky top-0 z-10 shrink-0">
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600">
                                     <FileText size={24} />
                                 </div>
                                 <div>
-                                    <h2 className="text-xl font-black text-[var(--color-secondary)] tracking-tight">Lease Details</h2>
-                                    <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest leading-none mt-1">
+                                    <h2 className="text-lg sm:text-xl font-black text-[var(--color-secondary)] tracking-tight">Lease Details</h2>
+                                    <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest leading-none mt-1 opacity-60">
                                         Contract ID: #{selectedLease._id.slice(-8).toUpperCase()}
                                     </p>
                                 </div>
@@ -328,12 +365,12 @@ export default function LeaseAgrement() {
                                 variant="secondary"
                                 size="xs"
                                 icon={<X size={18} />}
-                                className="hover:bg-gray-100"
+                                className="hover:bg-gray-100 cursor-pointer"
                             />
                         </div>
 
                         {/* Body */}
-                        <div className="p-8 overflow-y-auto space-y-8 custom-scrollbar">
+                        <div className="p-6 sm:p-8 overflow-y-auto space-y-8 custom-scrollbar flex-1">
 
                             {/* Tenant Information */}
                             <section className="space-y-4">
@@ -445,6 +482,7 @@ export default function LeaseAgrement() {
                                 variant="primary"
                                 size="sm"
                                 icon={<Download size={14} />}
+                                className="cursor-pointer"
                             >
                                 Download
                             </Button>

@@ -291,25 +291,23 @@ const Tenant = () => {
         <div className="min-h-screen bg-[var(--bg-main)] p-4 sm:p-6 lg:p-0 space-y-5 font-['Inter']">
 
             {/* Header Section */}
-            <header className="flex flex-col xl:flex-row xl:items-end justify-between gap-6 pb-2">
+            <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-4">
                 <div className="space-y-1">
-                    <h1 className="font-black text-[var(--color-secondary)] tracking-tight">
+                    <h1 className="text-2xl sm:text-3xl font-black text-[var(--color-secondary)] tracking-tight">
                         Tenant Management
                     </h1>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                    <div className="flex items-center gap-1 bg-white p-1 rounded-2xl border border-gray-100 shadow-sm overflow-x-auto no-scrollbar">
+                <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
+                    <div className="flex flex-wrap items-center gap-1 bg-white p-1 rounded-2xl border border-gray-100 shadow-sm overflow-x-auto no-scrollbar w-full sm:w-auto">
                         {["All", "Active", "Expiring", "Expired", "Terminated"].map((status) => (
-                            <Button
+                            <button
                                 key={status}
                                 onClick={() => setFilterStatus(status)}
-                                variant={filterStatus === status ? "primary" : "ghost"}
-                                size="xs"
-                                className="whitespace-nowrap"
+                                className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${filterStatus === status ? "bg-indigo-600 text-white shadow-lg" : "text-[var(--text-muted)] hover:bg-gray-50 cursor-pointer"}`}
                             >
                                 {status}
-                            </Button>
+                            </button>
                         ))}
                     </div>
                     {user?.role === "MANAGER" && (
@@ -318,6 +316,7 @@ const Tenant = () => {
                             variant="primary"
                             size="md"
                             icon={<Plus size={18} />}
+                            className="w-full sm:w-auto cursor-pointer"
                         >
                             REGISTER TENANT
                         </Button>
@@ -376,7 +375,7 @@ const Tenant = () => {
                     </div>
                 ) : null}
 
-                <div className="overflow-x-auto">
+                <div className="hidden lg:block overflow-x-auto">
                     <table className="w-full text-left font-['Inter']">
                         <thead className="bg-gray-50/50 border-b border-gray-50">
                             <tr>
@@ -430,11 +429,11 @@ const Tenant = () => {
                                         </td>
                                         <td className="px-8 py-7">
                                             <div className="flex items-center justify-end gap-2">
-                                                <Button onClick={() => setSelectedTenant(tenant)} iconOnly variant="secondary" size="xs" icon={<Eye size={18} />} title="View Manifest" />
+                                                <Button onClick={() => setSelectedTenant(tenant)} iconOnly variant="secondary" size="xs" icon={<Eye size={18} />} title="View Manifest" className="cursor-pointer" />
                                                 {user?.role === "MANAGER" && (
                                                     <>
-                                                        <Button onClick={() => handleEdit(tenant)} iconOnly variant="secondary" size="xs" icon={<Edit size={18} />} title="Modify Record" className="hover:text-blue-600 hover:border-blue-100" />
-                                                        <Button onClick={() => handleDelete(tenant._id)} iconOnly variant="secondary" size="xs" icon={<Trash2 size={18} />} title="Purge Record" className="text-rose-300 hover:text-rose-600 hover:border-rose-100" />
+                                                        <Button onClick={() => handleEdit(tenant)} iconOnly variant="secondary" size="xs" icon={<Edit size={18} />} title="Modify Record" className="hover:text-blue-600 hover:border-blue-100 cursor-pointer" />
+                                                        <Button onClick={() => handleDelete(tenant._id)} iconOnly variant="secondary" size="xs" icon={<Trash2 size={18} />} title="Purge Record" className="text-rose-300 hover:text-rose-600 hover:border-rose-100 cursor-pointer" />
                                                     </>
                                                 )}
                                             </div>
@@ -454,6 +453,50 @@ const Tenant = () => {
                         </tbody>
                     </table>
                 </div>
+
+                {/* Mobile/Tablet View */}
+                <div className="lg:hidden p-4 space-y-4 bg-gray-50/50 rounded-b-[2.5rem]">
+                    {filteredTenants.length === 0 ? (
+                        <div className="py-20 text-center opacity-20 italic font-black uppercase tracking-widest text-lg">No tenants logged</div>
+                    ) : (
+                        filteredTenants.map((tenant) => (
+                            <div key={tenant._id} className="p-6 bg-white border border-gray-100 rounded-[2.5rem] space-y-5 shadow-md hover:shadow-xl transition-all">
+                                <div className="flex justify-between items-start">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-12 h-12 rounded-2xl bg-white border border-gray-100 flex items-center justify-center text-lg font-black text-[var(--color-secondary)]">
+                                            {(tenant.userId?.name || tenant.name || 'T')[0]}
+                                        </div>
+                                        <div>
+                                            <p className="font-black text-[var(--color-secondary)]">{tenant.userId?.name || tenant.name}</p>
+                                            <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest opacity-60">U-{tenant.unitId?.unitNumber || "?"}</p>
+                                        </div>
+                                    </div>
+                                    <span className={`px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border ${tenant.leaseStatus === 'Active' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
+                                        {tenant.leaseStatus}
+                                    </span>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                                    <div className="space-y-0.5">
+                                        <p className="text-[9px] font-black text-[var(--text-muted)] uppercase opacity-40">Monthly Rent</p>
+                                        <p className="text-[11px] font-black text-emerald-600">₹{(tenant.rent || 0).toLocaleString()}</p>
+                                    </div>
+                                    <div className="space-y-0.5 text-right">
+                                        <p className="text-[9px] font-black text-[var(--text-muted)] uppercase opacity-40">Payment</p>
+                                        <p className={`text-[11px] font-bold ${tenant.paymentStatus === 'Paid' ? 'text-emerald-500' : 'text-rose-500'}`}>{tenant.paymentStatus}</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-2">
+                                    <Button onClick={() => setSelectedTenant(tenant)} variant="secondary" size="md" className="flex-1 cursor-pointer" icon={<Eye size={14} />}>Details</Button>
+                                    {user?.role === "MANAGER" && (
+                                        <Button onClick={() => handleEdit(tenant)} variant="primary" size="md" className="flex-1 cursor-pointer" icon={<Edit size={14} />}>Edit</Button>
+                                    )}
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
             </section>
 
             {/* Tenant Detail Modal */}
@@ -469,14 +512,14 @@ const Tenant = () => {
                     <div className="relative w-full max-w-xl bg-white rounded-[2.5rem] shadow-lg overflow-hidden animate-in zoom-in-95 duration-300 flex flex-col max-h-[90vh]">
 
                         {/* Header */}
-                        <div className="px-8 py-6 border-b border-gray-50 flex items-center justify-between bg-white sticky top-0 z-10">
+                        <div className="px-6 sm:px-8 py-6 border-b border-gray-50 flex items-center justify-between bg-white sticky top-0 z-10 shrink-0">
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600">
                                     <Users size={24} />
                                 </div>
                                 <div>
-                                    <h2 className="text-xl font-black text-[var(--color-secondary)] tracking-tight">Tenant Details</h2>
-                                    <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest leading-none mt-1">
+                                    <h2 className="text-lg sm:text-xl font-black text-[var(--color-secondary)] tracking-tight">Tenant Details</h2>
+                                    <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest leading-none mt-1 opacity-60">
                                         ID: #{selectedTenant._id.slice(-8).toUpperCase()}
                                     </p>
                                 </div>
@@ -487,12 +530,12 @@ const Tenant = () => {
                                 variant="secondary"
                                 size="xs"
                                 icon={<X size={18} />}
-                                className="hover:bg-gray-100"
+                                className="hover:bg-gray-100 cursor-pointer"
                             />
                         </div>
 
                         {/* Body */}
-                        <div className="p-8 overflow-y-auto space-y-8 custom-scrollbar">
+                        <div className="p-6 sm:p-8 overflow-y-auto space-y-8 custom-scrollbar flex-1">
 
                             {/* Personal Information */}
                             <section className="space-y-4 text-center">
@@ -610,8 +653,8 @@ const Tenant = () => {
                                 {selectedTenant.leaseStatus} Status
                             </span>
                             <div className="flex gap-2">
-                                <Button variant="secondary" size="sm" icon={<Mail size={14} />}>Message</Button>
-                                <Button variant="primary" size="sm" icon={<Phone size={14} />}>Call</Button>
+                                <Button variant="secondary" size="sm" icon={<Mail size={14} />} className="cursor-pointer">Message</Button>
+                                <Button variant="primary" size="sm" icon={<Phone size={14} />} className="cursor-pointer">Call</Button>
                             </div>
                         </div>
                     </div>
@@ -622,18 +665,18 @@ const Tenant = () => {
             {isAddingTenant && (
                 <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-in fade-in duration-300">
                     <div className="fixed inset-0 bg-black/60 backdrop-blur-md" onClick={() => { setIsAddingTenant(false); setEditId(null); setFormData(initialFormData); }}></div>
-                    <div className="relative w-full max-w-4xl bg-white rounded-[2rem] shadow-lg border border-gray-100 overflow-hidden flex flex-col">
+                    <div className="relative w-full max-w-4xl bg-white rounded-[2rem] shadow-lg border border-gray-100 overflow-hidden flex flex-col max-h-[90vh]">
 
-                        <div className="px-6 py-1 border-b border-gray-50 flex items-center justify-between bg-white z-10">
+                        <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between bg-white z-10 shrink-0">
                             <div>
-                                <h2 className="text-[18px] font-black text-[var(--color-secondary)] tracking-tight">
-                                    {editId ? "Edit Tenant" : "Add Tenant"}
+                                <h2 className="text-xl sm:text-2xl font-black text-[var(--color-secondary)] tracking-tight">
+                                    {editId ? "Modify Tenant" : "Register Tenant"}
                                 </h2>
                             </div>
-                            <Button onClick={() => { setIsAddingTenant(false); setEditId(null); setFormData(initialFormData); }} iconOnly variant="secondary" size="sm" icon={<X size={20} />} className="hover:bg-rose-50 hover:text-rose-600" />
+                            <Button onClick={() => { setIsAddingTenant(false); setEditId(null); setFormData(initialFormData); }} iconOnly variant="secondary" size="sm" icon={<X size={20} />} className="hover:bg-rose-50 hover:text-rose-600 cursor-pointer" />
                         </div>
 
-                        <form className="p-6" onSubmit={handleFormSubmit}>
+                        <form className="p-6 sm:p-8 overflow-y-auto custom-scrollbar flex-1" onSubmit={handleFormSubmit}>
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                                 <div className="space-y-2">
                                     {/* Identity Section */}
@@ -754,8 +797,8 @@ const Tenant = () => {
                             </div>
 
                             <div className="flex items-center justify-end gap-4 pt-5 mt-2  border-t border-gray-50 bg-white">
-                                <Button type="button" variant="ghost" size="sm" onClick={() => { setIsAddingTenant(false); setEditId(null); setFormData(initialFormData); }}>Cancel</Button>
-                                <Button type="submit" htmlType="submit" loading={loading} variant="primary" size="md" icon={editId ? <Edit size={16} /> : <CheckCircle2 size={16} />}>
+                                <Button type="button" variant="ghost" size="sm" onClick={() => { setIsAddingTenant(false); setEditId(null); setFormData(initialFormData); }} className="cursor-pointer">Cancel</Button>
+                                <Button type="submit" htmlType="submit" loading={loading} variant="primary" size="md" icon={editId ? <Edit size={16} /> : <CheckCircle2 size={16} />} className="cursor-pointer">
                                     {editId ? "Update Tenant" : "Save Tenant"}
                                 </Button>
                             </div>

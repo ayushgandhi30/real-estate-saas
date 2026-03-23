@@ -427,9 +427,10 @@ const FloorUnit = () => {
         </Button>
       </section>
 
-      {/* Main Table Content */}
+      {/* Main Content Area */}
       <section className="bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden shadow-[0_20px_50px_-15px_rgba(0,0,0,0.03)] min-h-[500px] relative">
-        <div className="overflow-x-auto">
+        {/* Desktop Table View */}
+        <div className="hidden lg:block overflow-x-auto">
           {activeTab === "floors" ? (
             <table className="w-full text-left">
               <thead className="bg-gray-50/50 border-b border-gray-50">
@@ -594,6 +595,100 @@ const FloorUnit = () => {
                 )}
               </tbody>
             </table>
+          )}
+        </div>
+
+        {/* Mobile/Tablet Card View */}
+        <div className="lg:hidden p-4 space-y-4 bg-gray-50/50 min-h-[500px]">
+          {activeTab === "floors" ? (
+            floors.length > 0 ? (
+              floors.map((floor) => (
+                <div key={floor._id} className="group bg-white p-6 rounded-[2rem] border border-gray-100 space-y-5 shadow-md hover:shadow-xl transition-all relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-1.5 h-full bg-indigo-500" />
+                  
+                  <div className="flex justify-between items-start pl-2">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-indigo-600 shadow-sm group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                        <Layers size={20} />
+                      </div>
+                      <div>
+                        <h3 className="font-black text-[var(--color-secondary)] text-sm uppercase tracking-tight">{floor.name}</h3>
+                        <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest mt-0.5">Lvl {floor.floorNumber}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50/50 p-4 rounded-xl border border-gray-100 space-y-3 ml-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Host Property</span>
+                      <span className="text-[11px] font-bold text-[var(--color-secondary)] max-w-[150px] truncate">{floor.propertyId?.propertyName}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Active Units</span>
+                      <span className="text-[11px] font-black text-indigo-600">{units.filter(u => u.floorId?._id === floor._id).length}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pl-2">
+                    <Button onClick={() => handleEditFloor(floor)} variant="secondary" size="md" className="flex-1 cursor-pointer font-black text-[10px] tracking-widest uppercase" icon={<Edit size={14} />}>Update</Button>
+                    <Button onClick={() => handleDeleteFloor(floor._id)} variant="primary" size="md" className="flex-1 cursor-pointer font-black text-[10px] tracking-widest uppercase" icon={<Trash2 size={14} />}>Delete</Button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="py-20 text-center opacity-20 italic font-black uppercase tracking-widest text-sm">No floor levels established</div>
+            )
+          ) : (
+            units.length > 0 ? (
+              units.map((unit) => (
+                <div key={unit._id} className="group bg-white p-6 rounded-[2rem] border border-gray-100 space-y-6 shadow-md hover:shadow-xl transition-all relative overflow-hidden">
+                  <div className={`absolute top-0 left-0 w-1.5 h-full ${unit.status === 'Vacant' ? 'bg-emerald-500' : unit.status === 'Occupied' ? 'bg-indigo-500' : 'bg-rose-500'}`} />
+                  
+                  <div className="flex justify-between items-start pl-2">
+                    <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 rounded-2xl bg-gray-900 text-white flex items-center justify-center text-xs font-black shadow-lg shadow-gray-100 group-hover:-rotate-6 transition-transform">
+                        {unit.unitNumber}
+                      </div>
+                      <div>
+                        <h3 className="font-black text-[var(--color-secondary)] text-sm uppercase tracking-tight">Ref: {unit._id.slice(-6).toUpperCase()}</h3>
+                        <div className="flex items-center gap-2 mt-1">
+                           <span className={`w-1.5 h-1.5 rounded-full ${unit.status === 'Vacant' ? 'bg-emerald-500' : unit.status === 'Occupied' ? 'bg-indigo-500' : 'bg-rose-500'}`} />
+                           <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)]">{unit.status}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-black text-emerald-600 tracking-tight">₹{unit.rentAmount?.toLocaleString()}</p>
+                      <p className="text-[8px] font-black text-[var(--text-muted)] uppercase tracking-widest mt-0.5 opacity-50">Monthly</p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 bg-gray-50/50 p-5 rounded-2xl border border-gray-100 ml-2">
+                    <div className="space-y-1">
+                      <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-60">Physical Mapping</p>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[10px] font-bold text-[var(--color-secondary)] truncate">{unit.propertyId?.propertyName}</span>
+                        <span className="text-[10px] font-bold text-[var(--text-muted)]">Lvl {unit.floorId?.floorNumber || "?"}</span>
+                      </div>
+                    </div>
+                    <div className="space-y-1 text-right">
+                      <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest opacity-60">Specification</p>
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[10px] font-bold text-[var(--color-secondary)]">{unit.unitType}</span>
+                        <span className="text-[10px] font-bold text-[var(--text-muted)]">{unit.area} Sq.Ft</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pl-2">
+                    <Button onClick={() => handleEditUnit(unit)} variant="secondary" size="md" className="flex-1 cursor-pointer font-black text-[10px] tracking-widest uppercase" icon={<Edit size={14} />}>Update</Button>
+                    <Button onClick={() => handleDeleteUnit(unit._id)} variant="primary" size="md" className="flex-1 cursor-pointer font-black text-[10px] tracking-widest uppercase" icon={<Trash2 size={14} />}>Delete</Button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="py-20 text-center opacity-20 italic font-black uppercase tracking-widest text-sm">No individual units deployed</div>
+            )
           )}
         </div>
       </section>
