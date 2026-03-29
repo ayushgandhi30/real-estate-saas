@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { UserPlus, Edit, Trash2, X, Search, Mail, Smartphone, ShieldCheck, ChevronDown, User as UserIcon, Loader2, ArrowRight } from "lucide-react";
+import { UserPlus, Edit, Trash2, X, Search, Mail, Smartphone, ShieldCheck, ChevronDown, User as UserIcon, Loader2, ArrowRight, Shield } from "lucide-react";
 import { useAuth } from "../store/auth";
 import { useToast } from "../store/ToastContext";
 import Button from "../components/ui/Button";
@@ -165,10 +165,11 @@ const User = () => {
                         }}
                         variant="primary"
                         size="md"
-                        icon={<UserPlus size={14} />}
+                        icon={currentUser?.isDemoAccount ? <Shield size={14} /> : <UserPlus size={14} />}
                         className="w-full sm:w-auto cursor-pointer"
+                        disabled={currentUser?.isDemoAccount}
                     >
-                        ADD USER
+                        {currentUser?.isDemoAccount ? "READ ONLY MODE" : "ADD USER"}
                     </Button>
                 </div>
             </header>
@@ -224,8 +225,8 @@ const User = () => {
                                     </td>
                                     <td className="px-8 py-7">
                                         <div className="flex items-center justify-end gap-2">
-                                            <Button onClick={() => handleEdit(user)} iconOnly variant="secondary" size="xs" icon={<Edit size={16} />} title="Modify Record" className="cursor-pointer" />
-                                            <Button onClick={() => handleDelete(user._id)} iconOnly variant="secondary" size="xs" icon={<Trash2 size={16} />} title="Delete Identity" className="text-rose-300 hover:text-rose-600 hover:border-rose-100 cursor-pointer" />
+                                            <Button onClick={() => handleEdit(user)} iconOnly variant="secondary" size="xs" icon={<Edit size={16} />} title={currentUser?.isDemoAccount ? "View Only" : "Modify Record"} className="cursor-pointer" disabled={currentUser?.isDemoAccount} />
+                                            <Button onClick={() => handleDelete(user._id)} iconOnly variant="secondary" size="xs" icon={<Trash2 size={16} />} title={currentUser?.isDemoAccount ? "Delete Disabled" : "Delete Identity"} className={`text-rose-300 hover:text-rose-600 hover:border-rose-100 cursor-pointer ${currentUser?.isDemoAccount ? "opacity-20" : ""}`} disabled={currentUser?.isDemoAccount} />
                                         </div>
                                     </td>
                                 </tr>
@@ -240,7 +241,7 @@ const User = () => {
                         <div key={user._id} className={`group p-6 bg-white border border-gray-100 rounded-[2.5rem] space-y-5 shadow-md hover:shadow-xl transition-all relative overflow-hidden ${user.isBlocked ? "grayscale opacity-50" : ""}`}>
                             {/* Status Accent Bar */}
                             <div className={`absolute top-0 left-0 w-1.5 h-full ${user.isBlocked ? 'bg-gray-400' : user.isActive ? 'bg-emerald-500' : 'bg-amber-500'}`} />
-                            
+
                             <div className="flex justify-between items-start pl-2">
                                 <div className="flex items-center gap-4">
                                     <div className="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-xl font-black shadow-lg group-hover:scale-110 transition-transform">
@@ -271,8 +272,12 @@ const User = () => {
                             </div>
 
                             <div className="flex items-center gap-3 pt-2 pl-2">
-                                <Button onClick={() => handleEdit(user)} variant="secondary" size="md" className="flex-1 cursor-pointer font-black text-[10px] tracking-widest uppercase" icon={<Edit size={14} />}>Update</Button>
-                                <Button onClick={() => handleDelete(user._id)} variant="primary" size="md" className="flex-1 cursor-pointer font-black text-[10px] tracking-widest uppercase" icon={<Trash2 size={14} />}>Delete</Button>
+                                <Button onClick={() => handleEdit(user)} variant="secondary" size="md" className="flex-1 cursor-pointer font-black text-[10px] tracking-widest uppercase" icon={<Edit size={14} />} disabled={currentUser?.isDemoAccount}>
+                                    {currentUser?.isDemoAccount ? "View" : "Update"}
+                                </Button>
+                                <Button onClick={() => handleDelete(user._id)} variant="primary" size="md" className="flex-1 cursor-pointer font-black text-[10px] tracking-widest uppercase" icon={<Trash2 size={14} />} disabled={currentUser?.isDemoAccount}>
+                                    {currentUser?.isDemoAccount ? "Locked" : "Delete"}
+                                </Button>
                             </div>
                         </div>
                     ))}

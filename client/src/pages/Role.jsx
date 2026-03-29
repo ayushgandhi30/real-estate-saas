@@ -1,6 +1,7 @@
 import React from 'react';
 import { Shield, Plus, Users, Lock, ChevronRight, Activity, ShieldAlert, ShieldCheck } from 'lucide-react';
 import Button from "../components/ui/Button";
+import { useAuth } from "../store/auth";
 
 const roles = [
     { title: "Network Overseer", users: 2, desc: "Global administrative authority across all platform layers.", color: "rose", bg: "bg-rose-50" },
@@ -10,6 +11,9 @@ const roles = [
 ];
 
 const Role = () => {
+    const { user } = useAuth();
+    const isDemo = user?.isDemoAccount;
+
     return (
         <div className="min-h-screen bg-[var(--bg-main)] p-4 sm:p-6 lg:p-8 space-y-10 font-['Inter']">
             
@@ -30,10 +34,11 @@ const Role = () => {
                 <Button 
                     variant="primary" 
                     size="lg" 
-                    icon={<Plus size={18} />}
+                    icon={isDemo ? <Lock size={18} /> : <Plus size={18} />}
                     className="shadow-2xl shadow-gray-200 group hover:-translate-y-1"
+                    disabled={isDemo}
                 >
-                    Forge New Role
+                    {isDemo ? "Matrix Locked (Demo)" : "Forge New Role"}
                 </Button>
             </header>
 
@@ -89,8 +94,9 @@ const Role = () => {
                                 icon={<ChevronRight size={14} />} 
                                 iconPosition="right"
                                 className="text-indigo-600 hover:text-black transition-colors"
+                                disabled={isDemo}
                            >
-                               Update Permissions
+                                {isDemo ? "View Clearances" : "Update Permissions"}
                            </Button>
                            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-300">
                              <Lock size={12} />

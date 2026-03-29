@@ -50,6 +50,10 @@ const user_Schema = new mongoose.Schema({
 
     resetToken: String,
     resetTokenExpiry: Date,
+    isDemoAccount: {
+        type: Boolean,
+        default: false,
+    },
 }, { timestamps: true })
 
 // Pre-save hook to hash password

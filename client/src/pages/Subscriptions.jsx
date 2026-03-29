@@ -20,6 +20,7 @@ import {
     MoreVertical,
     Loader2
 } from "lucide-react";
+import { useAuth } from "../store/auth";
 
 const initialState = {
     name: "",
@@ -34,6 +35,8 @@ const initialState = {
 };
 
 const Subscriptions = () => {
+    const { user } = useAuth();
+    const isDemo = user?.isDemoAccount;
     const { toast } = useToast();
     const [openForm, setOpenForm] = useState(false);
     const [editId, setEditId] = useState(null);
@@ -186,9 +189,10 @@ const Subscriptions = () => {
                         onClick={() => { resetForm(); setOpenForm(true); }}
                         variant="primary"
                         size="md"
-                        icon={<Plus size={18} />}
+                        disabled={isDemo}
+                        icon={isDemo ? <Shield size={18} /> : <Plus size={18} />}
                     >
-                        CREATE NEW TIER
+                        {isDemo ? "READ ONLY" : "CREATE NEW TIER"}
                     </Button>
                 </div>
             </header>
@@ -224,6 +228,8 @@ const Subscriptions = () => {
                                             size="xs" 
                                             iconOnly 
                                             icon={<Edit size={16} />} 
+                                            disabled={isDemo}
+                                            title={isDemo ? "Locked" : "Modify Tier"}
                                         />
                                         <Button 
                                             onClick={() => handleDelete(plan._id)} 
@@ -231,6 +237,8 @@ const Subscriptions = () => {
                                             size="xs" 
                                             iconOnly 
                                             icon={<Trash2 size={16} />} 
+                                            disabled={isDemo}
+                                            title={isDemo ? "Locked" : "Delete Tier"}
                                         />
                                     </div>
                                 </div>

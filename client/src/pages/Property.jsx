@@ -228,9 +228,10 @@ const Property = () => {
                             className="w-full sm:w-auto cursor-pointer"
                             variant="primary"
                             size="md"
-                            icon={<Plus size={18} />}
+                            icon={(user?.isDemoAccount) ? <ShieldCheck size={18} /> : <Plus size={18} />}
+                            disabled={user?.isDemoAccount}
                         >
-                            NEW PROPERTY
+                            {(user?.isDemoAccount) ? "READ ONLY" : "NEW PROPERTY"}
                         </Button>
                     )}
                 </div>
@@ -313,12 +314,12 @@ const Property = () => {
                                                 <span className="text-[15px] font-black text-emerald-600 tracking-tight">₹{property.totalRevenue?.toLocaleString() || 0}</span>
                                             </td>
                                             <td className="px-8 py-7">
-                                                <div className="flex items-center justify-end gap-2">
+                                                 <div className="flex items-center justify-end gap-2">
                                                     <Button onClick={() => { setSelectedProperty(property); setOpenViewProperty(true); }} iconOnly variant="secondary" size="xs" icon={<Eye size={18} />} title="Inspect Asset" />
                                                     {(user?.role === "OWNER" || user?.role === "MANAGER") && (
                                                         <>
-                                                            <Button onClick={() => handleEdit(property)} iconOnly variant="secondary" size="xs" icon={<Edit size={18} />} title="Modify Asset" className="hover:text-blue-600 hover:border-blue-100 cursor-pointer" />
-                                                            <Button onClick={() => handleDelete(property._id)} iconOnly variant="secondary" size="xs" icon={<Trash2 size={18} />} title="Purge Asset" className="text-rose-300 hover:text-rose-600 hover:border-rose-100 cursor-pointer" />
+                                                            <Button onClick={() => handleEdit(property)} iconOnly variant="secondary" size="xs" icon={<Edit size={18} />} title={(user?.isDemoAccount) ? "Locked" : "Modify Asset"} className="hover:text-blue-600 hover:border-blue-100 cursor-pointer" disabled={user?.isDemoAccount} />
+                                                            <Button onClick={() => handleDelete(property._id)} iconOnly variant="secondary" size="xs" icon={<Trash2 size={18} />} title={(user?.isDemoAccount) ? "Locked" : "Purge Asset"} className="text-rose-300 hover:text-rose-600 hover:border-rose-100 cursor-pointer" disabled={user?.isDemoAccount} />
                                                         </>
                                                     )}
                                                 </div>
@@ -382,8 +383,12 @@ const Property = () => {
                                     </div>
 
                                     <div className="flex gap-3 pl-2">
-                                        <Button onClick={() => handleEdit(p)} variant="secondary" size="md" className="flex-1 cursor-pointer font-black text-[10px] uppercase tracking-widest" icon={<Edit size={14} />}>Edit</Button>
-                                        <Button onClick={() => handleDelete(p._id)} variant="primary" size="md" className="flex-1 cursor-pointer font-black text-[10px] uppercase tracking-widest" icon={<Trash2 size={14} />}>Delete</Button>
+                                        <Button onClick={() => handleEdit(p)} variant="secondary" size="md" className="flex-1 cursor-pointer font-black text-[10px] uppercase tracking-widest" icon={<Edit size={14} />} disabled={user?.isDemoAccount}>
+                                            {(user?.isDemoAccount) ? "Locked" : "Edit"}
+                                        </Button>
+                                        <Button onClick={() => handleDelete(p._id)} variant="primary" size="md" className="flex-1 cursor-pointer font-black text-[10px] uppercase tracking-widest" icon={<Trash2 size={14} />} disabled={user?.isDemoAccount}>
+                                            {(user?.isDemoAccount) ? "Locked" : "Delete"}
+                                        </Button>
                                     </div>
                                 </div>
                             )

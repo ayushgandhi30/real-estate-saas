@@ -28,9 +28,10 @@ import { useAuth } from "../store/auth";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import Button from "../components/ui/Button";
+import { DEMO_LEASES } from "../utils/demoData";
 
 export default function LeaseAgrement() {
-    const { token } = useAuth();
+    const { token, user } = useAuth();
     const [tenants, setTenants] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -118,7 +119,12 @@ export default function LeaseAgrement() {
 
             if (response.ok) {
                 const data = await response.json();
-                setTenants(data.tenants);
+                const fetchedTenants = data.tenants || [];
+                if (user?.isDemoAccount) {
+                    setTenants([...DEMO_LEASES, ...fetchedTenants]);
+                } else {
+                    setTenants(fetchedTenants);
+                }
             } else {
                 const errorData = await response.json();
                 setError(errorData.message || "Failed to fetch lease records");
@@ -298,7 +304,7 @@ export default function LeaseAgrement() {
                         <div key={tenant._id} className="group p-6 bg-white border border-gray-100 rounded-[2.5rem] space-y-5 shadow-md hover:shadow-2xl transition-all relative overflow-hidden">
                             {/* Status Accent Bar */}
                             <div className={`absolute top-0 left-0 w-1.5 h-full ${tenant.leaseStatus === 'Active' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
-                            
+
                             <div className="flex justify-between items-start pl-2">
                                 <div className="flex items-center gap-4">
                                     <div className="w-14 h-14 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-xl font-black shadow-lg group-hover:scale-110 transition-transform">

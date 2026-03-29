@@ -33,6 +33,7 @@ import { useAuth } from "../store/auth";
 import { useToast } from "../store/ToastContext";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import { DEMO_TENANTS } from "../utils/demoData";
 
 const Tenant = () => {
     const { user, token } = useAuth();
@@ -91,7 +92,14 @@ const Tenant = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = await response.json();
-            if (response.ok) setAllTenants(data.tenants);
+            if (response.ok) {
+                const fetchedTenants = data.tenants || [];
+                if (user?.isDemoAccount) {
+                    setAllTenants([...DEMO_TENANTS, ...fetchedTenants]);
+                } else {
+                    setAllTenants(fetchedTenants);
+                }
+            }
         } catch (error) {
             console.error("Error fetching tenants:", error);
         } finally {
@@ -315,10 +323,11 @@ const Tenant = () => {
                             onClick={() => setIsAddingTenant(true)}
                             variant="primary"
                             size="md"
-                            icon={<Plus size={18} />}
+                            icon={(user?.isDemoAccount) ? <ShieldCheck size={18} /> : <Plus size={18} />}
                             className="w-full sm:w-auto cursor-pointer"
+                            disabled={user?.isDemoAccount}
                         >
-                            REGISTER TENANT
+                            {(user?.isDemoAccount) ? "READ ONLY" : "REGISTER TENANT"}
                         </Button>
                     )}
                 </div>
@@ -432,8 +441,8 @@ const Tenant = () => {
                                                 <Button onClick={() => setSelectedTenant(tenant)} iconOnly variant="secondary" size="xs" icon={<Eye size={18} />} title="View Manifest" className="cursor-pointer" />
                                                 {user?.role === "MANAGER" && (
                                                     <>
-                                                        <Button onClick={() => handleEdit(tenant)} iconOnly variant="secondary" size="xs" icon={<Edit size={18} />} title="Modify Record" className="hover:text-blue-600 hover:border-blue-100 cursor-pointer" />
-                                                        <Button onClick={() => handleDelete(tenant._id)} iconOnly variant="secondary" size="xs" icon={<Trash2 size={18} />} title="Purge Record" className="text-rose-300 hover:text-rose-600 hover:border-rose-100 cursor-pointer" />
+                                                        <Button onClick={() => handleEdit(tenant)} iconOnly variant="secondary" size="xs" icon={<Edit size={18} />} title={(user?.isDemoAccount) ? "Locked" : "Modify Record"} className="hover:text-blue-600 hover:border-blue-100 cursor-pointer" disabled={user?.isDemoAccount} />
+                                                        <Button onClick={() => handleDelete(tenant._id)} iconOnly variant="secondary" size="xs" icon={<Trash2 size={18} />} title={(user?.isDemoAccount) ? "Locked" : "Purge Record"} className="text-rose-300 hover:text-rose-600 hover:border-rose-100 cursor-pointer" disabled={user?.isDemoAccount} />
                                                     </>
                                                 )}
                                             </div>
@@ -490,7 +499,9 @@ const Tenant = () => {
                                 <div className="flex gap-2">
                                     <Button onClick={() => setSelectedTenant(tenant)} variant="secondary" size="md" className="flex-1 cursor-pointer" icon={<Eye size={14} />}>Details</Button>
                                     {user?.role === "MANAGER" && (
-                                        <Button onClick={() => handleEdit(tenant)} variant="primary" size="md" className="flex-1 cursor-pointer" icon={<Edit size={14} />}>Edit</Button>
+                                        <Button onClick={() => handleEdit(tenant)} variant="primary" size="md" className="flex-1 cursor-pointer" icon={<Edit size={14} />} disabled={user?.isDemoAccount}>
+                                            {(user?.isDemoAccount) ? "Locked" : "Edit"}
+                                        </Button>
                                     )}
                                 </div>
                             </div>

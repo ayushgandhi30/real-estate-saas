@@ -315,8 +315,9 @@ export default function SuperAdminDashboard() {
                                                     variant="primary"
                                                     size="sm"
                                                     className="w-full sm:w-auto"
+                                                    disabled={user?.isDemoAccount}
                                                 >
-                                                    AUTHORIZE
+                                                    {user?.isDemoAccount ? "LOCKED" : "AUTHORIZE"}
                                                 </Button>
                                             </td>
                                         </tr>
@@ -349,7 +350,7 @@ export default function SuperAdminDashboard() {
                                 </div>
                                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                                     <p className="text-[10px] font-black text-[var(--color-secondary)]">{new Date(owner.createdAt).toLocaleDateString()}</p>
-                                    <Button onClick={() => handleApproveOwner(owner._id)} variant="primary" size="sm">AUTHORIZE</Button>
+                                    <Button onClick={() => handleApproveOwner(owner._id)} variant="primary" size="sm" disabled={user?.isDemoAccount}>{user?.isDemoAccount ? "LOCKED" : "AUTHORIZE"}</Button>
                                 </div>
                             </div>
                         ))

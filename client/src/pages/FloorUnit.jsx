@@ -23,6 +23,7 @@ import { useAuth } from "../store/auth";
 import { useToast } from "../store/ToastContext";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
+import { DEMO_FLOORS, DEMO_UNITS } from "../utils/demoData";
 
 const initialFloorData = {
   propertyId: "",
@@ -92,7 +93,14 @@ const FloorUnit = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
-      if (response.ok) setFloors(data.floors || []);
+      if (response.ok) {
+        const fetchedFloors = data.floors || [];
+        if (user?.isDemoAccount) {
+          setFloors([...DEMO_FLOORS, ...fetchedFloors]);
+        } else {
+          setFloors(fetchedFloors);
+        }
+      }
     } catch (error) {
       console.error("Error fetching floors:", error);
     } finally {
@@ -108,7 +116,14 @@ const FloorUnit = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
-      if (response.ok) setUnits(data.units || []);
+      if (response.ok) {
+        const fetchedUnits = data.units || [];
+        if (user?.isDemoAccount) {
+          setUnits([...DEMO_UNITS, ...fetchedUnits]);
+        } else {
+          setUnits(fetchedUnits);
+        }
+      }
     } catch (error) {
       console.error("Error fetching units:", error);
     } finally {
@@ -605,7 +620,7 @@ const FloorUnit = () => {
               floors.map((floor) => (
                 <div key={floor._id} className="group bg-white p-6 rounded-[2rem] border border-gray-100 space-y-5 shadow-md hover:shadow-xl transition-all relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-1.5 h-full bg-indigo-500" />
-                  
+
                   <div className="flex justify-between items-start pl-2">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-indigo-600 shadow-sm group-hover:bg-indigo-600 group-hover:text-white transition-all">
@@ -643,7 +658,7 @@ const FloorUnit = () => {
               units.map((unit) => (
                 <div key={unit._id} className="group bg-white p-6 rounded-[2rem] border border-gray-100 space-y-6 shadow-md hover:shadow-xl transition-all relative overflow-hidden">
                   <div className={`absolute top-0 left-0 w-1.5 h-full ${unit.status === 'Vacant' ? 'bg-emerald-500' : unit.status === 'Occupied' ? 'bg-indigo-500' : 'bg-rose-500'}`} />
-                  
+
                   <div className="flex justify-between items-start pl-2">
                     <div className="flex items-center gap-4">
                       <div className="w-14 h-14 rounded-2xl bg-gray-900 text-white flex items-center justify-center text-xs font-black shadow-lg shadow-gray-100 group-hover:-rotate-6 transition-transform">
@@ -652,8 +667,8 @@ const FloorUnit = () => {
                       <div>
                         <h3 className="font-black text-[var(--color-secondary)] text-sm uppercase tracking-tight">Ref: {unit._id.slice(-6).toUpperCase()}</h3>
                         <div className="flex items-center gap-2 mt-1">
-                           <span className={`w-1.5 h-1.5 rounded-full ${unit.status === 'Vacant' ? 'bg-emerald-500' : unit.status === 'Occupied' ? 'bg-indigo-500' : 'bg-rose-500'}`} />
-                           <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)]">{unit.status}</span>
+                          <span className={`w-1.5 h-1.5 rounded-full ${unit.status === 'Vacant' ? 'bg-emerald-500' : unit.status === 'Occupied' ? 'bg-indigo-500' : 'bg-rose-500'}`} />
+                          <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)]">{unit.status}</span>
                         </div>
                       </div>
                     </div>

@@ -29,6 +29,7 @@ import { useAuth } from "../store/auth";
 import { useToast } from "../store/ToastContext";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import { DEMO_INVOICES } from "../utils/demoData";
 
 const Invoice = () => {
     const { user, token } = useAuth();
@@ -95,7 +96,12 @@ const Invoice = () => {
             });
             if (response.ok) {
                 const data = await response.json();
-                setInvoices(data.invoices || []);
+                const fetchedInvoices = data.invoices || [];
+                if (user?.isDemoAccount) {
+                    setInvoices([...DEMO_INVOICES, ...fetchedInvoices]);
+                } else {
+                    setInvoices(fetchedInvoices);
+                }
             } else {
                 console.error("Failed to fetch invoices");
             }

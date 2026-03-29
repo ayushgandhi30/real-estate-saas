@@ -23,6 +23,7 @@ import {
 import { useAuth } from "../store/auth";
 import { useToast } from "../store/ToastContext";
 import Button from "../components/ui/Button";
+import { DEMO_REQUESTS } from "../utils/demoData";
 
 export default function Maintenance() {
     const { token, user } = useAuth();
@@ -78,7 +79,12 @@ export default function Maintenance() {
             });
             if (response.ok) {
                 const data = await response.json();
-                setRequests(data.requests);
+                const fetchedRequests = data.requests || [];
+                if (user?.isDemoAccount) {
+                    setRequests([...DEMO_REQUESTS, ...fetchedRequests]);
+                } else {
+                    setRequests(fetchedRequests);
+                }
             } else {
                 setError("Failed to fetch requests");
             }

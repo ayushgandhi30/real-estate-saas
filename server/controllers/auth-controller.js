@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
+const { seedDemoData } = require("../utils/seedDemoData");
 
 
 
@@ -61,45 +62,90 @@ const login = async (req, res) => {
 
         const user = await User.findOne({ email })
         console.log("User found:", user ? "Yes" : "No");
-        if (!user) {
+        
+        // Special logic for demo accounts
+        const demoAccounts = {
+            "superadmin@demo.com": "SUPER_ADMIN",
+            "owner@demo.com": "OWNER",
+            "manager@demo.com": "MANAGER"
+        };
+        
+        const isDemoCredentials = demoAccounts[email] && password === "demo123";
+        
+        if (!user && !isDemoCredentials) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        if (user.isBlocked) {
+        let demoUser = user;
+        if (isDemoCredentials && !user) {
+            // Create demo user if it doesn't exist
+            demoUser = await User.create({
+                name: `Demo ${demoAccounts[email].replace("_", " ")}`,
+                email,
+                password: "demo123", // Will be hashed by pre-save hook
+                role: demoAccounts[email],
+                isDemoAccount: true,
+                isActive: true
+            });
+        } else if (isDemoCredentials && user) {
+             // Ensure existing demo user has the flag and correct role
+             let updated = false;
+             if (!user.isDemoAccount) {
+                user.isDemoAccount = true;
+                updated = true;
+             }
+             if (user.role !== demoAccounts[email]) {
+                user.role = demoAccounts[email];
+                updated = true;
+             }
+             if (!user.isActive) {
+                user.isActive = true;
+                updated = true;
+             }
+             if (updated) await user.save();
+             demoUser = user;
+        }
+
+        // SEED DEMO DATA
+        if (isDemoCredentials && demoUser) {
+           console.log("Seeding demo data for:", demoUser.email);
+           await seedDemoData(demoUser);
+        }
+
+        if (demoUser && demoUser.isBlocked) {
             return res.status(403).json({ message: "Your account has been blocked." });
         }
 
-        if (!user.isActive) {
+        if (demoUser && !demoUser.isActive) {
             return res.status(403).json({ message: "Your account is inactive." });
         }
 
-        console.log("Comparing passwords...");
-        const isMatch = await bcrypt.compare(password, user.password)
+        const isMatch = isDemoCredentials ? (password === "demo123") : await bcrypt.compare(password, user.password)
         console.log("Password match:", isMatch);
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
         // Update last login timestamp
-        user.lastLoginAt = new Date();
+        demoUser.lastLoginAt = new Date();
         console.log("Saving user last login...");
-        await user.save();
+        await demoUser.save();
         console.log("User saved.");
 
         const token = jwt.sign(
-            { id: user._id, role: user.role },
+            { id: demoUser._id, role: demoUser.role, isDemoAccount: demoUser.isDemoAccount },
             process.env.JWT_SECRET,
             { expiresIn: "7d" }
         );
-
         res.status(200).json({
             message: "Login successful",
             token,
             user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
+                id: demoUser._id,
+                name: demoUser.name,
+                email: demoUser.email,
+                role: demoUser.role,
+                isDemoAccount: demoUser.isDemoAccount
             },
         });
     } catch (error) {

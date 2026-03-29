@@ -9,7 +9,8 @@ import {
    Phone,
    Camera,
    Save,
-   ShieldCheck
+   ShieldCheck,
+   Lock
 } from "lucide-react";
 
 const Profile = () => {
@@ -95,7 +96,10 @@ const Profile = () => {
                      <div className="w-24 h-24 rounded-3xl bg-indigo-600 flex items-center justify-center text-3xl font-black text-white shadow-2xl transition-transform hover:scale-105 duration-500">
                         {formData?.name?.[0] || "U"}
                      </div>
-                     <button className="absolute -bottom-2 -right-2 p-2 bg-white border border-gray-100 rounded-xl shadow-lg text-indigo-600 hover:bg-slate-900 hover:text-white transition-all">
+                     <button 
+                        className={`absolute -bottom-2 -right-2 p-2 bg-white border border-gray-100 rounded-xl shadow-lg text-indigo-600 hover:bg-slate-900 hover:text-white transition-all ${user?.isDemoAccount ? "cursor-not-allowed opacity-50" : ""}`}
+                        disabled={user?.isDemoAccount}
+                     >
                         <Camera size={14} />
                      </button>
                   </div>
@@ -174,9 +178,10 @@ const Profile = () => {
                            variant="primary"
                            size="lg"
                            className="w-full sm:w-auto px-10 py-4 h-14 rounded-xl bg-slate-900 border-none shadow-xl shadow-slate-200 t uppercase text-[10px] font-black"
-                           icon={<Save size={14} />}
+                           icon={user?.isDemoAccount ? <Lock size={14} /> : <Save size={14} />}
+                           disabled={user?.isDemoAccount}
                         >
-                           Commit Changes
+                           {user?.isDemoAccount ? "Locked (Demo Account)" : "Commit Changes"}
                         </Button>
                      </div>
                   </div>

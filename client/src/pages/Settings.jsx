@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Settings as SettingsIcon, Save, Bell, Lock, Globe, Shield, Activity, Sliders, Monitor, CreditCard, Navigation, Inbox } from 'lucide-react';
 import Button from "../components/ui/Button";
+import { useAuth } from "../store/auth";
 
 const Settings = () => {
+    const { user } = useAuth();
+    const isDemo = user?.isDemoAccount;
     const [activeTab, setActiveTab] = useState('general');
 
     const tabs = [
@@ -138,9 +141,10 @@ const Settings = () => {
                                     <Button 
                                         variant="indigo"
                                         size="lg"
-                                        icon={<Save size={18} className="group-hover:rotate-12 transition-transform" />}
+                                        disabled={isDemo}
+                                        icon={isDemo ? <Lock size={18} /> : <Save size={18} className="group-hover:rotate-12 transition-transform" />}
                                     >
-                                        Authorize Changes
+                                        {isDemo ? "Locked (Demo Mode)" : "Authorize Changes"}
                                     </Button>
                                 </div>
                             </div>
