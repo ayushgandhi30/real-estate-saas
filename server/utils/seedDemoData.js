@@ -12,11 +12,11 @@ const seedDemoData = async (user) => {
         if (!user || !user.isDemoAccount) return;
 
         // Check if data already exists to avoid duplication
-        const existingData = await Property.findOne({ 
-             $or: [
-                 { owner: user._id }, 
-                 { manager: user._id }
-             ] 
+        const existingData = await Property.findOne({
+            $or: [
+                { owner: user._id },
+                { manager: user._id }
+            ]
         });
         if (existingData) return; // Properties already assigned/owned
 
@@ -49,7 +49,7 @@ const seedDemoData = async (user) => {
 
         if (user.role === "OWNER" || user.role === "MANAGER") {
             const { u: ownerUser, o: ownerProfile } = await ensureOwner("owner@demo.com");
-            
+
             // 2. Create Properties
             const property1 = await Property.create({
                 owner: ownerProfile._id,
@@ -147,19 +147,19 @@ const seedDemoData = async (user) => {
                     status: k === 0 ? "Paid" : "Pending",
                     invoiceNumber: `INV-DEMO-${Date.now()}-${k}`
                 });
-                
+
                 // 7. Create Maintenance Requests
                 if (k === 0) {
-                   await Maintenance.create({
-                      propertyId: property1._id,
-                      tenantId: tenant._id,
-                      unitId: unit._id,
-                      issueType: "Plumbing",
-                      description: "Leaking tap in the kitchen area.",
-                      priority: "High",
-                      status: "Pending",
-                      reportedBy: tenantUser._id
-                   });
+                    await Maintenance.create({
+                        propertyId: property1._id,
+                        tenantId: tenant._id,
+                        unitId: unit._id,
+                        issueType: "Plumbing",
+                        description: "Leaking tap in the kitchen area.",
+                        priority: "High",
+                        status: "Pending",
+                        reportedBy: tenantUser._id
+                    });
                 }
             }
         }

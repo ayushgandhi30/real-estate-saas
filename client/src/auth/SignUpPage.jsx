@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../store/auth";
 import { BASE_URL } from "../store/api";
 import Input from "../components/ui/Input";
-import { UserPlus, Mail, Lock, User, LayoutDashboard, ArrowRight, ShieldCheck, Home } from "lucide-react";
+import { UserPlus, Mail, Lock, User, LayoutDashboard, ArrowRight, ShieldCheck, Home, Loader2 } from "lucide-react";
 
 const SignUpPage = () => {
   const [form, setForm] = useState({
@@ -14,6 +14,7 @@ const SignUpPage = () => {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const { storetokenInLS } = useAuth();
@@ -35,7 +36,11 @@ const SignUpPage = () => {
       return;
     }
 
+    setLoading(true);
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+
       const response = await fetch(`${BASE_URL}/api/auth/register`,
         {
           method: "POST",
@@ -45,9 +50,11 @@ const SignUpPage = () => {
             email: form.email,
             password: form.password
           }),
+          signal: controller.signal,
         }
       );
 
+      clearTimeout(timeoutId);
       const res_data = await response.json();
 
       if (response.ok) {
@@ -58,7 +65,13 @@ const SignUpPage = () => {
       }
     } catch (error) {
       console.log("Register error:", error);
-      setError("Something went wrong. Please try again.");
+      if (error.name === "AbortError") {
+        setError("Server is not responding. Please try again later.");
+      } else {
+        setError("Network error. Please check your connection and try again.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -184,10 +197,10 @@ const SignUpPage = () => {
               </label>
             </div>
 
-            <Button type="primary" className="w-full h-14 outline-none border-none rounded-xl text-lg font-extrabold group bg-[var(--color-primary)] hover:bg-blue-700 text-white shadow-[0_8px_20px_-6px_rgba(0,118,255,0.4)] hover:shadow-[0_12px_25px_-6px_rgba(0,118,255,0.5)] transition-all hover:-translate-y-0.5 mt-2" htmlType="submit">
+            <Button type="primary" className="w-full h-14 outline-none border-none rounded-xl text-lg font-extrabold group bg-[var(--color-primary)] hover:bg-blue-700 text-white shadow-[0_8px_20px_-6px_rgba(0,118,255,0.4)] hover:shadow-[0_12px_25px_-6px_rgba(0,118,255,0.5)] transition-all hover:-translate-y-0.5 mt-2 disabled:opacity-60 disabled:cursor-not-allowed" htmlType="submit" disabled={loading}>
               <span className="flex items-center justify-center gap-2">
-                Create Account
-                <UserPlus className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                {loading ? "Creating Account..." : "Create Account"}
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <UserPlus className="w-5 h-5 group-hover:scale-110 transition-transform" />}
               </span>
             </Button>
           </form>

@@ -5,7 +5,7 @@ import { useAuth } from "../store/auth";
 import { BASE_URL } from "../store/api";
 import Input from "../components/ui/Input";
 import { useToast } from '../store/ToastContext';
-import { LogIn, Mail, Lock, LayoutDashboard, ArrowRight } from "lucide-react";
+import { LogIn, Mail, Lock, LayoutDashboard, ArrowRight, Loader2 } from "lucide-react";
 
 const SignInPage = () => {
     const { toast } = useToast();
@@ -13,6 +13,7 @@ const SignInPage = () => {
         email: "",
         password: "",
     });
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
     const { storetokenInLS } = useAuth();
@@ -27,16 +28,22 @@ const SignInPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 15000);
+
             const response = await fetch(`${BASE_URL}/api/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(user),
+                signal: controller.signal,
             });
 
+            clearTimeout(timeoutId);
             const res_data = await response.json();
 
             if (response.ok) {
@@ -53,10 +60,17 @@ const SignInPage = () => {
                     navigate("/dashboard");
                 }
             } else {
-                toast.error(res_data.message)
+                toast.error(res_data.message || "Login failed. Please try again.");
             }
         } catch (error) {
             console.error("Login error:", error);
+            if (error.name === "AbortError") {
+                toast.error("Server is not responding. Please try again later.");
+            } else {
+                toast.error("Network error. Please check your connection and try again.");
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -143,10 +157,10 @@ const SignInPage = () => {
                             />
                         </div>
 
-                        <Button type="primary" className="w-full h-14 outline-none border-none rounded-xl text-lg font-extrabold group bg-[var(--color-primary)] hover:bg-blue-700 text-white shadow-[0_8px_20px_-6px_rgba(0,118,255,0.4)] hover:shadow-[0_12px_25px_-6px_rgba(0,118,255,0.5)] transition-all hover:-translate-y-0.5 mt-2" htmlType="submit">
+                        <Button type="primary" className="w-full h-14 outline-none border-none rounded-xl text-lg font-extrabold group bg-[var(--color-primary)] hover:bg-blue-700 text-white shadow-[0_8px_20px_-6px_rgba(0,118,255,0.4)] hover:shadow-[0_12px_25px_-6px_rgba(0,118,255,0.5)] transition-all hover:-translate-y-0.5 mt-2 disabled:opacity-60 disabled:cursor-not-allowed" htmlType="submit" disabled={loading}>
                             <span className="flex items-center justify-center gap-2">
-                                Sign In
-                                <LogIn className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
+                                {loading ? "Signing In..." : "Sign In"}
+                                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <LogIn className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />}
                             </span>
                         </Button>
                     </form>
