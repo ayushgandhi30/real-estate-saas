@@ -4,6 +4,7 @@ import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import { useToast } from '../store/ToastContext';
 import { Lock, ShieldCheck, ArrowLeft, KeyRound, Eye, EyeOff, CheckCircle2 } from "lucide-react";
+import { BASE_URL } from "../store/api";
 
 const ResetPassword = () => {
     const { token } = useParams();
@@ -29,7 +30,7 @@ const ResetPassword = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`http://localhost:7000/api/auth/reset-password/${token}`, {
+            const response = await fetch(`${BASE_URL}/api/auth/reset-password/${token}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

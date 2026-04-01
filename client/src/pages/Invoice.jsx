@@ -26,6 +26,7 @@ import {
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import { useToast } from "../store/ToastContext";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -88,7 +89,7 @@ const Invoice = () => {
     const fetchInvoices = async () => {
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:7000/api/invoice/invoices", {
+            const response = await fetch(`${BASE_URL}/api/invoice/invoices`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -115,7 +116,7 @@ const Invoice = () => {
     // ── Fetch tenants for dropdown ─────────────────
     const fetchTenants = async () => {
         try {
-            const response = await fetch("http://localhost:7000/api/tenant/tenants", {
+            const response = await fetch(`${BASE_URL}/api/tenant/tenants`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -150,7 +151,7 @@ const Invoice = () => {
 
         setSubmitting(true);
         try {
-            const response = await fetch("http://localhost:7000/api/invoice/", {
+            const response = await fetch(`${BASE_URL}/api/invoice/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -188,7 +189,7 @@ const Invoice = () => {
 
     const handleDelete = async (id) => {
         try {
-            const response = await fetch(`http://localhost:7000/api/invoice/invoice/${id}`, {
+            const response = await fetch(`${BASE_URL}/api/invoice/invoice/${id}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -207,7 +208,7 @@ const Invoice = () => {
 
     const handlePay = async (id) => {
         try {
-            const response = await fetch(`http://localhost:7000/api/invoice/pay/${id}`, {
+            const response = await fetch(`${BASE_URL}/api/invoice/pay/${id}`, {
                 method: "PATCH",
                 headers: {
                     Authorization: `Bearer ${token}`,

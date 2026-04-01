@@ -4,6 +4,7 @@ import Input from "../components/ui/Input";
 import { NavLink } from "react-router-dom";
 import { useToast } from '../store/ToastContext';
 import { Mail, ArrowLeft, KeyRound, LayoutDashboard, ShieldCheck, MailQuestion } from "lucide-react";
+import { BASE_URL } from "../store/api";
 
 const ForgotPassword = () => {
     const { toast } = useToast();
@@ -15,7 +16,7 @@ const ForgotPassword = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch("http://localhost:7000/api/auth/forgot-password", {
+            const response = await fetch(`${BASE_URL}/api/auth/forgot-password`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

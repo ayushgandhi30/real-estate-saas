@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { UserPlus, Edit, Trash2, X, Search, Mail, Smartphone, ShieldCheck, ChevronDown, User as UserIcon, Loader2, ArrowRight, Shield } from "lucide-react";
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import { useToast } from "../store/ToastContext";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
@@ -61,8 +62,8 @@ const User = () => {
             const token = localStorage.getItem("token");
 
             const url = isEditing
-                ? `http://localhost:7000/api/admin/user/${editId}`
-                : `http://localhost:7000/api/admin/user`;
+                ? `${BASE_URL}/api/admin/user/${editId}`
+                : `${BASE_URL}/api/admin/user`;
 
             const response = await fetch(url, {
                 method: isEditing ? "PUT" : "POST",
@@ -113,7 +114,7 @@ const User = () => {
             const token = localStorage.getItem("token");
 
             const response = await fetch(
-                `http://localhost:7000/api/admin/user/${id}`,
+                `${BASE_URL}/api/admin/user/${id}`,
                 {
                     method: "DELETE",
                     headers: { Authorization: `Bearer ${token}` },

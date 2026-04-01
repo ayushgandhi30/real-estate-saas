@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Button from "../components/ui/Button";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import Input from "../components/ui/Input";
 import { useToast } from '../store/ToastContext';
 import { LogIn, Mail, Lock, LayoutDashboard, ArrowRight } from "lucide-react";
@@ -28,7 +29,7 @@ const SignInPage = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch("http://localhost:7000/api/auth/login", {
+            const response = await fetch(`${BASE_URL}/api/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

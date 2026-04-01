@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Building2, Home, Key, DoorClosed, IndianRupee, Wrench, AlertCircle, Loader2, Calendar, TrendingUp, PieChart as PieChartIcon, ArrowUpRight, ArrowDownRight, Activity, Users, FileText, Settings, Heart } from "lucide-react";
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 import Button from "../components/ui/Button";
 
@@ -13,7 +14,7 @@ const OwnerDashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await fetch(`http://localhost:7000/api/owner/dashboard-stats`, {
+        const response = await fetch(`${BASE_URL}/api/owner/dashboard-stats`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

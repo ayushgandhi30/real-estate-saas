@@ -35,6 +35,7 @@ import {
     Area
 } from "recharts";
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import Button from "../components/ui/Button";
 
 const SuperAdminRevenueReport = () => {
@@ -45,7 +46,7 @@ const SuperAdminRevenueReport = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await fetch("http://localhost:7000/api/admin/revenue-stats", {
+                const response = await fetch(`${BASE_URL}/api/admin/revenue-stats`, {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`

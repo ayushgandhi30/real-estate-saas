@@ -23,6 +23,7 @@ import {
     PieChart, Pie, Cell, Legend
 } from 'recharts';
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import Button from "../components/ui/Button";
 
 export default function ManagerDashboard() {
@@ -37,7 +38,7 @@ export default function ManagerDashboard() {
     const fetchDashboardData = async () => {
         try {
             setLoading(true);
-            const response = await fetch("http://localhost:7000/api/manager/dashboard/stats", {
+            const response = await fetch(`${BASE_URL}/api/manager/dashboard/stats`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (response.ok) {

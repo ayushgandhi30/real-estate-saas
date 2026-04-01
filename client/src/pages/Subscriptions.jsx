@@ -21,6 +21,7 @@ import {
     Loader2
 } from "lucide-react";
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 
 const initialState = {
     name: "",
@@ -51,7 +52,7 @@ const Subscriptions = () => {
         try {
             setLoading(true);
             const token = localStorage.getItem("token");
-            const response = await fetch("http://localhost:7000/api/admin/plans", {
+            const response = await fetch(`${BASE_URL}/api/admin/plans`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -106,7 +107,7 @@ const Subscriptions = () => {
         if (!window.confirm("Are you sure you want to delete this subscription plan?")) return;
         try {
             const token = localStorage.getItem("token");
-            const response = await fetch(`http://localhost:7000/api/admin/plan/${id}`, {
+            const response = await fetch(`${BASE_URL}/api/admin/plan/${id}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -131,8 +132,8 @@ const Subscriptions = () => {
         try {
             const token = localStorage.getItem("token");
             const url = isEditing
-                ? `http://localhost:7000/api/admin/plan/${editId}`
-                : "http://localhost:7000/api/admin/plan";
+                ? `${BASE_URL}/api/admin/plan/${editId}`
+                : `${BASE_URL}/api/admin/plan`;
 
             const response = await fetch(url, {
                 method: "POST",

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Search, Mail, Bell, User, ChevronDown, Menu, Layers, Clock, LogOut } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../store/auth.jsx";
+import { BASE_URL } from "../store/api.jsx";
 import Button from "../components/ui/Button";
 
 const Header = ({ onToggleSidebar }) => {
@@ -14,7 +15,7 @@ const Header = ({ onToggleSidebar }) => {
 
     const fetchNotifications = async () => {
         try {
-            const response = await fetch("http://localhost:7000/api/maintenance/requests", {
+            const response = await fetch(`${BASE_URL}/api/maintenance/requests`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (response.ok) {

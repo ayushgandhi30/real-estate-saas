@@ -30,6 +30,7 @@ import {
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import { useToast } from "../store/ToastContext";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -88,7 +89,7 @@ const Tenant = () => {
     const fetchTenants = async () => {
         try {
             setLoading(true);
-            const response = await fetch("http://localhost:7000/api/tenant/tenants", {
+            const response = await fetch(`${BASE_URL}/api/tenant/tenants`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = await response.json();
@@ -109,7 +110,7 @@ const Tenant = () => {
 
     const fetchProperties = async () => {
         try {
-            const response = await fetch("http://localhost:7000/api/owner/properties", {
+            const response = await fetch(`${BASE_URL}/api/owner/properties`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = await response.json();
@@ -121,7 +122,7 @@ const Tenant = () => {
 
     const fetchTenantUsers = async () => {
         try {
-            const response = await fetch("http://localhost:7000/api/auth/all-users", {
+            const response = await fetch(`${BASE_URL}/api/auth/all-users`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = await response.json();
@@ -148,13 +149,13 @@ const Tenant = () => {
         }
 
         try {
-            const floorResponse = await fetch(`http://localhost:7000/api/owner/floors?propertyId=${propertyId}`, {
+            const floorResponse = await fetch(`${BASE_URL}/api/owner/floors?propertyId=${propertyId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const floorData = await floorResponse.json();
             if (floorResponse.ok) setFloors(floorData.floors);
 
-            const unitResponse = await fetch(`http://localhost:7000/api/owner/units?propertyId=${propertyId}`, {
+            const unitResponse = await fetch(`${BASE_URL}/api/owner/units?propertyId=${propertyId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const unitData = await unitResponse.json();
@@ -219,8 +220,8 @@ const Tenant = () => {
         setLoading(true);
         try {
             const url = editId
-                ? `http://localhost:7000/api/tenant/tenant/${editId}`
-                : "http://localhost:7000/api/tenant/tenant";
+                ? `${BASE_URL}/api/tenant/tenant/${editId}`
+                : `${BASE_URL}/api/tenant/tenant`;
             const method = editId ? "PUT" : "POST";
 
             const response = await fetch(url, {
@@ -252,7 +253,7 @@ const Tenant = () => {
         if (!window.confirm("Are you sure you want to delete this tenant? This action cannot be undone.")) return;
 
         try {
-            const response = await fetch(`http://localhost:7000/api/tenant/tenant/${id}`, {
+            const response = await fetch(`${BASE_URL}/api/tenant/tenant/${id}`, {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}` }
             });

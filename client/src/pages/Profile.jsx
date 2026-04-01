@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Input from "../components/ui/Input";
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import { useToast } from "../store/ToastContext";
 import Button from "../components/ui/Button";
 import {
@@ -45,7 +46,7 @@ const Profile = () => {
          setIsSavingProfile(true);
          const token = localStorage.getItem("token");
 
-         const response = await fetch("http://localhost:7000/api/auth/profile", {
+         const response = await fetch(`${BASE_URL}/api/auth/profile`, {
             method: "PUT",
             headers: {
                "Content-Type": "application/json",

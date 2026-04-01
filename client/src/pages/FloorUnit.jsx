@@ -20,6 +20,7 @@ import {
   Scale
 } from "lucide-react";
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import { useToast } from "../store/ToastContext";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
@@ -75,7 +76,7 @@ const FloorUnit = () => {
   const fetchProperties = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:7000/api/owner/properties", {
+      const response = await fetch(`${BASE_URL}/api/owner/properties`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -89,7 +90,7 @@ const FloorUnit = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:7000/api/owner/floors", {
+      const response = await fetch(`${BASE_URL}/api/owner/floors`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -112,7 +113,7 @@ const FloorUnit = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:7000/api/owner/units", {
+      const response = await fetch(`${BASE_URL}/api/owner/units`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -207,8 +208,8 @@ const FloorUnit = () => {
       const token = localStorage.getItem("token");
       const response = await fetch(
         isEditingFloor
-          ? `http://localhost:7000/api/owner/floor/${editFloorId}`
-          : "http://localhost:7000/api/owner/floor",
+          ? `${BASE_URL}/api/owner/floor/${editFloorId}`
+          : `${BASE_URL}/api/owner/floor`,
         {
           method: isEditingFloor ? "PUT" : "POST",
           headers: {
@@ -257,8 +258,8 @@ const FloorUnit = () => {
       const token = localStorage.getItem("token");
       const response = await fetch(
         isEditingUnit
-          ? `http://localhost:7000/api/owner/unit/${editUnitId}`
-          : "http://localhost:7000/api/owner/unit",
+          ? `${BASE_URL}/api/owner/unit/${editUnitId}`
+          : `${BASE_URL}/api/owner/unit`,
         {
           method: isEditingUnit ? "PUT" : "POST",
           headers: {
@@ -295,7 +296,7 @@ const FloorUnit = () => {
   const handleDeleteFloor = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:7000/api/owner/floor/${id}`, {
+      const response = await fetch(`${BASE_URL}/api/owner/floor/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`
@@ -349,7 +350,7 @@ const FloorUnit = () => {
   const handleDeleteUnit = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:7000/api/owner/unit/${id}`, {
+      const response = await fetch(`${BASE_URL}/api/owner/unit/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`

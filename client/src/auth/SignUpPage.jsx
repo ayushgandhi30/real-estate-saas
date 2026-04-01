@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Button from "../components/ui/Button";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import Input from "../components/ui/Input";
 import { UserPlus, Mail, Lock, User, LayoutDashboard, ArrowRight, ShieldCheck, Home } from "lucide-react";
 
@@ -35,7 +36,7 @@ const SignUpPage = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:7000/api/auth/register",
+      const response = await fetch(`${BASE_URL}/api/auth/register`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

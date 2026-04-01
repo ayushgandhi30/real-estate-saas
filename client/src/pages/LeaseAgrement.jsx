@@ -25,6 +25,7 @@ import {
     MoreVertical
 } from "lucide-react";
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import Button from "../components/ui/Button";
@@ -110,7 +111,7 @@ export default function LeaseAgrement() {
 
     const fetchTenants = async () => {
         try {
-            const response = await fetch("http://localhost:7000/api/tenant/tenants", {
+            const response = await fetch(`${BASE_URL}/api/tenant/tenants`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`

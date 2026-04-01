@@ -18,6 +18,7 @@ import {
     Cell
 } from "recharts";
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import Button from "../components/ui/Button";
 
 const RevenueReport = () => {
@@ -37,7 +38,7 @@ const RevenueReport = () => {
     React.useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await fetch("http://localhost:7000/api/owner/revenue-stats", {
+                const response = await fetch(`${BASE_URL}/api/owner/revenue-stats`, {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`

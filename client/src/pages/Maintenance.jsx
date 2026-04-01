@@ -21,6 +21,7 @@ import {
     ChevronDown
 } from "lucide-react";
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import { useToast } from "../store/ToastContext";
 import Button from "../components/ui/Button";
 import { DEMO_REQUESTS } from "../utils/demoData";
@@ -59,7 +60,7 @@ export default function Maintenance() {
     const fetchProperties = async () => {
         if (!isPropertySelectRequired) return;
         try {
-            const response = await fetch("http://localhost:7000/api/owner/properties", {
+            const response = await fetch(`${BASE_URL}/api/owner/properties`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (response.ok) {
@@ -74,7 +75,7 @@ export default function Maintenance() {
     const fetchRequests = async () => {
         try {
             setLoading(true);
-            const response = await fetch("http://localhost:7000/api/maintenance/requests", {
+            const response = await fetch(`${BASE_URL}/api/maintenance/requests`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (response.ok) {
@@ -110,7 +111,7 @@ export default function Maintenance() {
         e.preventDefault();
         setSubmitting(true);
         try {
-            const response = await fetch("http://localhost:7000/api/maintenance/request", {
+            const response = await fetch(`${BASE_URL}/api/maintenance/request`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -137,7 +138,7 @@ export default function Maintenance() {
 
     const handleUpdateStatus = async (requestId, newStatus) => {
         try {
-            const response = await fetch(`http://localhost:7000/api/maintenance/request/${requestId}`, {
+            const response = await fetch(`${BASE_URL}/api/maintenance/request/${requestId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

@@ -21,6 +21,7 @@ import {
     User
 } from "lucide-react";
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import { useToast } from "../store/ToastContext";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
@@ -59,7 +60,7 @@ const Property = () => {
         setLoading(true);
         try {
             const token = localStorage.getItem("token");
-            const response = await fetch("http://localhost:7000/api/owner/properties", {
+            const response = await fetch(`${BASE_URL}/api/owner/properties`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -83,7 +84,7 @@ const Property = () => {
         if (user?.role !== "OWNER") return;
         try {
             const token = localStorage.getItem("token");
-            const response = await fetch("http://localhost:7000/api/owner/managers", {
+            const response = await fetch(`${BASE_URL}/api/owner/managers`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const data = await response.json();
@@ -119,8 +120,8 @@ const Property = () => {
         try {
             const token = localStorage.getItem("token");
             const url = isEditing
-                ? `http://localhost:7000/api/owner/property/${editId}`
-                : `http://localhost:7000/api/owner/properties`;
+                ? `${BASE_URL}/api/owner/property/${editId}`
+                : `${BASE_URL}/api/owner/properties`;
 
             const method = isEditing ? "PUT" : "POST";
 
@@ -176,7 +177,7 @@ const Property = () => {
 
         try {
             const token = localStorage.getItem("token");
-            const response = await fetch(`http://localhost:7000/api/owner/property/${id}`, {
+            const response = await fetch(`${BASE_URL}/api/owner/property/${id}`, {
                 method: "DELETE",
                 headers: {
                     Authorization: `Bearer ${token}`

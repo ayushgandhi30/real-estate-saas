@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { BASE_URL } from "./api";
 
 export const AuthContext = createContext(null);
 
@@ -39,7 +40,7 @@ export const AuthProvider = ({ children }) => {
         try {
             setIsLoading(true);
 
-            const response = await fetch("http://localhost:7000/api/auth/user", {
+            const response = await fetch(`${BASE_URL}/api/auth/user`, {
                 method: "GET",
                 headers: {
                     Authorization: authorizationToken,
@@ -64,7 +65,7 @@ export const AuthProvider = ({ children }) => {
     // Get all owners
     const getOwners = async () => {
         try {
-            const response = await fetch("http://localhost:7000/api/admin/getOwners", {
+            const response = await fetch(`${BASE_URL}/api/admin/getOwners`, {
                 method: "GET",
                 headers: {
                     Authorization: authorizationToken
@@ -86,7 +87,7 @@ export const AuthProvider = ({ children }) => {
     // Get all users
     const getUsers = async () => {
         try {
-            const response = await fetch("http://localhost:7000/api/auth/all-users", {
+            const response = await fetch(`${BASE_URL}/api/auth/all-users`, {
                 method: "GET",
                 headers: {
                     Authorization: authorizationToken,

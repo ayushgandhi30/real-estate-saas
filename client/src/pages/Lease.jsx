@@ -14,6 +14,7 @@ import {
     ArrowRight
 } from "lucide-react";
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import Button from "../components/ui/Button";
 
 export default function Lease() {
@@ -24,7 +25,7 @@ export default function Lease() {
 
     const fetchLeaseData = async () => {
         try {
-            const response = await fetch("http://localhost:7000/api/tenant/getmy-lease", {
+            const response = await fetch(`${BASE_URL}/api/tenant/getmy-lease`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`

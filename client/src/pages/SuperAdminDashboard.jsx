@@ -28,6 +28,7 @@ import {
     PieChart, Pie, Cell, Legend
 } from 'recharts';
 import { useAuth } from "../store/auth";
+import { BASE_URL } from "../store/api";
 import { toast } from "react-toastify";
 import Button from "../components/ui/Button";
 
@@ -42,7 +43,7 @@ export default function SuperAdminDashboard() {
     const fetchDashboardData = async () => {
         try {
             setLoading(true);
-            const response = await fetch("http://localhost:7000/api/admin/dashboard-stats", {
+            const response = await fetch(`${BASE_URL}/api/admin/dashboard-stats`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (response.ok) {
@@ -85,7 +86,7 @@ export default function SuperAdminDashboard() {
 
     const handleApproveOwner = async (ownerId) => {
         try {
-            const response = await fetch(`http://localhost:7000/api/admin/owner/${ownerId}/approve`, {
+            const response = await fetch(`${BASE_URL}/api/admin/owner/${ownerId}/approve`, {
                 method: "PATCH",
                 headers: { Authorization: `Bearer ${token}` }
             });
