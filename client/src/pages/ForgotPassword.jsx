@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useToast } from '../store/ToastContext';
 import { Mail, ArrowLeft, KeyRound, LayoutDashboard, ShieldCheck, MailQuestion } from "lucide-react";
 import { BASE_URL } from "../store/api";
 
 const ForgotPassword = () => {
     const { toast } = useToast();
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -27,8 +28,8 @@ const ForgotPassword = () => {
             const res_data = await response.json();
 
             if (response.ok) {
-                toast.success(res_data.message || "Reset link sent!");
-                setEmail("");
+                toast.success(res_data.message || "OTP sent successfully!");
+                navigate("/reset-password", { state: { email } });
             } else {
                 toast.error(res_data.message || "Failed to send reset link");
             }
@@ -104,9 +105,9 @@ const ForgotPassword = () => {
                             />
                         </div>
 
-                        <Button 
-                            type="primary" 
-                            className="w-full h-14 rounded-xl font-md font-extrabold group shadow-[0_15px_30px_-5px_rgba(231,76,60,0.2)] hover:shadow-[0_20px_40px_-5px_rgba(231,76,60,0.3)] transition-all flex items-center justify-center gap-3 mt-2" 
+                        <Button
+                            type="primary"
+                            className="w-full h-14 rounded-xl font-md font-extrabold group shadow-[0_15px_30px_-5px_rgba(231,76,60,0.2)] hover:shadow-[0_20px_40px_-5px_rgba(231,76,60,0.3)] transition-all flex items-center justify-center gap-3 mt-2"
                             htmlType="submit"
                             disabled={isLoading}
                         >

@@ -1,24 +1,41 @@
-import React, { useState } from "react";
-import { useParams, useNavigate, NavLink } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, NavLink, useLocation } from "react-router-dom";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import { useToast } from '../store/ToastContext';
-import { Lock, ShieldCheck, ArrowLeft, KeyRound, Eye, EyeOff, CheckCircle2 } from "lucide-react";
+import { Lock, ShieldCheck, ArrowLeft, KeyRound, Eye, EyeOff, CheckCircle2, Mail, Hash } from "lucide-react";
 import { BASE_URL } from "../store/api";
 
 const ResetPassword = () => {
-    const { token } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const { toast } = useToast();
     
+    const [email, setEmail] = useState("");
+    const [otp, setOtp] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
+    useEffect(() => {
+        // Automatically populate email if passed from ForgotPassword view
+        if (location.state?.email) {
+            setEmail(location.state.email);
+        }
+    }, [location.state]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         
+        if (!email) {
+            return toast.error("Email is required");
+        }
+
+        if (!otp) {
+            return toast.error("OTP is required");
+        }
+
         if (password !== confirmPassword) {
             return toast.error("Passwords do not match");
         }
@@ -30,12 +47,12 @@ const ResetPassword = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch(`${BASE_URL}/api/auth/reset-password/${token}`, {
+            const response = await fetch(`${BASE_URL}/api/auth/reset-password`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ password }),
+                body: JSON.stringify({ email, otp, password }),
             });
 
             const res_data = await response.json();
@@ -98,11 +115,44 @@ const ResetPassword = () => {
                         </div>
                         <h2 className="text-2xl font-black mb-3 text-[var(--color-secondary)] tracking-tight">New Password</h2>
                         <p className="font-md text-[var(--text-muted)] leading-relaxed">
-                            Establish a strong, unique password to secure your account.
+                            Enter the OTP sent to your email and establish a strong password.
                         </p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        <div className="space-y-1.5">
+                            <div className="flex items-center gap-2 mb-1 ml-1 text-xs font-bold text-[var(--color-secondary)] uppercase tracking-[0.2em] opacity-80">
+                                <Mail className="w-3.5 h-3.5 text-[var(--color-primary)]" />
+                                Email Address
+                            </div>
+                            <Input
+                                type="email"
+                                name="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="name@example.com"
+                                className="bg-gray-50/50 border-gray-100 focus:bg-white focus:border-[var(--color-primary)] h-13 transition-all rounded-xl font-md shadow-sm"
+                                required
+                            />
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <div className="flex items-center gap-2 mb-1 ml-1 text-xs font-bold text-[var(--color-secondary)] uppercase tracking-[0.2em] opacity-80">
+                                <Hash className="w-3.5 h-3.5 text-[var(--color-primary)]" />
+                                6-Digit OTP
+                            </div>
+                            <Input
+                                type="text"
+                                name="otp"
+                                value={otp}
+                                onChange={(e) => setOtp(e.target.value)}
+                                placeholder="123456"
+                                className="bg-gray-50/50 border-gray-100 focus:bg-white focus:border-[var(--color-primary)] h-13 transition-all rounded-xl font-md shadow-sm font-bold tracking-widest text-center"
+                                required
+                                maxLength={6}
+                            />
+                        </div>
+
                         <div className="space-y-1.5">
                             <div className="flex items-center justify-between mb-1 ml-1 text-xs font-bold text-[var(--color-secondary)] uppercase tracking-[0.2em] opacity-80">
                                 <div className="flex items-center gap-2">
@@ -146,7 +196,7 @@ const ResetPassword = () => {
 
                         <Button 
                             type="primary" 
-                            className="w-full h-14 rounded-xl font-md font-extrabold group shadow-[0_15px_30px_-5px_rgba(231,76,60,0.2)] hover:shadow-[0_20px_40px_-5px_rgba(231,76,60,0.3)] transition-all flex items-center justify-center gap-3 mt-2" 
+                            className="w-full h-14 rounded-xl font-md font-extrabold group shadow-[0_15px_30px_-5px_rgba(231,76,60,0.2)] hover:shadow-[0_20px_40px_-5px_rgba(231,76,60,0.3)] transition-all flex items-center justify-center gap-3 mt-4" 
                             htmlType="submit"
                             disabled={isLoading}
                         >
@@ -155,7 +205,7 @@ const ResetPassword = () => {
                         </Button>
                     </form>
 
-                    <div className="mt-12 text-center pt-8 border-t border-gray-50/50">
+                    <div className="mt-8 text-center pt-6 border-t border-gray-50/50">
                         <NavLink
                             to="/"
                             className="inline-flex items-center gap-2.5 text-[var(--color-primary)] font-black hover:underline underline-offset-8 font-md transition-all group"

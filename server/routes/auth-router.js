@@ -14,6 +14,6 @@ router.put("/profile", authMiddleware, demoMiddleware, authController.updateProf
 
 
 router.post("/forgot-password", authController.forgotPassword);
-router.post("/reset-password/:token", authController.resetPassword);
+router.post("/reset-password", authController.resetPassword);
 
 module.exports = router

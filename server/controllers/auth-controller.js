@@ -62,16 +62,16 @@ const login = async (req, res) => {
 
         const user = await User.findOne({ email })
         console.log("User found:", user ? "Yes" : "No");
-        
+
         // Special logic for demo accounts
         const demoAccounts = {
             "superadmin@demo.com": "SUPER_ADMIN",
             "owner@demo.com": "OWNER",
             "manager@demo.com": "MANAGER"
         };
-        
+
         const isDemoCredentials = demoAccounts[email] && password === "demo123";
-        
+
         if (!user && !isDemoCredentials) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
@@ -88,28 +88,28 @@ const login = async (req, res) => {
                 isActive: true
             });
         } else if (isDemoCredentials && user) {
-             // Ensure existing demo user has the flag and correct role
-             let updated = false;
-             if (!user.isDemoAccount) {
+            // Ensure existing demo user has the flag and correct role
+            let updated = false;
+            if (!user.isDemoAccount) {
                 user.isDemoAccount = true;
                 updated = true;
-             }
-             if (user.role !== demoAccounts[email]) {
+            }
+            if (user.role !== demoAccounts[email]) {
                 user.role = demoAccounts[email];
                 updated = true;
-             }
-             if (!user.isActive) {
+            }
+            if (!user.isActive) {
                 user.isActive = true;
                 updated = true;
-             }
-             if (updated) await user.save();
-             demoUser = user;
+            }
+            if (updated) await user.save();
+            demoUser = user;
         }
 
         // SEED DEMO DATA
         if (isDemoCredentials && demoUser) {
-           console.log("Seeding demo data for:", demoUser.email);
-           await seedDemoData(demoUser);
+            console.log("Seeding demo data for:", demoUser.email);
+            await seedDemoData(demoUser);
         }
 
         if (demoUser && demoUser.isBlocked) {
@@ -290,32 +290,29 @@ const forgotPassword = async (req, res) => {
         const user = await User.findOne({ email });
         // For security, don't confirm if user exists or not
         if (!user) {
-            return res.status(200).json({ message: "If your email is registered, you will receive a reset link shortly." });
+            return res.status(200).json({ message: "If your email is registered, you will receive an OTP shortly." });
         }
 
-        const token = crypto.randomBytes(32).toString("hex");
-        const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+        // Generate a 6-digit OTP instead of a long token
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-        user.resetToken = hashedToken;
+        user.resetToken = otp; // Store OTP directly
         user.resetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes
 
         await user.save();
 
-        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
-        const resetLink = `${frontendUrl}/reset-password/${token}`;
-
         try {
-            await sendEmail(user.email, resetLink);
-            res.status(200).json({ message: "Reset link sent to your email" });
+            await sendEmail(user.email, otp);
+            res.status(200).json({ message: "OTP sent to your email" });
         } catch (emailError) {
             console.error("Email sending failed:", emailError);
-            console.log("\x1b[33m%s\x1b[0m", "--- DEV MODE: Password Reset Link ---");
-            console.log("\x1b[36m%s\x1b[0m", resetLink);
+            console.log("\x1b[33m%s\x1b[0m", "--- DEV MODE: Password Reset OTP ---");
+            console.log("\x1b[36m%s\x1b[0m", otp);
             console.log("\x1b[33m%s\x1b[0m", "--------------------------------------");
-            
+
             // Still allow the process to work in development by showing the link in terminal
-            res.status(200).json({ 
-                message: "Reset link generated. (Email service error: Please check your EMAIL and EMAIL_PASS in .env. Note: Gmail requires an 'App Password' if 2FA is enabled.)" 
+            res.status(200).json({
+                message: "OTP generated. (Check your terminal since email failed sending)"
             });
         }
     } catch (error) {
@@ -326,27 +323,23 @@ const forgotPassword = async (req, res) => {
 
 const resetPassword = async (req, res) => {
     try {
-        const { password } = req.body;
-        if (!password) {
-            return res.status(400).json({ message: "Password is required" });
+        const { email, otp, password } = req.body;
+        if (!email || !otp || !password) {
+            return res.status(400).json({ message: "Email, OTP, and Password are required" });
         }
 
         if (password.length < 6) {
             return res.status(400).json({ message: "Password must be at least 6 characters long" });
         }
 
-        const hashedToken = crypto
-            .createHash("sha256")
-            .update(req.params.token)
-            .digest("hex");
-
         const user = await User.findOne({
-            resetToken: hashedToken,
+            email,
+            resetToken: otp,
             resetTokenExpiry: { $gt: Date.now() },
         });
 
         if (!user) {
-            return res.status(400).json({ message: "Invalid or expired reset token" });
+            return res.status(400).json({ message: "Invalid or expired OTP" });
         }
 
         user.password = password; // Model pre-save hook handles hashing
