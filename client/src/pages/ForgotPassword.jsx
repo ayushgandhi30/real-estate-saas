@@ -3,7 +3,7 @@ import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useToast } from '../store/ToastContext';
-import { Mail, ArrowLeft, KeyRound, LayoutDashboard, ShieldCheck, MailQuestion } from "lucide-react";
+import { Mail, ArrowLeft, KeyRound, LayoutDashboard, ShieldCheck, Lock, Loader2 } from "lucide-react";
 import { BASE_URL } from "../store/api";
 
 const ForgotPassword = () => {
@@ -42,88 +42,85 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="min-h-screen flex text-[var(--text-secondary)] bg-[var(--bg-main)] overflow-hidden relative">
-            {/* Side Panel - Aesthetic Mesh */}
-            <div className="hidden lg:flex lg:w-[45%] flex-col justify-center px-16 xl:px-24 bg-mesh border-r border-gray-100 relative overflow-hidden">
-                <div className="relative z-10">
-                    {/* <div className="flex items-center mb-10">
-                        <img src="/SVGs/logo.jpg" alt="Logo" className="h-24 w-auto rounded-xl shadow-md" />
-                    </div> */}
+        <div className="min-h-screen flex text-[var(--text-secondary)] bg-[var(--bg-main)] font-['Inter']">
+            {/* Left Section - Same as SignIn */}
+            <div className="hidden lg:flex lg:w-[50%] flex-col justify-between p-12 bg-[var(--color-primary)] relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)] to-blue-900 opacity-90 z-0"></div>
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1073&q=80')] bg-cover bg-center mix-blend-overlay opacity-40 z-0"></div>
 
-                    <h1 className="text-3xl xl:text-4xl font-black mb-8 leading-tight tracking-tight text-[var(--color-secondary)]">
-                        Secure Your Account <br />
-                        <span className="hero-gradient-text">Easily.</span>
-                    </h1>
-
-                    <div className="space-y-6">
-                        {[
-                            { title: "Quick Recovery", desc: "Get back into your account in just a few minutes.", icon: KeyRound },
-                            { title: "Safe & Encrypted", desc: "Your security is our top priority.", icon: ShieldCheck },
-                            { title: "24/7 Support", desc: "Need help? Our team is always here for you.", icon: MailQuestion }
-                        ].map((item, idx) => (
-                            <div key={idx} className="flex gap-5 items-start group">
-                                <div className="mt-1 p-2.5 rounded-xl bg-white border border-gray-100 shadow-sm group-hover:border-[var(--color-primary)]/40 group-hover:shadow-[0_4px_12px_rgba(231,76,60,0.1)] transition-all">
-                                    <item.icon className="w-4 h-4 text-[var(--color-primary)] opacity-80" />
-                                </div>
-                                <div>
-                                    <h3 className="font-bold text-[var(--color-secondary)] text-base group-hover:text-[var(--color-primary)] transition-colors">{item.title}</h3>
-                                    <p className="font-md text-[var(--text-muted)] mt-0.5 leading-relaxed">{item.desc}</p>
-                                </div>
-                            </div>
-                        ))}
+                <div className="relative z-10 flex items-center">
+                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg">
+                        <LayoutDashboard className="w-6 h-6 text-[var(--color-primary)]" />
                     </div>
+                    <span className="ml-3 text-2xl font-black text-white tracking-tight">EstateFlow.</span>
+                </div>
+
+                <div className="relative z-10 text-white space-y-6 max-w-lg mb-12">
+                    <h1 className="text-4xl xl:text-5xl font-black leading-tight tracking-tight">
+                        Forgot Your <br />
+                        Password?
+                    </h1>
+                    <p className="text-lg text-blue-100/80 font-medium leading-relaxed">
+                        No worries — we'll send a secure 6-digit OTP to your registered email so you can reset your password quickly and safely.
+                    </p>
+
+                    <div className="flex gap-4 pt-4">
+                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+                            <ShieldCheck className="w-4 h-4 text-blue-200" />
+                            <span className="text-sm font-semibold text-blue-50">Secure OTP</span>
+                        </div>
+                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+                            <KeyRound className="w-4 h-4 text-blue-200" />
+                            <span className="text-sm font-semibold text-blue-50">Quick Recovery</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="relative z-10 flex gap-4 text-blue-100/60 text-sm font-medium">
+                    <span>© 2026 EstateFlow. All rights reserved.</span>
                 </div>
             </div>
 
-            {/* Main Form Container */}
-            <div className="w-full lg:w-[55%] flex items-center justify-center p-6 relative z-10 bg-[var(--bg-main)]">
-                <div className="w-full max-w-[440px] premium-card rounded-[2.5rem] p-10 sm:p-12">
+            {/* Right Section - Form */}
+            <div className="w-full lg:w-[50%] flex items-center justify-center p-6 relative z-10 bg-[var(--bg-main)]">
+                <div className="w-full max-w-[440px] bg-white rounded-[2rem] p-8 sm:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100">
                     <div className="mb-10 text-center sm:text-left">
-                        <div className="p-3.5 w-fit rounded-2xl bg-[var(--color-primary)]/5 border border-[var(--color-primary)]/10 mb-6 mx-auto sm:mx-0 shadow-sm">
-                            <KeyRound className="w-6 h-6 text-[var(--color-primary)] opacity-90" />
-                        </div>
-                        <h2 className="text-2xl font-black mb-3 text-[var(--color-secondary)] tracking-tight">Forgot Password?</h2>
-                        <p className="font-md text-[var(--text-muted)] leading-relaxed">
-                            We'll send a secure restoration link to your verified email.
+                        <h2 className="text-3xl font-black mb-2 text-[var(--color-secondary)] tracking-tight">Forgot Password?</h2>
+                        <p className="font-medium text-[var(--text-muted)] text-base">
+                            Enter your email to receive a secure OTP code.
                         </p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="space-y-1.5">
-                            <div className="flex items-center gap-2 mb-1 ml-1 text-xs font-bold text-[var(--color-secondary)] uppercase tracking-[0.2em] opacity-80">
-                                <Mail className="w-3.5 h-3.5 text-[var(--color-primary)]" />
-                                Recovery Email
-                            </div>
-                            <Input
-                                type="email"
-                                name="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="name@example.com"
-                                className="bg-gray-50/50 border-gray-100 focus:bg-white focus:border-[var(--color-primary)] h-13 transition-all rounded-xl font-md shadow-sm"
-                                required
-                            />
-                        </div>
+                        <Input
+                            label="Email Address"
+                            type="email"
+                            name="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="name@example.com"
+                            icon={Mail}
+                            required
+                        />
 
-                        <Button
-                            type="primary"
-                            className="w-full h-14 rounded-xl font-md font-extrabold group shadow-[0_15px_30px_-5px_rgba(231,76,60,0.2)] hover:shadow-[0_20px_40px_-5px_rgba(231,76,60,0.3)] transition-all flex items-center justify-center gap-3 mt-2"
-                            htmlType="submit"
-                            disabled={isLoading}
-                        >
-                            {isLoading ? "Dispatching..." : "Send Reset Link"}
-                            <ShieldCheck className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                        <Button type="primary" className="w-full h-14 outline-none border-none rounded-xl text-lg font-extrabold group bg-[var(--color-primary)] hover:bg-blue-700 text-white shadow-[0_8px_20px_-6px_rgba(0,118,255,0.4)] hover:shadow-[0_12px_25px_-6px_rgba(0,118,255,0.5)] transition-all hover:-translate-y-0.5 mt-2 disabled:opacity-60 disabled:cursor-not-allowed" htmlType="submit" disabled={isLoading}>
+                            <span className="flex items-center justify-center gap-2">
+                                {isLoading ? "Sending OTP..." : "Send OTP"}
+                                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShieldCheck className="w-5 h-5 group-hover:scale-110 transition-transform" />}
+                            </span>
                         </Button>
                     </form>
 
-                    <div className="mt-12 text-center pt-8 border-t border-gray-50/50">
-                        <NavLink
-                            to="/"
-                            className="inline-flex items-center gap-2.5 text-[var(--color-primary)] font-black hover:underline underline-offset-8 font-md transition-all group"
-                        >
-                            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                            Back to Sign In
-                        </NavLink>
+                    <div className="mt-10 text-center">
+                        <p className="font-medium text-[var(--text-muted)] text-sm">
+                            Remember your password?{" "}
+                            <NavLink
+                                to="/"
+                                className="text-[var(--color-primary)] font-bold hover:underline underline-offset-4 ml-1 transition-colors hover:text-blue-700"
+                            >
+                                Sign In
+                            </NavLink>
+                        </p>
                     </div>
                 </div>
             </div>
